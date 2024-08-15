@@ -66,6 +66,13 @@ def get_index(index_type,
         code_sz = 64 # power of 2
         nbits = 8  # nbits must be 8, 12 or 16, The dimension d should be a multiple of M.
         index = faiss.IndexIVFPQ(index, d, n_centroids, code_sz, nbits)
+
+    elif mode == 'lsh':
+        # Using LSH index
+        nbits = 256
+        index = faiss.IndexLSH(d, nbits)
+
+
     elif mode == 'ivfpq-rr':
         # Using IVF-PQ index + Re-rank
         code_sz = 64
@@ -151,8 +158,10 @@ def load_memmap_data(source_dir,
         data = np.memmap(path_data, dtype='float32', mode='r+',
                          shape=(data_shape[0], data_shape[1]))
     else:
-        data = np.memmap(path_data, dtype='float32', mode='r',
+        data = np.memmap(path_data, dtype='float32', mode='r+',
                          shape=(data_shape[0], data_shape[1]))
+    # Convert nan values to 0
+    data[np.isnan(data)] = 0.0
     if display:
         print(f'Load {data_shape[0]:,} items from \033[32m{path_data}\033[0m.')
     return data, data_shape
@@ -231,6 +240,7 @@ def eval_faiss(emb_dir,
     if test_ids.lower() == 'all':
         test_ids = np.arange(0, len(query) - max(test_seq_len), 1) # will test all segments in query/db set
     elif test_ids.isnumeric():
+        np.random.seed(42)
         test_ids = np.random.permutation(len(query) - max(test_seq_len))[:int(test_ids)]
     else:
         test_ids = np.load(test_ids)

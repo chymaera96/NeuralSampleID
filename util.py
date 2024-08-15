@@ -8,43 +8,59 @@ import shutil
 import yaml
 from prettytable import PrettyTable
 
+class DummyScaler:
+    def scale(self, loss):
+        return loss
 
-def load_index(data_dir, ext=['wav','mp3'], max_len=10000, inplace=False):
-    dataset = {}
+    def step(self, optimizer):
+        return optimizer.step()
+
+    def update(self):
+        pass
+
+
+
+def load_index(cfg, data_dir, ext=['wav','mp3'], shuffle_dataset=True, mode="train"):
 
     if data_dir.endswith('.json'):
+        print(f"=>Loading indices from index file {data_dir}")
         with open(data_dir, 'r') as fp:
             dataset = json.load(fp)
         return dataset
     
     print(f"=>Loading indices from {data_dir}")
-    if inplace:
-        json_path = os.path.join(data_dir, data_dir.split('/')[-1] + ".json")
-    else:
-        json_path = os.path.join('data', data_dir.split('/')[-1] + ".json")
-    if not os.path.exists(json_path):
-        idx = 0
-        for fpath in glob.iglob(os.path.join(data_dir,'**/*.*'), recursive=True):
-            if len(dataset) >= max_len:
-                break
-            if fpath.split('.')[-1] in ext: 
-                dataset[str(idx)] = fpath
-                idx += 1
-
-        with open(json_path, 'w') as fp:
-            json.dump(dataset, fp)
+    if not os.path.exists(data_dir):
+        raise FileNotFoundError(f"Directory {data_dir} not found")
     
-    else:
-        print(f"Index exists. Loading indices from {json_path}")
+    json_path = os.path.join(cfg['data_dir'], data_dir.split('/')[-1] + ".json")
+    if os.path.exists(json_path):
+        print(f"Loading indices from {json_path}")
         with open(json_path, 'r') as fp:
             dataset = json.load(fp)
+        return dataset
+    
+    fpaths = glob.glob(os.path.join(data_dir,'**/*.*'), recursive=True)
+    fpaths = [p for p in fpaths if p.split('.')[-1] in ext]
+    dataset_size = len(fpaths)
+    indices = list(range(dataset_size))
+    if shuffle_dataset :
+        np.random.seed(42)
+        np.random.shuffle(indices)
+    if mode == "train":
+        size = cfg['train_sz']
+    else:
+        size = cfg['val_sz']
+    dataset = {str(i):fpaths[ix] for i,ix in enumerate(indices[:size])}
 
-    assert len(dataset) > 0
+    with open(json_path, 'w') as fp:
+        json.dump(dataset, fp)
+
     return dataset
 
-def load_augmentation_index(data_dir, splits, ext=['wav','mp3'], shuffle_dataset=True):
+def load_augmentation_index(data_dir, splits, json_path=None, ext=['wav','mp3'], shuffle_dataset=True):
     dataset = {'train' : [], 'test' : [], 'validate': []}
-    json_path = os.path.join(data_dir, data_dir.split('/')[-1] + ".json")
+    if json_path is None:
+        json_path = os.path.join(data_dir, data_dir.split('/')[-1] + ".json")
     if not os.path.exists(json_path):
         fpaths = glob.glob(os.path.join(data_dir,'**/*.*'), recursive=True)
         fpaths = [p for p in fpaths if p.split('.')[-1] in ext]
@@ -80,7 +96,11 @@ def get_frames(y, frame_length, hop_length):
     return frames
 
 def qtile_normalize(y, q, eps=1e-8):
-    return y / (eps + torch.quantile(y,q=q))
+    return y / (eps + torch.quantile(y.abs(),q=q))
+
+def qtile_norm(y, q, eps=1e-8):
+    return eps + torch.quantile(y.abs(),q=q)
+
 
 def query_len_from_seconds(seconds, overlap, dur):
     hop = dur*(1-overlap)
@@ -92,6 +112,10 @@ def seconds_from_query_len(query_len, overlap, dur):
 
 def load_ckp(checkpoint_fpath, model, optimizer, scheduler):
     checkpoint = torch.load(checkpoint_fpath)
+    # # Check if dataparallel is used
+    # if 'module' in list(checkpoint['state_dict'].keys())[0]:
+    #     print("Loading model with dataparallel...")
+    #     checkpoint = {key.replace('module.', ''): value for key, value in checkpoint.items()}
     model.load_state_dict(checkpoint['state_dict'])
     optimizer.load_state_dict(checkpoint['optimizer'])
     scheduler.load_state_dict(checkpoint['scheduler'])
@@ -186,6 +210,12 @@ def count_parameters(model, encoder):
         f.write(str(table))
     return total_params
 
+def calculate_output_sparsity(output):
+    total_elements = torch.numel(output)
+    zero_elements = torch.sum((output == 0).int()).item()
+
+    sparsity = zero_elements / total_elements * 100
+    return sparsity
 
     # Get paths of files not in the index
 def get_test_index(data_dir):
@@ -203,15 +233,3 @@ def get_test_index(data_dir):
             idx += 1
 
     return test_idx
-    
-def main():
-    data_dir = '/import/c4dm-datasets-ext/fma/fma/data/fma_medium'
-    test_idx = get_test_index(data_dir)
-    print(len(test_idx))
-    print(list(test_idx.items())[:5])
-    json_dir = os.path.join('data', 'test_idx.json')
-    with open(json_dir, 'w') as fp:
-        json.dump(test_idx, fp)
-
-if __name__ == '__main__':
-    main()

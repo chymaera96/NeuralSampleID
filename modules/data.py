@@ -9,7 +9,7 @@ import librosa
 import torch.nn as nn
 import warnings
 
-from util import load_index, get_frames, qtile_normalize
+from util import load_index, get_frames, qtile_normalize, qtile_norm
 
 
 class NeuralfpDataset(Dataset):
@@ -22,11 +22,17 @@ class NeuralfpDataset(Dataset):
         self.sample_rate = cfg['fs']
         self.dur = cfg['dur']
         self.n_frames = cfg['n_frames']
-        self.size = cfg['train_sz'] if train else cfg['val_sz']
-        self.filenames = load_index(path, max_len=self.size)
+        self.silence = cfg['silence']
+        self.error_threshold = cfg['error_threshold']
+
+        if train:
+            self.filenames = load_index(cfg, path, mode="train")
+        else:
+            self.filenames = load_index(cfg, path, mode="valid")
+
         print(f"Loaded {len(self.filenames)} files from {path}")
         self.ignore_idx = []
-  
+        self.error_counts = {}
         
     def __getitem__(self, idx):
         if idx in self.ignore_idx:
@@ -40,30 +46,28 @@ class NeuralfpDataset(Dataset):
 
         except Exception:
             print("Error loading:" + self.filenames[str(idx)])
-            self.ignore_idx.append(idx)
+            self.error_counts[idx] = self.error_counts.get(idx, 0) + 1
+            if self.error_counts[idx] > self.error_threshold:
+                self.ignore_idx.append(idx)
             return self[idx+1]
 
         audio_mono = audio.mean(dim=0)
-        if self.norm is not None:
-            audio_mono = qtile_normalize(audio_mono, q=self.norm)
+        
         resampler = torchaudio.transforms.Resample(sr, self.sample_rate)
         audio_resampled = resampler(audio_mono)    
 
         clip_frames = int(self.sample_rate*self.dur)
         
         if len(audio_resampled) <= clip_frames:
-            self.ignore_idx.append(idx)
+            # self.ignore_idx.append(idx)
             return self[idx + 1]
-        
-
+    
         
         #   For training pipeline, output a random frame of the audio
         if self.train:
             a_i = audio_resampled
             a_j = a_i.clone()
-            if self.transform is not None:
-                a_i, a_j = self.transform(a_i, a_j)
-
+            
             offset_mod = int(self.sample_rate*(self.offset) + clip_frames)
             if len(audio_resampled) < offset_mod:
                 print(len(audio_resampled), offset_mod)
@@ -75,14 +79,38 @@ class NeuralfpDataset(Dataset):
             x_i = clip_i[ri:ri+clip_frames]
             x_j = clip_j[rj:rj+clip_frames]
 
-            # if self.transform is not None:
-            #     x_i, x_j = self.transform(x_i, x_j)
+            if x_i.abs().max() < self.silence or x_j.abs().max() < self.silence:
+                print("Silence detected. Skipping...")
+                return self[idx + 1]
+            
+            if self.norm is not None:
+                norm_val = qtile_norm(audio_resampled, q=self.norm)
+                x_i = x_i / norm_val
+                x_j = x_j / norm_val
 
-            return torch.unsqueeze(x_i, 0), torch.unsqueeze(x_j, 0)
+            if self.transform is not None:
+                x_i, x_j = self.transform(x_i, x_j)
+
+            if x_i is None or x_j is None:
+                return self[idx + 1]
+
+            # Pad or truncate to sample_rate * dur
+            if len(x_i) < clip_frames:
+                x_i = F.pad(x_i, (0, clip_frames - len(x_i)))
+            else:
+                x_i = x_i[:clip_frames]
+
+            if len(x_j) < clip_frames:
+                x_j = F.pad(x_j, (0, clip_frames - len(x_j)))
+            else:    
+                x_j = x_j[:clip_frames]
+
+
+            return x_i, x_j
         
         #   For validation / test, output consecutive (overlapping) frames
         else:
-            return torch.unsqueeze(audio_resampled, 0)
+            return audio_resampled
             # return audio_resampled
     
     def __len__(self):

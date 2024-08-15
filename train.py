@@ -3,30 +3,36 @@ import numpy as np
 import argparse
 import torch
 import gc
+import sys
 import torch.nn.functional as F
 from torch.utils.data.sampler import SubsetRandomSampler
 from torch.utils.tensorboard import SummaryWriter
+from torch.nn.parallel import DataParallel
+from torch.cuda.amp import GradScaler
+import torchaudio
+torchaudio.set_audio_backend("soundfile")
 
 
 from util import *
-from ntxent import ntxent_loss
-from sfnet.gpu_transformations import GPUTransformNeuralfp
-from sfnet.data import NeuralfpDataset
-from sfnet.modules.simclr import SimCLR
-from sfnet.modules.residual import SlowFastNetwork, ResidualUnit
+from simclr.ntxent import ntxent_loss
+from simclr.simclr import SimCLR   
+from modules.transformations import GPUTransformNeuralfp
+from modules.data import NeuralfpDataset
+from encoder.graph_encoder import GraphEncoder
 from eval import eval_faiss
 from test_fp import create_fp_db, create_dummy_db
 
 # Directories
 root = os.path.dirname(__file__)
 model_folder = os.path.join(root,"checkpoint")
+parent_dir = os.path.abspath(os.path.join(root, os.pardir))
+sys.path.append(parent_dir)
+
+device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
 
-device = torch.device("cuda")
-
-
-parser = argparse.ArgumentParser(description='Neuralfp Training')
-parser.add_argument('--config', default=None, type=str,
+parser = argparse.ArgumentParser(description='Grafprint Training')
+parser.add_argument('--config', default='config/grafp.yaml', type=str,
                     help='Path to config file')
 parser.add_argument('--train_dir', default=None, type=str, metavar='PATH',
                     help='path to training data')
@@ -40,30 +46,41 @@ parser.add_argument('--seed', default=42, type=int,
                     help='seed for initializing training. ')
 parser.add_argument('--ckp', default='test', type=str,
                     help='checkpoint_name')
-parser.add_argument('--encoder', default='sfnet', type=str)
+parser.add_argument('--encoder', default='grafp', type=str)
 parser.add_argument('--n_dummy_db', default=None, type=int)
 parser.add_argument('--n_query_db', default=None, type=int)
+parser.add_argument('--k', default=3, type=int)
 
 
 
-def train(cfg, train_loader, model, optimizer, ir_idx, noise_idx, augment=None):
+def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augment=None):
     model.train()
     loss_epoch = 0
+    # return loss_epoch
 
     for idx, (x_i, x_j) in enumerate(train_loader):
 
         optimizer.zero_grad()
         x_i = x_i.to(device)
         x_j = x_j.to(device)
+
+        # with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=True):
         with torch.no_grad():
             x_i, x_j = augment(x_i, x_j)
-        h_i, h_j, z_i, z_j = model(x_i, x_j)
-        loss = ntxent_loss(z_i, z_j, cfg)
-        loss.backward()
-        optimizer.step()
+        assert x_i.device == torch.device('cuda:0'), f"[IN TRAINING] x_i device: {x_i.device}"
+        l1_i, l1_j, z_i, z_j = model(x_i, x_j)
+        # assert loss is being computed for the whole batch
+        assert z_i.shape[0] == cfg['bsz_train'], f"Batch size mismatch: {z_i.shape[0]} != {cfg['bsz_train']}"
+        l1_loss = cfg['lambda'] * (l1_i.mean() + l1_j.mean())
+        loss = ntxent_loss(z_i, z_j, cfg) + l1_loss
+
+        scaler.scale(loss).backward()
+        scaler.step(optimizer)
+        scaler.update()
 
         if idx % 10 == 0:
-            print(f"Step [{idx}/{len(train_loader)}]\t Loss: {loss.item()}")
+            print(f"Step [{idx}/{len(train_loader)}]\t Net Loss: {loss.item()} \t L1 Loss: {l1_loss.item()}")
+            # print(f"Peak matrix sparsity: {calculate_output_sparsity(p_i)}")
 
         loss_epoch += loss.item()
 
@@ -74,7 +91,7 @@ def validate(epoch, query_loader, dummy_loader, augment, model, output_root_dir)
     if epoch==1 or epoch % 10 == 0:
         create_dummy_db(dummy_loader, augment=augment, model=model, output_root_dir=output_root_dir, verbose=False)
         create_fp_db(query_loader, augment=augment, model=model, output_root_dir=output_root_dir, verbose=False)
-        hit_rates = eval_faiss(emb_dir=output_root_dir, test_ids='all', index_type='l2', n_centroids=64, nogpu=True)
+        hit_rates = eval_faiss(emb_dir=output_root_dir, test_ids='all', index_type='l2', n_centroids=32, nogpu=True)
         print("-------Validation hit-rates-------")
         print(f'Top-1 exact hit rate = {hit_rates[0]}')
         print(f'Top-1 near hit rate = {hit_rates[1]}')
@@ -98,12 +115,6 @@ def main():
     model_name = args.ckp
     random_seed = args.seed
     shuffle_dataset = True
-
-    # print(f"Size of train index file {len(load_index(train_dir))}")
-    # print(f"Size of validation index file {len(load_index(valid_dir))}")
-
-
-    # assert data_dir == os.path.join(root,"data/fma_8000")
 
     print("Intializing augmentation pipeline...")
     noise_train_idx = load_augmentation_index(noise_dir, splits=0.8)["train"]
@@ -148,19 +159,28 @@ def main():
                                             pin_memory=True, 
                                             drop_last=False,
                                             sampler=query_db_sampler)
-
     
+
     print("Creating new model...")
-    if args.encoder == 'baseline':
-        model = Neuralfp(encoder=Encoder()).to(device)
-    elif args.encoder == 'sfnet':
-        model = SimCLR(encoder=SlowFastNetwork(ResidualUnit, cfg)).to(device)
-    # pytorch_total_params = sum(p.numel() for p in model.parameters() if p.requires_grad)
-    # print(f"Number of trainable parameters: {pytorch_total_params}")
+    if args.encoder == 'resnet':
+        # TODO: Add support for resnet encoder (deprecated)
+        raise NotImplementedError
+    elif args.encoder == 'grafp':
+        model = SimCLR(cfg, encoder=GraphEncoder(cfg=cfg, in_channels=cfg['n_filters'], k=args.k))
+        if torch.cuda.device_count() > 1:
+            print("Using", torch.cuda.device_count(), "GPUs!")
+            # model = DataParallel(model).to(device)
+            model = model.to(device)
+            model = torch.nn.DataParallel(model)
+        else:
+            model = model.to(device)
+        
     print(count_parameters(model, args.encoder))
 
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max = cfg['T_max'], eta_min = cfg['min_lr'])
+    # scaler = GradScaler(enabled=True)
+    scaler = DummyScaler()
        
     if args.resume:
         if os.path.isfile(args.resume):
@@ -184,7 +204,7 @@ def main():
 
     for epoch in range(start_epoch+1, num_epochs+1):
         print("#######Epoch {}#######".format(epoch))
-        loss_epoch = train(cfg, train_loader, model, optimizer, ir_train_idx, noise_train_idx, gpu_augment)
+        loss_epoch = train(cfg, train_loader, model, optimizer, scaler, ir_train_idx, noise_train_idx, gpu_augment)
         writer.add_scalar("Loss/train", loss_epoch, epoch)
         loss_log.append(loss_epoch)
         output_root_dir = create_fp_dir(ckp=args.ckp, epoch=epoch)
@@ -205,6 +225,8 @@ def main():
             'scheduler': scheduler.state_dict()
         }
         save_ckp(checkpoint, model_name, model_folder, 'current')
+        assert os.path.exists(f'checkpoint/model_{model_name}_current.pth'), "Checkpoint not saved"
+
         if loss_epoch < best_loss:
             best_loss = loss_epoch
             save_ckp(checkpoint, model_name, model_folder, 'best')
@@ -212,19 +234,6 @@ def main():
         if hit_rates is not None and hit_rates[0][0] > best_hr:
             best_hr = hit_rates[0][0]
             save_ckp(checkpoint, model_name, model_folder, epoch)
-
-        # elif hit_rates is not None and hit_rates[0][0] > best_hr:
-        #     best_hr = hit_rates[0][0]
-        #     checkpoint = {
-        #         'epoch': epoch,
-        #         'loss': loss_log,
-        #         'valid_acc' : hit_rate_log,
-        #         'hit_rate': hit_rates,
-        #         'state_dict': model.state_dict(),
-        #         'optimizer': optimizer.state_dict(),
-        #         'scheduler': scheduler.state_dict()
-        #     }
-        #     save_ckp(checkpoint,epoch, model_name, model_folder)
             
         scheduler.step()
     
