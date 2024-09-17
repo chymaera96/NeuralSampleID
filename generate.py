@@ -36,8 +36,14 @@ def create_db(dataloader, model, augment, output_dir, concat=True):
     for idx, audio in enumerate(dataloader):
         audio = audio.to(device)
         x_i, _ = augment(audio, None)
-        with torch.no_grad():
-            _, _, z_i, _= model(x_i.to(device),x_i.to(device))  
+        
+        max_size = 128
+        # Determining mini-batches for large audio files
+        x_list = torch.split(x_i, max_size, dim=0)  
+
+        for x_i in x_list:
+            with torch.no_grad():
+                _, _, z_i, _ = model(x_i.to(device), x_i.to(device))  
 
         fp.append(z_i.detach().cpu().numpy())
 
