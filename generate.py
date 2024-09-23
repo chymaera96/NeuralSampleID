@@ -65,7 +65,7 @@ def main():
     ckp = args.ckp
 
     print("Loading model...")
-    model = SimCLR(cfg, encoder=GraphEncoder(cfg=cfg, in_channels=cfg['n_filters'], k=args.k))
+    model = SimCLR(cfg, encoder=GraphEncoder(cfg=cfg, in_channels=cfg['n_filters'], k=3))
     if torch.cuda.device_count() > 1:
         print("Using", torch.cuda.device_count(), "GPUs!")
         # model = DataParallel(model).to(device)
