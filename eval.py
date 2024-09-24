@@ -137,7 +137,7 @@ def load_memmap_data(source_dir,
     fname : (str)
         File name except extension.
     append_empty_length : None or (int)
-        Length to appened empty vector when loading memmap. If activate, the
+        Length to append empty vector when loading memmap. If activate, the
         file will be opened as 'r+' mode.
     shape_only : (bool), optional
         Return only shape. The default is False.
