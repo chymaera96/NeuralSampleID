@@ -26,13 +26,13 @@ class GPUTransformNeuralfp(nn.Module):
 
 
         self.train_transform = Compose([
-            ApplyImpulseResponse(ir_path=self.ir_dir, p=0.8),
             PitchShift(sample_rate=self.sample_rate,
                         min_semitones=-cfg['pitch_shift'],
                         max_semitones=cfg['pitch_shift'], 
                         p=0.8),
             # BitCrush(min_bit_depth=cfg['min_bit_depth'], max_bit_depth=cfg['min_bit_depth'], p=0.25),
             TimeStretch(min_rate=cfg['min_rate'], max_rate=cfg['max_rate'], p=0.5),
+            ApplyImpulseResponse(ir_path=self.ir_dir, p=0.8),
             # SevenBandParametricEQ(p=0.5),
             # Limiter(p=0.5),
             ])
