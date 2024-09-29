@@ -1,4 +1,5 @@
 import torch
+import torch.nn as nn
 import torch.nn.functional as F
 
 def ntxent_loss(z_i, z_j, cfg):
@@ -27,3 +28,14 @@ def ntxent_loss(z_i, z_j, cfg):
     
     loss = torch.sum(Ls) / -z.shape[0]
     return loss
+
+# For mixup-based contrastive learning
+class SoftCrossEntropy(nn.Module):
+    def __init__(self):
+        super(SoftCrossEntropy, self).__init__()
+
+    def forward(self, logits, target):
+        probs = F.softmax(logits, 1) 
+        loss = (- target * torch.log(probs)).sum(1).mean()
+
+        return loss

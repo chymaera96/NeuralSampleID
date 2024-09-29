@@ -1,7 +1,12 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch_audiomentations import Compose,AddBackgroundNoise, ApplyImpulseResponse
+# from torch_audiomentations import Compose,AddBackgroundNoise, ApplyImpulseResponse, ApplyPitchShift
+from torch_audiomentations import Identity
+from audiomentations import \
+    Compose, ApplyImpulseResponse, \
+    PitchShift, BitCrush, TimeStretch, \
+    SevenBandParametricEQ, Limiter
 from torchaudio.transforms import MelSpectrogram, TimeMasking, FrequencyMasking, AmplitudeToDB
 import warnings
 
@@ -19,22 +24,28 @@ class GPUTransformNeuralfp(nn.Module):
         self.cpu = cpu
         self.cfg = cfg
 
+
         self.train_transform = Compose([
-            ApplyImpulseResponse(ir_paths=self.ir_dir, p=cfg['ir_prob']),
-            AddBackgroundNoise(background_paths=self.noise_dir, 
-                               min_snr_in_db=cfg['tr_snr'][0],
-                               max_snr_in_db=cfg['tr_snr'][1], 
-                               p=cfg['noise_prob']),
+            ApplyImpulseResponse(ir_path=self.ir_dir, p=0.8),
+            PitchShift(sample_rate=self.sample_rate,
+                        min_semitones=-cfg['pitch_shift'],
+                        max_semitones=cfg['pitch_shift'], 
+                        p=0.8),
+            # BitCrush(min_bit_depth=cfg['min_bit_depth'], max_bit_depth=cfg['min_bit_depth'], p=0.25),
+            TimeStretch(min_rate=cfg['min_rate'], max_rate=cfg['max_rate'], p=0.5),
+            # SevenBandParametricEQ(p=0.5),
+            # Limiter(p=0.5),
             ])
         
-        self.val_transform = Compose([
-            ApplyImpulseResponse(ir_paths=self.ir_dir, p=1),
-            AddBackgroundNoise(background_paths=self.noise_dir, 
-                               min_snr_in_db=cfg['val_snr'][0], 
-                               max_snr_in_db=cfg['val_snr'][1], 
-                               p=1),
+        # self.val_transform = Compose([
+        #     ApplyImpulseResponse(ir_paths=self.ir_dir, p=1),
+        #     AddBackgroundNoise(background_paths=self.noise_dir, 
+        #                        min_snr_in_db=cfg['val_snr'][0], 
+        #                        max_snr_in_db=cfg['val_snr'][1], 
+        #                        p=1),
 
-            ])
+        #     ])
+        self.val_transform = Identity()
                 
         self.logmelspec = nn.Sequential(
             MelSpectrogram(sample_rate=self.sample_rate, 
@@ -55,13 +66,21 @@ class GPUTransformNeuralfp(nn.Module):
     def forward(self, x_i, x_j):
         if self.cpu:
             try:
-                x_j = self.train_transform(x_j.view(1,1,x_j.shape[-1]), sample_rate=self.sample_rate)
+            #     x_j = self.train_transform(x_j.view(1,1,x_j.shape[-1]), sample_rate=self.sample_rate)
+            # except ValueError:
+            #     print("Error loading noise file. Hack to solve issue...")
+            #     # Increase length of x_j by 1 sample
+            #     x_j = F.pad(x_j, (0,1))
+            #     x_j = self.train_transform(x_j.view(1,1,x_j.shape[-1]), sample_rate=self.sample_rate)
+            # return x_i, x_j.flatten()[:int(self.sample_rate*self.cfg['dur'])]
+                x_j = self.train_transform(x_j.numpy(), sample_rate=self.sample_rate)
             except ValueError:
                 print("Error loading noise file. Hack to solve issue...")
                 # Increase length of x_j by 1 sample
                 x_j = F.pad(x_j, (0,1))
-                x_j = self.train_transform(x_j.view(1,1,x_j.shape[-1]), sample_rate=self.sample_rate)
-            return x_i, x_j.flatten()[:int(self.sample_rate*self.cfg['dur'])]
+                x_j = self.train_transform(x_j.numpy(), sample_rate=self.sample_rate)
+
+            return x_i, torch.from_numpy(x_j)[:int(self.sample_rate*self.cfg['dur'])]
 
         if self.train:
             X_i = self.logmelspec(x_i)

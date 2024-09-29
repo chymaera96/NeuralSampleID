@@ -14,7 +14,7 @@ torchaudio.set_audio_backend("soundfile")
 
 
 from util import *
-from simclr.ntxent import ntxent_loss
+from simclr.ntxent import ntxent_loss, SoftCrossEntropy
 from simclr.simclr import SimCLR   
 from modules.transformations import GPUTransformNeuralfp
 from modules.data import NeuralfpDataset
@@ -53,6 +53,31 @@ parser.add_argument('--k', default=3, type=int)
 
 
 
+def mixco(model, xis, xjs, zis, zjs, cfg):
+# This code is adapted from https://github.com/Lee-Gihun/MixCo-Mixup-Contrast
+    
+    crit = SoftCrossEntropy()
+    B = xis.shape[0]
+    assert B % 2 == 0
+    sid = int(B/2)
+    loss = 0
+    for x, z in zip([xis, xjs], [zjs, zis]):
+        x_1, x_2 = x[:sid], x[sid:]
+
+        # each image get different lambda
+        lam = torch.from_numpy(np.random.uniform(0, 1, size=(sid,1,1,1))).float().to(x.device)
+        spec_mix = lam * x_1 + (1-lam) * x_2
+
+        _, _, _, z_mix = model(spec_mix, spec_mix)
+        lbls_mix = torch.cat((torch.diag(lam.squeeze()), torch.diag((1-lam).squeeze())), dim=1)
+        z_mix = F.normalize(z_mix, dim=1)
+
+        logits_mix = torch.mm(z_mix, z.transpose(0, 1)) # N/2 * N
+        logits_mix /= cfg['tau_mix']
+        loss += crit(logits_mix, lbls_mix) / 2
+        
+    return loss
+
 def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augment=None):
     model.train()
     loss_epoch = 0
@@ -67,20 +92,23 @@ def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augmen
         # with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=True):
         with torch.no_grad():
             x_i, x_j = augment(x_i, x_j)
-        assert x_i.device == torch.device('cuda:0'), f"[IN TRAINING] x_i device: {x_i.device}"
-        l1_i, l1_j, z_i, z_j = model(x_i, x_j)
-        # assert loss is being computed for the whole batch
-        assert z_i.shape[0] == cfg['bsz_train'], f"Batch size mismatch: {z_i.shape[0]} != {cfg['bsz_train']}"
-        l1_loss = cfg['lambda'] * (l1_i.mean() + l1_j.mean())
-        loss = ntxent_loss(z_i, z_j, cfg) + l1_loss
+
+        _, _, z_i, z_j = model(x_i, x_j)
+
+        simclr_loss = ntxent_loss(z_i, z_j, cfg)
+        if cfg['beta'] > 0.0:
+            mixco_loss = mixco(model, x_i, x_j, z_i, z_j, cfg)
+        else:
+            mixco_loss = 0.0
+    
+        loss = simclr_loss + cfg['beta'] * mixco_loss.item()
 
         scaler.scale(loss).backward()
         scaler.step(optimizer)
         scaler.update()
 
         if idx % 10 == 0:
-            print(f"Step [{idx}/{len(train_loader)}]\t Net Loss: {loss.item()} \t L1 Loss: {l1_loss.item()}")
-            # print(f"Peak matrix sparsity: {calculate_output_sparsity(p_i)}")
+            print(f"Step [{idx}/{len(train_loader)}]\t SimCLR Loss: {simclr_loss.item()} \t MixCo Loss: {mixco_loss.item()}")
 
         loss_epoch += loss.item()
 
