@@ -26,8 +26,7 @@ class GPUTransformNeuralfp(nn.Module):
 
 
         self.train_transform = Compose([
-            PitchShift(sample_rate=self.sample_rate,
-                        min_semitones=-cfg['pitch_shift'],
+            PitchShift(min_semitones=-cfg['pitch_shift'],
                         max_semitones=cfg['pitch_shift'], 
                         p=0.8),
             # BitCrush(min_bit_depth=cfg['min_bit_depth'], max_bit_depth=cfg['min_bit_depth'], p=0.25),
