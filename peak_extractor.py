@@ -335,6 +335,8 @@ class GPUPeakExtractorv2(nn.Module):
             tensor = torch.cat((self.T_tensor.unsqueeze(1), self.F_tensor.unsqueeze(1), peaks), dim=1)
         except RuntimeError as e:
             # Validation case
+            print(str(e))
+            print("shapes of T_tensor, F_tensor, peaks: ", self.T_tensor.shape, self.F_tensor.shape, peaks.shape)
             T_tensor = torch.linspace(0, 1, steps=spec_tensor.shape[2], device=spec_tensor.device)
             T_tensor = T_tensor.unsqueeze(0).unsqueeze(1).repeat(spec_tensor.shape[0], spec_tensor.shape[1], 1)
             F_tensor = torch.linspace(0, 1, steps=spec_tensor.shape[1], device=spec_tensor.device)
