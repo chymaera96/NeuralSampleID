@@ -65,7 +65,7 @@ def mixco(model, xis, xjs, zis, zjs, cfg):
         x_1, x_2 = x[:sid], x[sid:]
 
         # each image get different lambda
-        lam = torch.from_numpy(np.random.uniform(0, 1, size=(sid,1,1,1))).float().to(x.device)
+        lam = torch.from_numpy(np.random.uniform(0, 1, size=(sid,1,1))).float().to(x.device)
         spec_mix = lam * x_1 + (1-lam) * x_2
 
         _, _, _, z_mix = model(spec_mix, spec_mix)
