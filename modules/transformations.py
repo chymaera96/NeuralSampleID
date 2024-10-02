@@ -33,7 +33,7 @@ class GPUTransformNeuralfp(nn.Module):
             BitCrush(min_bit_depth=cfg['min_bit_depth'], max_bit_depth=cfg['min_bit_depth'], p=0.25),
             ApplyImpulseResponse(ir_path=self.ir_dir, p=0.8),
             SevenBandParametricEQ(p=0.5),
-            Limiter(p=0.5),
+            # Limiter(p=0.5),
             ])
         
         # self.val_transform = Compose([
