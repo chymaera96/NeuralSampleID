@@ -99,7 +99,7 @@ def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augmen
         if cfg['beta'] > 0.0:
             mixco_loss = mixco(model, x_i, x_j, z_i, z_j, cfg)
         else:
-            mixco_loss = 0.0
+            mixco_loss = torch.tensor(0.0)
     
         loss = simclr_loss + cfg['beta'] * mixco_loss.item()
         # Assert that loss is not NaN
