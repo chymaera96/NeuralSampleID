@@ -242,11 +242,13 @@ def extract_losses(filename):
 
     with open(filename, 'r') as file:
         for line in file:
-            match = re.search(r'Step \[\d+/\d+\]\s+SimCLR Loss: (\d+\.\d+)\s+MixCo Loss: (\d+\.\d+)', line)
-            if match:
-                simclr_loss = float(match.group(1))
-                mixco_loss = float(match.group(2))
+            simclr_match = re.search(r'SimCLR Loss: (\d+\.\d+)', line)
+            mixco_match = re.search(r'MixCo Loss: (\d+\.\d+)', line)
+            if simclr_match:
+                simclr_loss = float(simclr_match.group(1))
                 simclr_losses.append(simclr_loss)
+            if mixco_match:
+                mixco_loss = float(mixco_match.group(1))
                 mixco_losses.append(mixco_loss)
 
     return simclr_losses, mixco_losses
