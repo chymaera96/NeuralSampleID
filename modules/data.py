@@ -110,7 +110,8 @@ class NeuralfpDataset(Dataset):
         
         #   For validation / test, output consecutive (overlapping) frames
         else:
-            return audio_resampled
+            fname = os.path.basename(datapath)
+            return fname, audio_resampled
             # return audio_resampled
     
     def __len__(self):

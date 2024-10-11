@@ -7,6 +7,7 @@ import soundfile as sf
 import shutil
 import yaml
 from prettytable import PrettyTable
+import re
 
 class DummyScaler:
     def scale(self, loss):
@@ -233,3 +234,26 @@ def get_test_index(data_dir):
             idx += 1
 
     return test_idx
+
+
+def extract_losses(filename):
+    simclr_losses = []
+    mixco_losses = []
+
+    with open(filename, 'r') as file:
+        for line in file:
+            match = re.search(r'Step \[\d+/\d+\]\s+SimCLR Loss: (\d+\.\d+)\s+MixCo Loss: (\d+\.\d+)', line)
+            if match:
+                simclr_loss = float(match.group(1))
+                mixco_loss = float(match.group(2))
+                simclr_losses.append(simclr_loss)
+                mixco_losses.append(mixco_loss)
+
+    return simclr_losses, mixco_losses
+
+
+def main():
+    extract_losses('hpc_out/nsid_tc_1.o3925245')
+
+if __name__ == '__main__':
+    main()

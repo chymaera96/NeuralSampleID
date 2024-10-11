@@ -87,19 +87,11 @@ class GPUTransformNeuralfp(nn.Module):
             X_j = self.logmelspec(x_j)
 
         else:
+            # Test-time use case: x_i is waveform and x_j is None
             X_i = self.logmelspec(x_i.squeeze(0)).transpose(1,0)
             X_i = X_i.unfold(0, size=self.n_frames, step=int(self.n_frames*(1-self.overlap)))
+            X_j = None
 
-            if x_j is None:
-                # Dummy db does not need augmentation
-                return X_i, X_i
-            try:
-                x_j = self.val_transform(x_j.view(1,1,x_j.shape[-1]), sample_rate=self.sample_rate)
-            except ValueError:
-                print("Error loading noise file. Retrying...")
-                x_j = self.val_transform(x_j.view(1,1,x_j.shape[-1]), sample_rate=self.sample_rate)
 
-            X_j = self.logmelspec(x_j.flatten()).transpose(1,0)
-            X_j = X_j.unfold(0, size=self.n_frames, step=int(self.n_frames*(1-self.overlap)))
 
         return X_i, X_j

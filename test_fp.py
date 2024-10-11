@@ -82,52 +82,77 @@ def create_table(hit_rates, overlap, dur, test_seq_len=[1,3,5,9,11,19], text="te
     table += '</table>'
     return table
 
-def create_fp_db(dataloader, augment, model, output_root_dir, verbose=True):
-    fp_q = []
-    fp_db = []
-    print("=> Creating query and db fingerprints...")
-    for idx, audio in enumerate(dataloader):
+def create_query_db(dataloader, augment, model, output_root_dir, fname='query_db', verbose=True):
+    fp = []
+    lookup_table = []  # Initialize lookup table
+    print("=> Creating query fingerprints...")
+    for idx, (nm,audio) in enumerate(dataloader):
         audio = audio.to(device)
-        x_i, x_j = augment(audio, audio)
+        x_i, _ = augment(audio, None)
         with torch.no_grad():
-            _, _, z_i, z_j= model(x_i.to(device),x_j.to(device))        
+            _, _, z_i, _= model(x_i.to(device),x_i.to(device))  
 
-        # print(f'Shape of z_i {z_i.shape} inside the create_fp_db function')
-        fp_db.append(z_i.detach().cpu().numpy())
-        fp_q.append(z_j.detach().cpu().numpy())
+        fp.append(z_i.detach().cpu().numpy())
 
-        if verbose and idx % 10 == 0:
+        # Append song number to lookup table for each segment in the batch
+        lookup_table.extend([nm] * x_i.shape[0])
+
+        if verbose and idx % 100 == 0:
             print(f"Step [{idx}/{len(dataloader)}]\t shape: {z_i.shape}")
-        # fp = torch.cat(fp)
-    
-    fp_db = np.concatenate(fp_db)
-    fp_q = np.concatenate(fp_q)
-    arr_shape = (len(fp_db), z_i.shape[-1])
 
+    fp = np.concatenate(fp)
+    arr_shape = (len(fp), z_i.shape[-1])
 
-    arr_q = np.memmap(f'{output_root_dir}/query.mm',
+    arr = np.memmap(f'{output_root_dir}/{fname}.mm',
                     dtype='float32',
                     mode='w+',
                     shape=arr_shape)
-    
-    arr_q[:] = fp_q[:]
-    arr_q.flush(); del(arr_q)   #Close memmap
+    arr[:] = fp[:]
+    arr.flush(); del(arr)   #Close memmap
 
-    np.save(f'{output_root_dir}/query_shape.npy', arr_shape)
+    np.save(f'{output_root_dir}/{fname}_shape.npy', arr_shape)
 
-    arr_db = np.memmap(f'{output_root_dir}/db.mm',
+    # Save lookup table
+    np.save(f'{output_root_dir}/{fname}_lookup.npy', lookup_table)
+
+def create_ref_db(dataloader, augment, model, output_root_dir, fname='ref_db', verbose=True):
+    fp = []
+    lookup_table = []  # Initialize lookup table
+    print("=> Creating reference fingerprints...")
+    for idx, (nm,audio) in enumerate(dataloader):
+        audio = audio.to(device)
+        x_i, _ = augment(audio, None)
+        with torch.no_grad():
+            _, _, z_i, _= model(x_i.to(device),x_i.to(device))  
+
+        fp.append(z_i.detach().cpu().numpy())
+
+        # Append song number to lookup table for each segment in the batch
+        lookup_table.extend([nm] * x_i.shape[0])
+
+        if verbose and idx % 100 == 0:
+            print(f"Step [{idx}/{len(dataloader)}]\t shape: {z_i.shape}")
+
+    fp = np.concatenate(fp)
+    arr_shape = (len(fp), z_i.shape[-1])
+
+    arr = np.memmap(f'{output_root_dir}/{fname}.mm',
                     dtype='float32',
                     mode='w+',
                     shape=arr_shape)
-    arr_db[:] = fp_db[:]
-    arr_db.flush(); del(arr_db)   #Close memmap
+    arr[:] = fp[:]
+    arr.flush(); del(arr)   #Close memmap
 
-    np.save(f'{output_root_dir}/db_shape.npy', arr_shape)
+    np.save(f'{output_root_dir}/{fname}_shape.npy', arr_shape)
+
+    # Save lookup table
+    np.save(f'{output_root_dir}/{fname}_lookup.npy', lookup_table)
+
 
 def create_dummy_db(dataloader, augment, model, output_root_dir, fname='dummy_db', verbose=True):
     fp = []
     print("=> Creating dummy fingerprints...")
-    for idx, audio in enumerate(dataloader):
+    for idx, (nm,audio) in enumerate(dataloader):
         audio = audio.to(device)
         x_i, _ = augment(audio, None)
         # x_i = torch.unsqueeze(db[0],1)
@@ -203,21 +228,17 @@ def main():
 
     dataset = NeuralfpDataset(cfg, path=args.test_dir, train=False)
 
+    dummy_indices = np.load(f'{args.data_dir}/dummy_indices.npy')
+    query_indices = np.load(f'{args.data_dir}/query_indices.npy')
+    ref_indices = np.load(f'{args.data_dir}/ref_indices.npy')
 
-    dataset_size = len(dataset)
-    indices = list(range(dataset_size))
-    split1 = args.n_dummy_db
-    split2 = args.n_query_db
-    if split1 is None:
-        split1 = len(dataset) - split2
-    if shuffle_dataset :
-        np.random.seed(random_seed)
-        np.random.shuffle(indices)
-    dummy_indices, query_db_indices = indices[:split1], indices[split1: split1 + split2]
+    print(f"Dummy indices: {len(dummy_indices)} files")
+    print(f"Query indices: {len(query_indices)} files")
+    print(f"Reference indices: {len(ref_indices)} files")
 
-    print(f"Creating dummy db with {len(dummy_indices)} samples and query db with {len(query_db_indices)} samples")
     dummy_db_sampler = SubsetRandomSampler(dummy_indices)
-    query_db_sampler = SubsetRandomSampler(query_db_indices)
+    query_db_sampler = SubsetRandomSampler(query_indices)
+    ref_db_sampler = SubsetRandomSampler(ref_indices)
 
     dummy_db_loader = torch.utils.data.DataLoader(dataset, batch_size=1, 
                                             shuffle=False,
@@ -232,6 +253,13 @@ def main():
                                             pin_memory=True, 
                                             drop_last=False,
                                             sampler=query_db_sampler)
+    
+    ref_db_loader = torch.utils.data.DataLoader(dataset, batch_size=1, 
+                                            shuffle=False,
+                                            num_workers=4, 
+                                            pin_memory=True, 
+                                            drop_last=False,
+                                            sampler=ref_db_sampler)
 
 
     if args.small_test:
