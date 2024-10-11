@@ -8,6 +8,8 @@ import shutil
 import yaml
 from prettytable import PrettyTable
 import re
+import matplotlib.pyplot as plt
+
 
 class DummyScaler:
     def scale(self, loss):
@@ -255,7 +257,18 @@ def extract_losses(filename):
 
 
 def main():
-    print(extract_losses('hpc_out/nsid_tc_1.o3925245'))
+    simclr_losses, mixco_losses = extract_losses('hpc_out/nsid_tc_1.o3925245')
+
+    plt.figure()
+    plt.plot(simclr_losses, label='SimCLR Loss')
+    plt.plot(mixco_losses, label='MixCo Loss')
+    plt.legend()
+
+    plt.title('Losses per step')
+    plt.xlabel('Step')
+    plt.ylabel('Loss')
+
+    plt.savefig('losses.jpg')
 
 if __name__ == '__main__':
     main()
