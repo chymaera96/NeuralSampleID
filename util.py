@@ -255,7 +255,7 @@ def extract_losses(filename):
 
 
 def main():
-    extract_losses('hpc_out/nsid_tc_1.o3925245')
+    print(extract_losses('hpc_out/nsid_tc_1.o3925245'))
 
 if __name__ == '__main__':
     main()
