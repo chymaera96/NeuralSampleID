@@ -4,6 +4,35 @@ import faiss
 import time
 import numpy as np
 import os
+from collections import defaultdict
+import json
+
+
+def extract_test_ids(lookup_table):
+    starts = []
+    lengths = []
+    
+    # Initialize the first string and starting index
+    current_string = lookup_table[0]
+    current_start = 0
+    
+    # Iterate through the list to detect changes in strings
+    for i in range(1, len(lookup_table)):
+        if lookup_table[i] != current_string:
+            # When a new string is found, record the start and length of the previous group
+            starts.append(current_start)
+            lengths.append(i - current_start)
+            
+            # Update the current string and starting index
+            current_string = lookup_table[i]
+            current_start = i
+    
+    # Add the last group
+    starts.append(current_start)
+    lengths.append(len(lookup_table) - current_start)
+    
+    return np.array(starts), np.array(lengths)
+
 
 def get_index(index_type,
               train_data,
@@ -183,8 +212,8 @@ def eval_faiss(emb_dir,
             list(map(int, test_seq_len.split())))  # '1 3 5' --> [1, 3, 5]
 
     # Load items from {query, db, dummy_db}
-    query, query_shape = load_memmap_data(emb_dir, 'query')
-    db, db_shape = load_memmap_data(emb_dir, 'db')
+    query, query_shape = load_memmap_data(emb_dir, 'query_db')
+    db, db_shape = load_memmap_data(emb_dir, 'ref_db')
     if emb_dummy_dir is None:
         emb_dummy_dir = emb_dir
     dummy_db, dummy_db_shape = load_memmap_data(emb_dummy_dir, 'dummy_db')
@@ -221,93 +250,95 @@ def eval_faiss(emb_dir,
     • Unforunately, current faiss.index.reconstruct_n(id_start, id_stop)
       supports only CPU index.
     • We prepare a fake_recon_index thourgh the on-disk method.
+    • In future implementations, fake_recon_index will be used for calculating
+      histogram-based matching score.
     ---------------------------------------------------------------------- """
     # Prepare fake_recon_index
     del dummy_db
     start_time = time.time()
 
-    fake_recon_index, index_shape = load_memmap_data(
-        emb_dummy_dir, 'dummy_db', append_extra_length=query_shape[0],
-        display=False)
-    fake_recon_index[dummy_db_shape[0]:dummy_db_shape[0] + query_shape[0], :] = db[:, :]
-    fake_recon_index.flush()
+    # fake_recon_index, index_shape = load_memmap_data(
+    #     emb_dummy_dir, 'dummy_db', append_extra_length=db_shape[0],
+    #     display=False)
+    # fake_recon_index[dummy_db_shape[0]:dummy_db_shape[0] + db_shape[0], :] = db[:, :]
+    # fake_recon_index.flush()
 
-    t = time.time() - start_time
-    print(f'Created fake_recon_index, total {index_shape[0]} items. {t:>4.2f} sec.')
+    # t = time.time() - start_time
+    # print(f'Created fake_recon_index, total {index_shape[0]} items. {t:>4.2f} sec.')
 
     # Get test_ids
     print(f'test_id: \033[93m{test_ids}\033[0m,  ', end='')
-    if test_ids.lower() == 'all':
-        test_ids = np.arange(0, len(query) - max(test_seq_len), 1) # will test all segments in query/db set
-    elif test_ids.isnumeric():
-        np.random.seed(42)
-        test_ids = np.random.permutation(len(query) - max(test_seq_len))[:int(test_ids)]
-    else:
-        test_ids = np.load(test_ids)
 
+    query_lookup = np.load(f'{emb_dir}/query_lookup.npy')
+    ref_lookup = np.load(f'{emb_dir}/ref_lookup.npy')
+    test_ids, max_test_seq_len = extract_test_ids(query_lookup)
     n_test = len(test_ids)
-    gt_ids  = test_ids + dummy_db_shape[0]
+    with open('data/gt_dict.json', 'r') as fp:
+        gt = json.load(fp)
+
     print(f'n_test: \033[93m{n_test:n}\033[0m')
 
-    """ Segement/sequence-level search & evaluation """
-    # Define metric
-    top1_exact = np.zeros((n_test, len(test_seq_len))).astype(int) # (n_test, test_seg_len)
-    top1_near = np.zeros((n_test, len(test_seq_len))).astype(int)
-    top3_exact = np.zeros((n_test, len(test_seq_len))).astype(int)
-    top10_exact = np.zeros((n_test, len(test_seq_len))).astype(int)
-    # top1_song = np.zeros((n_test, len(test_seq_len))).astype(np.int)
+    """ Song-level search & evaluation """
+
+    # Define metrics
+    top1_exact = np.zeros((n_test, len(test_seq_len))).astype(np.int)
+    top3_exact = np.zeros((n_test, len(test_seq_len))).astype(np.int)
+    top10_exact = np.zeros((n_test, len(test_seq_len))).astype(np.int)
 
     start_time = time.time()
     for ti, test_id in enumerate(test_ids):
-        gt_id = gt_ids[ti]
+
+        # Limit test_seq_len to max_test_seq_len
+        max_len = max_test_seq_len[ti]
+        test_seq_len = test_seq_len[test_seq_len <= max_len]
+
         for si, sl in enumerate(test_seq_len):
+
+            hist = defaultdict(int)
             assert test_id <= len(query)
             q = query[test_id:(test_id + sl), :] # shape(q) = (length, dim)
-
+            q_id = query_lookup[test_id]    # query ID
+            
             # segment-level top k search for each segment
             _, I = index.search(
                 q, k_probe) # _: distance, I: result IDs matrix
 
-            # offset compensation to get the start IDs of candidate sequences
-            for offset in range(len(I)):
-                I[offset, :] -= offset
+            # # offset compensation to get the start IDs of candidate sequences
+            # for offset in range(len(I)):
+            #     I[offset, :] -= offset
 
             # unique candidates
             candidates = np.unique(I[np.where(I >= 0)])   # ignore id < 0
 
-            """ Sequence match score """
-            _scores = np.zeros(len(candidates))
+            """ Song-level match score """
             for ci, cid in enumerate(candidates):
-                _scores[ci] = np.mean(
-                    np.diag(
-                        # np.dot(q, index.reconstruct_n(cid, (cid + l)).T)
-                        np.dot(q, fake_recon_index[cid:cid + sl, :].T)
-                        )
-                    )
+                if cid < dummy_db_shape[0]:
+                    continue
+                match = ref_lookup[cid - dummy_db_shape[0]]
+                hist[match] += 1
+                # To-do: use cosine distance for better matching score
 
             """ Evaluate """
-            pred_ids = candidates[np.argsort(-_scores)[:10]]
-            # pred_id = candidates[np.argmax(_scores)] <-- only top1-hit
+            pred = sorted(hist, key=hist.get, reverse=True)
+            
+            if pred:
+                # Top-1 hit: 
+                top1_exact[ti, si] = int(q_id in gt[pred[0]])
+                # Top-3 hit:
+                if any(q_id in gt[p] for p in pred[:3]):
+                    top3_exact[ti, si] += 1
+                # Top-10 hit:
+                if any(q_id in gt[p] for p in pred[:10]):
+                    top10_exact[ti, si] += 1
 
-            # top1 hit
-            top1_exact[ti, si] = int(gt_id == pred_ids[0])
-            top1_near[ti, si] = int(
-                pred_ids[0] in [gt_id - 1, gt_id, gt_id + 1])
-            # top1_song = need song info here...
 
-            # top3, top10 hit
-            top3_exact[ti, si] = int(gt_id in pred_ids[:3])
-            top10_exact[ti, si] = int(gt_id in pred_ids[:10])
+    # Summary 
+    valid_mask = (test_seq_len <= max_test_seq_len[:, None])        # The mask preserves valid entries
+    top1_rate = 100. * np.mean(np.where(valid_mask, top1_exact, np.nan), axis=0)
+    top3_rate = 100. * np.mean(np.where(valid_mask, top3_exact, np.nan), axis=0)
+    top10_rate = 100. * np.mean(np.where(valid_mask, top10_exact, np.nan), axis=0)
 
-
-    # Summary
-    top1_exact_rate = 100. * np.mean(top1_exact, axis=0)
-    top1_near_rate = 100. * np.mean(top1_near, axis=0)
-    top3_exact_rate = 100. * np.mean(top3_exact, axis=0)
-    top10_exact_rate = 100. * np.mean(top10_exact, axis=0)
-    # top1_song = 100 * np.mean(top1_song[:ti + 1, :], axis=0)
-
-    hit_rates = np.stack([top1_exact_rate, top1_near_rate, top3_exact_rate, top10_exact_rate])
+    hit_rates = np.stack([top1_rate, top3_rate, top10_rate], axis=0)
     del fake_recon_index, query, db
 
     # print(hit_rates)
@@ -315,7 +346,7 @@ def eval_faiss(emb_dir,
 
     np.save(f'{emb_dir}/raw_score.npy',
             np.concatenate(
-                (top1_exact, top1_near, top3_exact, top10_exact), axis=1))
+                (top1_exact, top3_exact, top10_exact), axis=1))
     np.save(f'{emb_dir}/test_ids.npy', test_ids)
     print(f'Saved test_ids, hit-rates and raw score to {emb_dir}.')
 

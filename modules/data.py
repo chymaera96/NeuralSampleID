@@ -8,6 +8,7 @@ import numpy as np
 import librosa
 import torch.nn as nn
 import warnings
+import pandas as pd
 
 from util import load_index, get_frames, qtile_normalize, qtile_norm
 
@@ -110,9 +111,130 @@ class NeuralfpDataset(Dataset):
         
         #   For validation / test, output consecutive (overlapping) frames
         else:
-            fname = os.path.basename(datapath)
-            return fname, audio_resampled
-            # return audio_resampled
+            # Not implemented yet; raise error
+            raise NotImplementedError("Validation pipeline not implemented yet")
     
     def __len__(self):
         return len(self.filenames)
+    
+
+class Sample100Dataset(Dataset):
+    def __init__(self, cfg, path, annot_path, transform=None, mode=None):
+        self.path = path
+        self.annot_path = annot_path
+        self.norm = cfg['norm']
+        self.sample_rate = cfg['fs']
+        self.n_frames = cfg['n_frames']
+        self.silence = cfg['silence']
+        self.error_threshold = cfg['error_threshold']
+        self.transform = transform
+        self.mode = mode
+
+        if self.mode == "dummy":
+            self.filenames = load_index(cfg, path, mode="valid")
+        else:
+            self.filenames = {}
+
+        self.annotations = pd.read_csv(annot_path)
+        with open(f'{cfg["data_dir"]}/query_dict.json', 'r') as fp:
+            self.query_dict = json.load(fp)
+
+        self.error_counts = {}
+        self.ignore_idx = set()
+
+    def _get_safe_index(self, idx):
+        """Get next valid index, avoiding infinite recursion."""
+        next_idx = idx
+        max_attempts = len(self)
+        attempts = 0
+        
+        while next_idx in self.ignore_idx and attempts < max_attempts:
+            next_idx = (next_idx + 1) % len(self)
+            attempts += 1
+            
+        if attempts >= max_attempts:
+            raise RuntimeError("No valid indices available in dataset")
+        return next_idx
+
+    def __getitem__(self, idx):
+        
+        idx = self._get_safe_index(idx)
+        
+        if self.mode == "query":
+
+            rel = self.annotations.iloc[idx]
+            fname = rel['sample_track_id']
+            query_path = os.path.join(self.path, fname+'.wav')
+            try:
+                audio, sr = torchaudio.load(query_path)
+            except Exception as e:
+                self.error_counts[idx] = self.error_counts.get(idx, 0) + 1
+                if self.error_counts[idx] > self.error_threshold:
+                    self.ignore_idx.add(idx)
+                raise e
+
+            audio_mono = audio.mean(dim=0)
+            resampler = torchaudio.transforms.Resample(sr, self.sample_rate)
+            audio_resampled = resampler(audio_mono)    
+
+            segment = np.array(self.query_dict[rel['sample_id']]) * self.sample_rate
+            x = audio_resampled[int(segment[0]): int(segment[1])]
+    
+
+        elif self.mode == "ref":
+
+            rel = self.annotations.iloc[idx]
+            fname = rel['original_track_id']
+            ref_path = os.path.join(self.path, fname+'.wav')
+            try:
+                audio, sr = torchaudio.load(ref_path)
+            except Exception as e:
+                self.error_counts[idx] = self.error_counts.get(idx, 0) + 1
+                if self.error_counts[idx] > self.error_threshold:
+                    self.ignore_idx.add(idx)
+                raise e
+
+
+            audio_mono = audio.mean(dim=0)
+            resampler = torchaudio.transforms.Resample(sr, self.sample_rate)
+            audio_resampled = resampler(audio_mono)   
+            x = audio_resampled
+
+        elif self.mode == "dummy":
+
+            datapath = self.filenames[str(idx)]
+            fname = datapath.split('/')[-1].split('.')[0]
+            if not datapath.split('/')[-1].startswith('N'):
+                warnings.warn(f"filename not a dummy file: {datapath.split('/')[-1]}")
+                return self[idx + 1]
+            try:
+                audio, sr = torchaudio.load(datapath)
+            except Exception as e:
+                self.error_counts[idx] = self.error_counts.get(idx, 0) + 1
+                if self.error_counts[idx] > self.error_threshold:
+                    self.ignore_idx.add(idx)
+                raise e
+            
+            audio_mono = audio.mean(dim=0)
+            resampler = torchaudio.transforms.Resample(sr, self.sample_rate)
+            audio_resampled = resampler(audio_mono)   
+            x = audio_resampled
+        
+        else:
+            raise ValueError("Invalid Evaluation mode")
+
+        if self.norm is not None:
+            norm_val = qtile_norm(audio_resampled, q=self.norm)
+            x = x / norm_val
+
+        if self.transform is not None:
+            x, _ = self.transform(x, None)
+
+        return fname, x
+
+    def __len__(self):
+        if self.mode == "dummy":
+            return len(self.filenames)
+
+        else:
+            return len(self.annotations)

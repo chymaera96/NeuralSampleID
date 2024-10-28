@@ -8,6 +8,7 @@ import faiss
 import json
 import shutil
 from torch.utils.data.sampler import SubsetRandomSampler
+from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 from torch.nn.parallel import DataParallel
 import torchaudio
@@ -19,7 +20,7 @@ from util import \
 create_fp_dir, load_config, \
 query_len_from_seconds, seconds_from_query_len, \
 load_augmentation_index
-from modules.data import NeuralfpDataset
+from modules.data import NeuralfpDataset, Sample100Dataset
 from encoder.graph_encoder import GraphEncoder
 from simclr.simclr import SimCLR   
 from modules.transformations import GPUTransformNeuralfp
@@ -115,17 +116,19 @@ def create_query_db(dataloader, augment, model, output_root_dir, fname='query_db
     # Save lookup table
     np.save(f'{output_root_dir}/{fname}_lookup.npy', lookup_table)
 
-def create_ref_db(dataloader, augment, model, output_root_dir, fname='ref_db', verbose=True):
+def create_ref_db(dataloader, augment, model, output_root_dir, fname='ref_db', verbose=True, max_size=128):
     fp = []
     lookup_table = []  # Initialize lookup table
     print("=> Creating reference fingerprints...")
     for idx, (nm,audio) in enumerate(dataloader):
         audio = audio.to(device)
         x_i, _ = augment(audio, None)
-        with torch.no_grad():
-            _, _, z_i, _= model(x_i.to(device),x_i.to(device))  
+        x_list = torch.split(x_i, max_size, dim=0)
+        for x in x_list:
+            with torch.no_grad():
+                _, _, z_i, _= model(x.to(device),x.to(device))  
 
-        fp.append(z_i.detach().cpu().numpy())
+            fp.append(z_i.detach().cpu().numpy())
 
         # Append song number to lookup table for each segment in the batch
         lookup_table.extend([nm] * x_i.shape[0])
@@ -149,18 +152,18 @@ def create_ref_db(dataloader, augment, model, output_root_dir, fname='ref_db', v
     np.save(f'{output_root_dir}/{fname}_lookup.npy', lookup_table)
 
 
-def create_dummy_db(dataloader, augment, model, output_root_dir, fname='dummy_db', verbose=True):
+def create_dummy_db(dataloader, augment, model, output_root_dir, fname='dummy_db', verbose=True, max_size=128):
     fp = []
     print("=> Creating dummy fingerprints...")
     for idx, (nm,audio) in enumerate(dataloader):
         audio = audio.to(device)
         x_i, _ = augment(audio, None)
-        # x_i = torch.unsqueeze(db[0],1)
-        with torch.no_grad():
-            _, _, z_i, _= model(x_i.to(device),x_i.to(device))  
+        x_list = torch.split(x_i, max_size, dim=0)
+        for x in x_list:
+            with torch.no_grad():
+                _, _, z_i, _= model(x.to(device),x.to(device))  
 
-        # print(f'Shape of z_i {z_i.shape} inside the create_dummy_db function')
-        fp.append(z_i.detach().cpu().numpy())
+            fp.append(z_i.detach().cpu().numpy())
         
         if verbose and idx % 100 == 0:
             print(f"Step [{idx}/{len(dataloader)}]\t shape: {z_i.shape}")
@@ -188,6 +191,7 @@ def main():
     test_cfg = load_config(args.test_config)
     ir_dir = cfg['ir_dir']
     noise_dir = cfg['noise_dir']
+    annot_path = cfg['annot_path']
     # args.recompute = False
     # assert args.recompute is False
     assert args.small_test is False
@@ -195,10 +199,6 @@ def main():
     random_seed = 42
     shuffle_dataset =True
 
-    ################## kNN experimental setup ##################
-    if list(test_cfg.keys())[0] == 'tck':
-        test_cfg = { f'tck{args.k}' : ['best']}
-    ###########################################################
 
     print("Creating new model...")
     if args.encoder == 'resnet':
@@ -226,40 +226,22 @@ def main():
                                         noise_dir=noise_test_idx, 
                                         train=False).to(device)
 
-    dataset = NeuralfpDataset(cfg, path=args.test_dir, train=False)
+    dummy_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="dummy")
+    query_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="query")
+    ref_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="ref")
 
-    dummy_indices = np.load(f'{args.data_dir}/dummy_indices.npy')
-    query_indices = np.load(f'{args.data_dir}/query_indices.npy')
-    ref_indices = np.load(f'{args.data_dir}/ref_indices.npy')
+    # Create DataLoader instances for each dataset
+    dummy_db_loader = DataLoader(dummy_dataset, batch_size=1, 
+                                shuffle=False, num_workers=4, 
+                                pin_memory=True, drop_last=False)
 
-    print(f"Dummy indices: {len(dummy_indices)} files")
-    print(f"Query indices: {len(query_indices)} files")
-    print(f"Reference indices: {len(ref_indices)} files")
+    query_db_loader = DataLoader(query_dataset, batch_size=1, 
+                                shuffle=False, num_workers=4, 
+                                pin_memory=True, drop_last=False)
 
-    dummy_db_sampler = SubsetRandomSampler(dummy_indices)
-    query_db_sampler = SubsetRandomSampler(query_indices)
-    ref_db_sampler = SubsetRandomSampler(ref_indices)
-
-    dummy_db_loader = torch.utils.data.DataLoader(dataset, batch_size=1, 
-                                            shuffle=False,
-                                            num_workers=4, 
-                                            pin_memory=True, 
-                                            drop_last=False,
-                                            sampler=dummy_db_sampler)
-    
-    query_db_loader = torch.utils.data.DataLoader(dataset, batch_size=1, 
-                                            shuffle=False,
-                                            num_workers=4, 
-                                            pin_memory=True, 
-                                            drop_last=False,
-                                            sampler=query_db_sampler)
-    
-    ref_db_loader = torch.utils.data.DataLoader(dataset, batch_size=1, 
-                                            shuffle=False,
-                                            num_workers=4, 
-                                            pin_memory=True, 
-                                            drop_last=False,
-                                            sampler=ref_db_sampler)
+    ref_db_loader = DataLoader(ref_dataset, batch_size=1, 
+                            shuffle=False, num_workers=4, 
+                            pin_memory=True, drop_last=False)
 
 
     if args.small_test:
@@ -299,8 +281,11 @@ def main():
             else:
                 print("=> Skipping dummy db creation...")
 
-            create_fp_db(query_db_loader, augment=test_augment, 
-                         model=model, output_root_dir=fp_dir, verbose=False)
+            create_ref_db(ref_db_loader, augment=test_augment,
+                            model=model, output_root_dir=fp_dir, verbose=True)
+            
+            create_query_db(query_db_loader, augment=test_augment,
+                            model=model, output_root_dir=fp_dir, verbose=True)
             
             
             text = f'{args.text}_{str(epoch)}'
@@ -309,7 +294,6 @@ def main():
 
             if args.query_lens is not None:
                 hit_rates = eval_faiss(emb_dir=fp_dir,
-                                    test_ids=args.test_ids, 
                                     test_seq_len=test_seq_len, 
                                     index_type=index_type,
                                     nogpu=True) 
@@ -322,7 +306,6 @@ def main():
   
             else:
                 hit_rates = eval_faiss(emb_dir=fp_dir, 
-                                    test_ids=args.test_ids, 
                                     index_type=index_type,
                                     nogpu=True)
                 
