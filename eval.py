@@ -309,12 +309,16 @@ def eval_faiss(emb_dir,
 
             # unique candidates
             candidates = np.unique(I[np.where(I >= 0)])   # ignore id < 0
+            
 
             """ Song-level match score """
             for ci, cid in enumerate(candidates):
                 if cid < dummy_db_shape[0]:
                     continue
                 match = ref_lookup[cid - dummy_db_shape[0]]
+                # Ignore candidates which is the same as query file
+                if match == q_id:
+                    continue
                 hist[match] += 1
                 # To-do: use cosine distance for better matching score
 
