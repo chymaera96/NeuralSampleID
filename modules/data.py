@@ -230,6 +230,8 @@ class Sample100Dataset(Dataset):
         if self.transform is not None:
             x, _ = self.transform(x, None)
 
+        assert x is not None, f"Error loading (data.py) {fname}"
+
         return fname, x
 
     def __len__(self):
