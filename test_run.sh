@@ -12,4 +12,6 @@
 
 module load python/3.10.7
 source ../grafp_venv/bin/activate
-python test_fp.py --query_lens=1,2,3,5 --n_query_db=500 --test_snr=10 --text=1000_fma_medium_10
+python test_fp.py --query_lens=1,2,3,5 \
+                  --text=sample100_ivfpq \
+                  --test_dir=../dataset/sample_100/audio

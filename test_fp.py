@@ -47,10 +47,10 @@ parser.add_argument('--fp_dir', default='fingerprints', type=str)
 parser.add_argument('--query_lens', default=None, type=str)
 parser.add_argument('--encoder', default='grafp', type=str)
 parser.add_argument('--n_dummy_db', default=None, type=int)
-parser.add_argument('--n_query_db', default=350, type=int)
+# parser.add_argument('--n_query_db', default=350, type=int)
 parser.add_argument('--small_test', action='store_true', default=False)
 parser.add_argument('--text', default='test', type=str)
-parser.add_argument('--test_snr', default=None, type=int)
+# parser.add_argument('--test_snr', default=None, type=int)
 parser.add_argument('--recompute', action='store_true', default=False)
 parser.add_argument('--k', default=3, type=int)
 parser.add_argument('--test_ids', default='1000', type=str)
@@ -186,8 +186,6 @@ def main():
 
     args = parser.parse_args()
     cfg = load_config(args.config)
-    if args.test_snr is not None:
-        cfg['val_snr'] = [int(args.test_snr), int(args.test_snr)]
     test_cfg = load_config(args.test_config)
     ir_dir = cfg['ir_dir']
     noise_dir = cfg['noise_dir']
@@ -226,9 +224,10 @@ def main():
                                         noise_dir=noise_test_idx, 
                                         train=False).to(device)
 
-    dummy_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="dummy")
     query_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="query")
     ref_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="ref")
+    dummy_path = 'data/sample_100.json'     # Required for dummy db
+    dummy_dataset = Sample100Dataset(cfg, path=dummy_path, annot_path=annot_path, mode="dummy")
 
     # Create DataLoader instances for each dataset
     dummy_db_loader = DataLoader(dummy_dataset, batch_size=1, 

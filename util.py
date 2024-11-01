@@ -272,11 +272,14 @@ def main():
 
     # Create index file for sample_100 dataset
     data_dir = '../datasets/sample_100/audio'
-    index = {}
+    index = {'db': [], 'dummy': []}
     for fname in os.listdir(data_dir):
         fpath = os.path.join(data_dir, fname)
-        if fpath.endswith('.wav') and fname.startswith('N'):
-            index[fname] = fpath
+        if fpath.endswith('.wav'):
+            if 'db' in fname:
+                index['db'].append(fpath)
+            else:
+                index['dummy'].append(fpath)
         
     with open('data/sample_100.json', 'w') as fp:
         json.dump(index, fp)
