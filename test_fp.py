@@ -157,9 +157,9 @@ def create_dummy_db(dataloader, augment, model, output_root_dir, fname='dummy_db
     for idx, (nm,audio) in enumerate(dataloader):
         audio = audio.to(device)
         x_i, _ = augment(audio, None)
-        print(f"Shape of x_i (dummy): {x_i.shape}")
+        # print(f"Shape of x_i (dummy): {x_i.shape}")
         x_list = torch.split(x_i, max_size, dim=0)
-        print(f"Number of splits: {len(x_list)}")
+        # print(f"Number of splits: {len(x_list)}")
         for x in x_list:
             with torch.no_grad():
                 _, _, z_i, _= model(x.to(device),x.to(device))  
