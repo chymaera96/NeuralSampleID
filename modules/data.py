@@ -202,7 +202,7 @@ class Sample100Dataset(Dataset):
 
         elif self.mode == "dummy":
 
-            datapath = self.filenames[str(idx)]
+            datapath = self.filenames['dummy'][idx]
             fname = datapath.split('/')[-1].split('.')[0]
             if not datapath.split('/')[-1].startswith('N'):
                 warnings.warn(f"filename not a dummy file: {datapath.split('/')[-1]}")

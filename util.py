@@ -257,18 +257,29 @@ def extract_losses(filename):
 
 
 def main():
-    simclr_losses, mixco_losses = extract_losses('hpc_out/nsid_tc_1.o3925245')
+    # simclr_losses, mixco_losses = extract_losses('hpc_out/nsid_tc_1.o3925245')
 
-    plt.figure()
-    plt.plot(simclr_losses, label='SimCLR Loss')
-    plt.plot(mixco_losses, label='MixCo Loss')
-    plt.legend()
+    # plt.figure()
+    # plt.plot(simclr_losses, label='SimCLR Loss')
+    # plt.plot(mixco_losses, label='MixCo Loss')
+    # plt.legend()
 
-    plt.title('Losses per step')
-    plt.xlabel('Step')
-    plt.ylabel('Loss')
+    # plt.title('Losses per step')
+    # plt.xlabel('Step')
+    # plt.ylabel('Loss')
 
-    plt.savefig('losses.jpg')
+    # plt.savefig('losses.jpg')
+
+    # Create index file for sample_100 dataset
+    data_dir = '../datasets/sample_100/audio'
+    index = {}
+    for fname in os.listdir(data_dir):
+        fpath = os.path.join(data_dir, fname)
+        if fpath.endswith('.wav') and fname.startswith('N'):
+            index[fname] = fpath
+        
+    with open('data/sample_100.json', 'w') as fp:
+        json.dump(index, fp)
 
 if __name__ == '__main__':
     main()
