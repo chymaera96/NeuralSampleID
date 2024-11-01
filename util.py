@@ -275,7 +275,7 @@ def main():
     index = {'db': [], 'dummy': []}
     for fname in os.listdir(data_dir):
         fpath = os.path.join(data_dir, fname)
-        if fpath.endswith('.wav'):
+        if fpath.endswith('.mp3'):
             if 'db' in fname:
                 index['db'].append(fpath)
             else:
