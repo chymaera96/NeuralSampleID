@@ -234,7 +234,7 @@ class Sample100Dataset(Dataset):
 
     def __len__(self):
         if self.mode == "dummy":
-            return len(self.filenames)
+            return len(self.filenames['dummy'])
 
         else:
             return len(self.annotations)
