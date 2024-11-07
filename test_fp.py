@@ -123,17 +123,19 @@ def create_ref_db(dataloader, augment, model, output_root_dir, fname='ref_db', v
         audio = audio.to(device)
         x_i, _ = augment(audio, None)
         x_list = torch.split(x_i, max_size, dim=0)
+        fp_size = 0
         for x in x_list:
             with torch.no_grad():
                 _, _, z_i, _= model(x.to(device),x.to(device))  
 
             fp.append(z_i.detach().cpu().numpy())
+            fp_size += z_i.shape[0]
 
         # Append song number to lookup table for each segment in the batch
         lookup_table.extend([nm] * x_i.shape[0])
 
-        if verbose and idx % 100 == 0:
-            print(f"Step [{idx}/{len(dataloader)}]\t shape: {z_i.shape}")
+        if verbose and idx % 10 == 0:
+            print(f"Step [{idx}/{len(dataloader)}]\t shape: {fp_size}")
 
     fp = np.concatenate(fp)
     arr_shape = (len(fp), z_i.shape[-1])
@@ -160,14 +162,16 @@ def create_dummy_db(dataloader, augment, model, output_root_dir, fname='dummy_db
         # print(f"Shape of x_i (dummy): {x_i.shape}")
         x_list = torch.split(x_i, max_size, dim=0)
         # print(f"Number of splits: {len(x_list)}")
+        fp_size = 0
         for x in x_list:
             with torch.no_grad():
                 _, _, z_i, _= model(x.to(device),x.to(device))  
 
             fp.append(z_i.detach().cpu().numpy())
+            fp_size += z_i.shape[0]
         
         if verbose and idx % 10 == 0:
-            print(f"Step [{idx}/{len(dataloader)}]\t shape: {z_i.shape}")
+            print(f"Step [{idx}/{len(dataloader)}]\t shape: {fp_size}")
         # fp = torch.cat(fp)
     
     fp = np.concatenate(fp)
