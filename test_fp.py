@@ -115,7 +115,7 @@ def create_query_db(dataloader, augment, model, output_root_dir, fname='query_db
     # Save lookup table
     np.save(f'{output_root_dir}/{fname}_lookup.npy', lookup_table)
 
-def create_ref_db(dataloader, augment, model, output_root_dir, fname='ref_db', verbose=True, max_size=128):
+def create_ref_db(dataloader, augment, model, output_root_dir, fname='ref_db', verbose=True, max_size=32):
     fp = []
     lookup_table = []  # Initialize lookup table
     print("=> Creating reference fingerprints...")
@@ -151,7 +151,7 @@ def create_ref_db(dataloader, augment, model, output_root_dir, fname='ref_db', v
     np.save(f'{output_root_dir}/{fname}_lookup.npy', lookup_table)
 
 
-def create_dummy_db(dataloader, augment, model, output_root_dir, fname='dummy_db', verbose=True, max_size=128):
+def create_dummy_db(dataloader, augment, model, output_root_dir, fname='dummy_db', verbose=True, max_size=32):
     fp = []
     print("=> Creating dummy fingerprints...")
     for idx, (nm,audio) in enumerate(dataloader):
