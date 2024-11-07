@@ -186,6 +186,7 @@ class Sample100Dataset(Dataset):
             rel = self.annotations.iloc[idx]
             fname = rel['original_track_id']
             ref_path = os.path.join(self.path, fname+'.mp3')
+            assert os.path.exists(ref_path), f"File not found: {ref_path}"
             try:
                 audio, sr = torchaudio.load(ref_path)
             except Exception as e:
