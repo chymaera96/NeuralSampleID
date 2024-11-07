@@ -276,7 +276,7 @@ def main():
     for fname in os.listdir(data_dir):
         fpath = os.path.join(data_dir, fname)
         if fpath.endswith('.mp3'):
-            if 'db' in fname:
+            if fname.startswith('T'):
                 index['db'].append(fpath)
             else:
                 index['dummy'].append(fpath)
