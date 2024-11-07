@@ -177,7 +177,7 @@ class Sample100Dataset(Dataset):
             resampler = torchaudio.transforms.Resample(sr, self.sample_rate)
             audio_resampled = resampler(audio_mono)    
 
-            segment = np.array(self.query_dict[rel['sample_id']]) * self.sample_rate
+            segment = np.array(self.query_dict[rel['sample_id']][0]) * self.sample_rate
             x = audio_resampled[int(segment[0]): int(segment[1])]
     
 
