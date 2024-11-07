@@ -166,7 +166,7 @@ def create_dummy_db(dataloader, augment, model, output_root_dir, fname='dummy_db
 
             fp.append(z_i.detach().cpu().numpy())
         
-        if verbose and idx % 100 == 0:
+        if verbose and idx % 10 == 0:
             print(f"Step [{idx}/{len(dataloader)}]\t shape: {z_i.shape}")
         # fp = torch.cat(fp)
     
@@ -277,7 +277,7 @@ def main():
             if args.recompute or os.path.isfile(f'{fp_dir}/db.mm') is False:
                 print("=> Computing dummy fingerprints...")
                 create_dummy_db(dummy_db_loader, augment=test_augment,
-                                model=model, output_root_dir=fp_dir, verbose=False)
+                                model=model, output_root_dir=fp_dir, verbose=True)
             else:
                 print("=> Skipping dummy db creation...")
 
