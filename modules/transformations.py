@@ -92,7 +92,7 @@ class GPUTransformNeuralfp(nn.Module):
             try:
                 X_i = X_i.unfold(0, size=self.n_frames, step=int(self.n_frames*(1-self.overlap)))
             except RuntimeError:
-                print("Error in unfolding. x_i shape: ", x_i.shape)
+                print("Error in unfolding. x_i shape: ", X_i.shape)
             X_j = None
 
 
