@@ -269,8 +269,8 @@ def eval_faiss(emb_dir,
     # Get test_ids
     print(f'test_id: \033[93m{test_ids}\033[0m,  ', end='')
 
-    query_lookup = np.load(f'{emb_dir}/query_lookup.npy')
-    ref_lookup = np.load(f'{emb_dir}/ref_lookup.npy')
+    query_lookup = np.load(f'{emb_dir}/query_db_lookup.npy')
+    ref_lookup = np.load(f'{emb_dir}/ref_db_lookup.npy')
     test_ids, max_test_seq_len = extract_test_ids(query_lookup)
     n_test = len(test_ids)
     with open('data/gt_dict.json', 'r') as fp:
