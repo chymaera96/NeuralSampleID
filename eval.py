@@ -281,9 +281,9 @@ def eval_faiss(emb_dir,
     """ Song-level search & evaluation """
 
     # Define metrics
-    top1_exact = np.zeros((n_test, len(test_seq_len))).astype(np.int)
-    top3_exact = np.zeros((n_test, len(test_seq_len))).astype(np.int)
-    top10_exact = np.zeros((n_test, len(test_seq_len))).astype(np.int)
+    top1_exact = np.zeros((n_test, len(test_seq_len))).astype(np.int_)
+    top3_exact = np.zeros((n_test, len(test_seq_len))).astype(np.int_)
+    top10_exact = np.zeros((n_test, len(test_seq_len))).astype(np.int_)
 
     start_time = time.time()
     for ti, test_id in enumerate(test_ids):
