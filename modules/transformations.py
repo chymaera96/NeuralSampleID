@@ -89,7 +89,10 @@ class GPUTransformNeuralfp(nn.Module):
         else:
             # Test-time use case: x_i is waveform and x_j is None
             X_i = self.logmelspec(x_i.squeeze(0)).transpose(1,0)
-            X_i = X_i.unfold(0, size=self.n_frames, step=int(self.n_frames*(1-self.overlap)))
+            try:
+                X_i = X_i.unfold(0, size=self.n_frames, step=int(self.n_frames*(1-self.overlap)))
+            except RuntimeError:
+                print("Error in unfolding. x_i shape: ", x_i.shape)
             X_j = None
 
 
