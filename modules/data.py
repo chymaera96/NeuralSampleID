@@ -227,6 +227,9 @@ class Sample100Dataset(Dataset):
         if self.norm is not None:
             norm_val = qtile_norm(audio_resampled, q=self.norm)
             x = x / norm_val
+        
+        if x.shape[-1] < self.sample_rate:
+            x = F.pad(x, (0, self.sample_rate - x.shape[-1]))
 
         if self.transform is not None:
             x, _ = self.transform(x, None)
