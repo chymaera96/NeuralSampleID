@@ -241,7 +241,6 @@ class Sample100Dataset(Dataset):
 
         assert x is not None, f"Error loading (data.py) {fname}"
 
-        assert type(fname) == str, f"Error loading (data.py) {fname}"
         return fname, x
 
     def __len__(self):

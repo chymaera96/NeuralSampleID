@@ -87,7 +87,7 @@ def create_query_db(dataloader, augment, model, output_root_dir, fname='query_db
     lookup_table = []  # Initialize lookup table
     print("=> Creating query fingerprints...")
     for idx, (nm,audio) in enumerate(dataloader):
-        assert type(nm) == str, f"nm type: {type(nm)}"
+        nm = nm[0] # Extract filename from list
         audio = audio.to(device)
         x_i, _ = augment(audio, None)
         with torch.no_grad():
@@ -121,6 +121,7 @@ def create_ref_db(dataloader, augment, model, output_root_dir, fname='ref_db', v
     lookup_table = []  # Initialize lookup table
     print("=> Creating reference fingerprints...")
     for idx, (nm,audio) in enumerate(dataloader):
+        nm = nm[0] # Extract filename from list
         audio = audio.to(device)
         x_i, _ = augment(audio, None)
         x_list = torch.split(x_i, max_size, dim=0)
@@ -286,8 +287,8 @@ def main():
             else:
                 print("=> Skipping dummy db creation...")
 
-            # create_ref_db(ref_db_loader, augment=test_augment,
-            #                 model=model, output_root_dir=fp_dir, verbose=True)
+            create_ref_db(ref_db_loader, augment=test_augment,
+                            model=model, output_root_dir=fp_dir, verbose=True)
             
             create_query_db(query_db_loader, augment=test_augment,
                             model=model, output_root_dir=fp_dir, verbose=True)
