@@ -304,6 +304,7 @@ def main():
                                     index_type=index_type,
                                     nogpu=True) 
 
+                print(f"hit rate shape: {hit_rates.shape}")
                 writer.add_text("table", 
                                 create_table(hit_rates, 
                                             cfg['overlap'], cfg['dur'],
