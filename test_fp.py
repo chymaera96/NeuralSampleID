@@ -114,7 +114,7 @@ def create_query_db(dataloader, augment, model, output_root_dir, fname='query_db
     np.save(f'{output_root_dir}/{fname}_shape.npy', arr_shape)
 
     # Save lookup table
-    np.save(f'{output_root_dir}/{fname}_lookup.npy', lookup_table)
+    json.dump(lookup_table, open(f'{output_root_dir}/{fname}_lookup.json', 'w'))
 
 def create_ref_db(dataloader, augment, model, output_root_dir, fname='ref_db', verbose=True, max_size=32):
     fp = []
@@ -152,7 +152,7 @@ def create_ref_db(dataloader, augment, model, output_root_dir, fname='ref_db', v
     np.save(f'{output_root_dir}/{fname}_shape.npy', arr_shape)
 
     # Save lookup table
-    np.save(f'{output_root_dir}/{fname}_lookup.npy', lookup_table)
+    json.dump(lookup_table, open(f'{output_root_dir}/{fname}_lookup.json', 'w'))
 
 
 def create_dummy_db(dataloader, augment, model, output_root_dir, fname='dummy_db', verbose=True, max_size=32):
