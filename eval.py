@@ -290,9 +290,9 @@ def eval_faiss(emb_dir,
 
         # Limit test_seq_len to max_test_seq_len
         max_len = int(max_test_seq_len[ti])
-        assert type(max_len) == int, f'{max_len} is not int. See {max_test_seq_len}'
+        # assert type(max_len) == int, f'{max_len} is not int. See {max_test_seq_len}'
 
-        assert type(test_seq_len) == np.ndarray, f'{type(max_test_seq_len)} is not np.ndarray'
+        assert type(test_seq_len) == np.ndarray, f'{type(test_seq_len)} is not np.ndarray'
         test_seq_len = test_seq_len[test_seq_len <= max_len]
 
         for si, sl in enumerate(test_seq_len):
