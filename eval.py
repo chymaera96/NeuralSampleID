@@ -210,6 +210,7 @@ def eval_faiss(emb_dir,
     if type(test_seq_len) == str:
         test_seq_len = np.asarray(
             list(map(int, test_seq_len.split())))  # '1 3 5' --> [1, 3, 5]
+        print("test_seq_len is a string. Converting to numpy array.")
     assert type(test_seq_len) == np.ndarray, f'{type(test_seq_len)} is not np.ndarray'
     # Load items from {query, db, dummy_db}
     query, query_shape = load_memmap_data(emb_dir, 'query_db')
