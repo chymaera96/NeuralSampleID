@@ -349,7 +349,8 @@ def eval_faiss(emb_dir,
     top10_rate = 100. * np.mean(np.where(valid_mask, top10_exact, np.nan), axis=0)
 
     hit_rates = np.stack([top1_rate, top3_rate, top10_rate], axis=0)
-    del fake_recon_index, query, db
+    # del fake_recon_index, query, db
+    del query, db
 
     # print(hit_rates)
     np.save(f'{emb_dir}/hit_rates.npy', hit_rates)
