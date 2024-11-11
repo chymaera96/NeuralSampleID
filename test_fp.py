@@ -302,7 +302,7 @@ def main():
                                     index_type=index_type,
                                     nogpu=True) 
 
-                print(f"hit rate shape: {hit_rates.shape}")
+
                 writer.add_text("table", 
                                 create_table(hit_rates, 
                                             cfg['overlap'], cfg['dur'],
@@ -323,7 +323,8 @@ def main():
             print("-------Test hit-rates-------")
             # Create table
             print(f'Top-1 exact hit rate = {hit_rates[0]}')
-            print(f'Top-1 near hit rate = {hit_rates[1]}')
+            print(f'Top-3 exact hit rate = {hit_rates[1]}')
+            print(f'Top-10 exact hit rate = {hit_rates[2]}')
 
 
 
