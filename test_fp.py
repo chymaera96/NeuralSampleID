@@ -87,6 +87,7 @@ def create_query_db(dataloader, augment, model, output_root_dir, fname='query_db
     lookup_table = []  # Initialize lookup table
     print("=> Creating query fingerprints...")
     for idx, (nm,audio) in enumerate(dataloader):
+        assert type(nm) == str
         audio = audio.to(device)
         x_i, _ = augment(audio, None)
         with torch.no_grad():
@@ -97,7 +98,7 @@ def create_query_db(dataloader, augment, model, output_root_dir, fname='query_db
         # Append song number to lookup table for each segment in the batch
         lookup_table.extend([nm] * x_i.shape[0])
 
-        if verbose and idx % 100 == 0:
+        if verbose and idx % 10 == 0:
             print(f"Step [{idx}/{len(dataloader)}]\t shape: {z_i.shape}")
 
     fp = np.concatenate(fp)
@@ -288,8 +289,8 @@ def main():
             # create_ref_db(ref_db_loader, augment=test_augment,
             #                 model=model, output_root_dir=fp_dir, verbose=True)
             
-            # create_query_db(query_db_loader, augment=test_augment,
-            #                 model=model, output_root_dir=fp_dir, verbose=True)
+            create_query_db(query_db_loader, augment=test_augment,
+                            model=model, output_root_dir=fp_dir, verbose=True)
             
             
             text = f'{args.text}_{str(epoch)}'
