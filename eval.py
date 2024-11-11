@@ -324,7 +324,7 @@ def eval_faiss(emb_dir,
                 # Ignore candidates which is the same as query file
                 if match == q_id:
                     continue
-                assert type(match) == str, f'{match} is not str. See {ref_lookup}'
+                assert type(match) == str, f'{type(match)} is not str. See {ref_lookup}'
                 hist[match] += 1
                 # To-do: use cosine distance for better matching score
 
