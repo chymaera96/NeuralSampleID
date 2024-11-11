@@ -87,7 +87,7 @@ def create_query_db(dataloader, augment, model, output_root_dir, fname='query_db
     lookup_table = []  # Initialize lookup table
     print("=> Creating query fingerprints...")
     for idx, (nm,audio) in enumerate(dataloader):
-        assert type(nm) == str
+        assert type(nm) == str, f"nm type: {type(nm)}"
         audio = audio.to(device)
         x_i, _ = augment(audio, None)
         with torch.no_grad():
