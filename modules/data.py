@@ -182,7 +182,7 @@ class Sample100Dataset(Dataset):
                 self.ignore_idx.add(idx)
                 next_idx = self._get_safe_index(idx)
                 return self[next_idx]
-                
+
             x = audio_resampled[int(segment[0]): int(segment[1])]
     
 
@@ -241,6 +241,7 @@ class Sample100Dataset(Dataset):
 
         assert x is not None, f"Error loading (data.py) {fname}"
 
+        assert type(fname) == str, f"Error loading (data.py) {fname}"
         return fname, x
 
     def __len__(self):
