@@ -64,7 +64,6 @@ def create_table(hit_rates, overlap, dur, test_seq_len=[1,3,5,9,11,19], text="te
     <th colspan="5"{text}</th>
     <th>Query Length</th>
     <th>Top-1 Exact</th>
-    <th>Top-1 Near</th>
     <th>Top-3 Exact</th>
     <th>Top-10 Exact</th>
     </tr>
@@ -76,7 +75,6 @@ def create_table(hit_rates, overlap, dur, test_seq_len=[1,3,5,9,11,19], text="te
         <td>{hit_rates[0][idx]}</td>
         <td>{hit_rates[1][idx]}</td>
         <td>{hit_rates[2][idx]}</td>
-        <td>{hit_rates[3][idx]}</td>
         </tr>
         '''
     table += '</table>'
