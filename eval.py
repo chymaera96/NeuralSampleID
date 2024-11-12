@@ -335,7 +335,7 @@ def eval_faiss(emb_dir,
                 # To-do: use cosine distance for better matching score
 
             """ Evaluate """
-            print(f"histogram for {q_id}; sl = {sl}: {dict(hist)}")
+            # print(f"histogram for {q_id}; sl = {sl}: {dict(hist)}")
             pred = sorted(hist, key=hist.get, reverse=True)
             
             if pred:
