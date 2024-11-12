@@ -303,12 +303,6 @@ def eval_faiss(emb_dir,
             assert test_id <= len(query)
             q = query[test_id:(test_id + sl), :] # shape(q) = (length, dim)
             q_id = query_lookup[test_id]    # query ID
-            
-            # # Sanity check
-            # if q_id == 'T149':
-            #     print(f"VOILA! {q_id} with sl = {sl}")
-            #     print(test_seq_len)
-            #     print(max_len)
 
             # segment-level top k search for each segment
             _, I = index.search(
@@ -330,8 +324,8 @@ def eval_faiss(emb_dir,
                 match = ref_lookup[cid - dummy_db_shape[0]]
                 # Ignore candidates which is the same as query file
                 if match == q_id:
-                    # continue
-                    print(f'Query ID: {q_id}, Match ID: {match}. Identical!')
+                    continue
+                    # print(f'Query ID: {q_id}, Match ID: {match}. Identical!')
                 assert type(match) == str, f'{type(match)} is not str. See {ref_lookup}'
                 hist[match] += 1
                 # To-do: use cosine distance for better matching score
