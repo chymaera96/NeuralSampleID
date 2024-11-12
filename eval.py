@@ -305,8 +305,10 @@ def eval_faiss(emb_dir,
             q_id = query_lookup[test_id]    # query ID
             
             # Sanity check
-            if q_id == 'T149' and sl == 5:
+            if q_id == 'T149':
                 print(f"VOILA! {q_id} with sl = {sl}")
+                print(test_seq_len)
+                print(max_len)
 
             # segment-level top k search for each segment
             _, I = index.search(
