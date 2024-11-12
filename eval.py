@@ -353,7 +353,7 @@ def eval_faiss(emb_dir,
 
     # Summary 
     valid_mask = (test_seq_len <= max_test_seq_len[:, None])        # The mask preserves valid entries
-    print("Valid mask: ", valid_mask)
+    # print("Valid mask: ", valid_mask)
     top1_rate = 100. * np.nanmean(np.where(valid_mask, top1_exact, np.nan), axis=0)
     top3_rate = 100. * np.nanmean(np.where(valid_mask, top3_exact, np.nan), axis=0)
     top10_rate = 100. * np.nanmean(np.where(valid_mask, top10_exact, np.nan), axis=0)
