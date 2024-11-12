@@ -304,11 +304,11 @@ def eval_faiss(emb_dir,
             q = query[test_id:(test_id + sl), :] # shape(q) = (length, dim)
             q_id = query_lookup[test_id]    # query ID
             
-            # Sanity check
-            if q_id == 'T149':
-                print(f"VOILA! {q_id} with sl = {sl}")
-                print(test_seq_len)
-                print(max_len)
+            # # Sanity check
+            # if q_id == 'T149':
+            #     print(f"VOILA! {q_id} with sl = {sl}")
+            #     print(test_seq_len)
+            #     print(max_len)
 
             # segment-level top k search for each segment
             _, I = index.search(
@@ -353,6 +353,7 @@ def eval_faiss(emb_dir,
 
     # Summary 
     valid_mask = (test_seq_len <= max_test_seq_len[:, None])        # The mask preserves valid entries
+    print("Valid mask: ", valid_mask)
     top1_rate = 100. * np.mean(np.where(valid_mask, top1_exact, np.nan), axis=0)
     top3_rate = 100. * np.mean(np.where(valid_mask, top3_exact, np.nan), axis=0)
     top10_rate = 100. * np.mean(np.where(valid_mask, top10_exact, np.nan), axis=0)
