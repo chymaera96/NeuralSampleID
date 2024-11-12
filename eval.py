@@ -313,7 +313,8 @@ def eval_faiss(emb_dir,
             #     I[offset, :] -= offset
 
             # unique candidates
-            candidates = np.unique(I[np.where(I >= 0)])   # ignore id < 0
+            # candidates = np.unique(I[np.where(I >= 0)])   # ignore id < 0
+            candidates = I[np.where(I >= 0)].flatten()
             
 
             """ Song-level match score """
