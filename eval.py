@@ -304,6 +304,10 @@ def eval_faiss(emb_dir,
             q = query[test_id:(test_id + sl), :] # shape(q) = (length, dim)
             q_id = query_lookup[test_id]    # query ID
             
+            # Sanity check
+            if q_id == 'T149' and sl == 5:
+                print(f"VOILA! {q_id} with sl = {sl}")
+
             # segment-level top k search for each segment
             _, I = index.search(
                 q, k_probe) # _: distance, I: result IDs matrix
