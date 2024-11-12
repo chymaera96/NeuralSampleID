@@ -323,8 +323,8 @@ def eval_faiss(emb_dir,
                     continue
                 match = ref_lookup[cid - dummy_db_shape[0]]
                 # Ignore candidates which is the same as query file
-                if match == q_id:
-                    continue
+                # if match == q_id:
+                #     continue
                 assert type(match) == str, f'{type(match)} is not str. See {ref_lookup}'
                 hist[match] += 1
                 # To-do: use cosine distance for better matching score
