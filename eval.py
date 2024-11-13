@@ -329,7 +329,7 @@ def eval_faiss(emb_dir,
                 assert type(match) == str, f'{type(match)} is not str. See {ref_lookup}'
                 candidate_seq = fake_recon_index[cid:(cid + sl), :] 
                 score = np.mean(np.diag(q * candidate_seq))
-                hist[match] += 1
+                hist[match] += score
                 # To-do: use cosine distance for better matching score
 
             """ Evaluate """
