@@ -260,14 +260,14 @@ def eval_faiss(emb_dir,
     del dummy_db
     start_time = time.time()
 
-    # fake_recon_index, index_shape = load_memmap_data(
-    #     emb_dummy_dir, 'dummy_db', append_extra_length=db_shape[0],
-    #     display=False)
-    # fake_recon_index[dummy_db_shape[0]:dummy_db_shape[0] + db_shape[0], :] = db[:, :]
-    # fake_recon_index.flush()
+    fake_recon_index, index_shape = load_memmap_data(
+        emb_dummy_dir, 'dummy_db', append_extra_length=db_shape[0],
+        display=False)
+    fake_recon_index[dummy_db_shape[0]:dummy_db_shape[0] + db_shape[0], :] = db[:, :]
+    fake_recon_index.flush()
 
-    # t = time.time() - start_time
-    # print(f'Created fake_recon_index, total {index_shape[0]} items. {t:>4.2f} sec.')
+    t = time.time() - start_time
+    print(f'Created fake_recon_index, total {index_shape[0]} items. {t:>4.2f} sec.')
 
     # Get test_ids
     print(f'test_id: \033[93m{test_ids}\033[0m,  ', end='')
@@ -327,7 +327,9 @@ def eval_faiss(emb_dir,
                     continue
                     # print(f'Query ID: {q_id}, Match ID: {match}. Identical!')
                 assert type(match) == str, f'{type(match)} is not str. See {ref_lookup}'
-                hist[match] += 1
+                candidate_seq = fake_recon_index[cid:(cid + sl), :] 
+                score = np.mean(np.sum(q * candidate_seq, axis=1))
+                hist[match] += score
                 # To-do: use cosine distance for better matching score
 
             """ Evaluate """
