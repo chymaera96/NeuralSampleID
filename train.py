@@ -20,7 +20,7 @@ from modules.transformations import GPUTransformNeuralfp
 from modules.data import NeuralfpDataset
 from encoder.graph_encoder import GraphEncoder
 from eval import eval_faiss
-from test_fp import create_fp_db, create_dummy_db
+# from test_fp import create_fp_db, create_dummy_db
 
 # Directories
 root = os.path.dirname(__file__)
