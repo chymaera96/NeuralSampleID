@@ -50,9 +50,9 @@ overlap: 0.5
 tr_snr: [0, 20]
 val_snr: [0, 10]
 test_snr: [19, 21]
-pitch_shift: 4
-min_rate: 0.8
-max_rate: 1.25
+pitch_shift: 8
+min_rate: 0.5
+max_rate: 2.0
 min_bit_depth: 5
 max_bit_depth: 10
 time_mask: 8
