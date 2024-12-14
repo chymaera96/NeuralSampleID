@@ -328,8 +328,9 @@ def eval_faiss(emb_dir,
                     # print(f'Query ID: {q_id}, Match ID: {match}. Identical!')
                 assert type(match) == str, f'{type(match)} is not str. See {ref_lookup}'
                 candidate_seq = fake_recon_index[cid:(cid + sl), :] 
-                # score = np.mean(np.sum(q * candidate_seq, axis=1))
-                hist[match] += 1
+                print(f'q.shape: {q.shape}, candidate_seq.shape: {candidate_seq.shape}')
+                score = np.mean(np.sum(q * candidate_seq, axis=1))
+                hist[match] += score
                 # To-do: use cosine distance for better matching score
 
             """ Evaluate """
