@@ -329,6 +329,8 @@ def eval_faiss(emb_dir,
                 assert type(match) == str, f'{type(match)} is not str. See {ref_lookup}'
                 candidate_seq = fake_recon_index[cid:(cid + sl), :] 
                 print(f'q.shape: {q.shape}, candidate_seq.shape: {candidate_seq.shape}')
+                if q.shape != candidate_seq.shape:
+                    print(sl)
                 score = np.mean(np.sum(q * candidate_seq, axis=1))
                 hist[match] += score
                 # To-do: use cosine distance for better matching score
