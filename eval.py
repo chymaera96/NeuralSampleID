@@ -328,7 +328,7 @@ def eval_faiss(emb_dir,
                     # print(f'Query ID: {q_id}, Match ID: {match}. Identical!')
                 assert type(match) == str, f'{type(match)} is not str. See {ref_lookup}'
                 candidate_seq = fake_recon_index[cid:(cid + sl), :] 
-                # print(f'q.shape: {q.shape}, candidate_seq.shape: {candidate_seq.shape}')
+                print(f'q.shape: {q.shape}, candidate_seq.shape: {candidate_seq.shape}')
                 if candidate_seq.shape[0] < sl:
                     q = q[:candidate_seq.shape[0], :]      
                 score = np.mean(np.sum(q * candidate_seq, axis=1))
