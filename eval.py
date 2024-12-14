@@ -330,8 +330,8 @@ def eval_faiss(emb_dir,
                 candidate_seq = fake_recon_index[cid:(cid + sl), :] 
                 print(f'q.shape: {q.shape}, candidate_seq.shape: {candidate_seq.shape}')
                 if candidate_seq.shape[0] < sl:
-                    q = q[:candidate_seq.shape[0], :]      
-                score = np.mean(np.sum(q * candidate_seq, axis=1))
+                    q_match = q[:candidate_seq.shape[0], :]      
+                score = np.mean(np.sum(q_match * candidate_seq, axis=1))
                 hist[match] += score
                 # To-do: use cosine distance for better matching score
 
