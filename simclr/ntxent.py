@@ -36,6 +36,6 @@ class SoftCrossEntropy(nn.Module):
 
     def forward(self, logits, target):
         probs = F.softmax(logits, 1) 
-        loss = (- target * torch.log(probs)).sum(1).mean()
+        loss = (- target * torch.log(probs + 1e-9)).sum(1).mean()
 
         return loss
