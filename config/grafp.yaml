@@ -17,7 +17,7 @@ annot_path: '/data/home/acw723/datasets/sample_100/samples.csv'
 # Model input parameters
 arch: 'grafp'
 fs: 16000
-dur: 4.0
+dur: 4.08
 offset: 0.25
 norm: 0.95
 win_len: 1024
