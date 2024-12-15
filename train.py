@@ -54,29 +54,33 @@ parser.add_argument('--k', default=3, type=int)
 
 
 def mixco(model, xis, xjs, zis, zjs, cfg):
-# This code is adapted from https://github.com/Lee-Gihun/MixCo-Mixup-Contrast
-    
+    # This code is adapted from https://github.com/Lee-Gihun/MixCo-Mixup-Contrast
+
     crit = SoftCrossEntropy()
     B = xis.shape[0]
     assert B % 2 == 0
-    sid = int(B/2)
+    sid = int(B / 2)
     loss = 0
+
     for x, z in zip([xis, xjs], [zjs, zis]):
         x_1, x_2 = x[:sid], x[sid:]
 
-        # each image get different lambda
-        lam = torch.from_numpy(np.random.uniform(0, 1, size=(sid,1,1))).float().to(x.device)
-        spec_mix = lam * x_1 + (1-lam) * x_2
+        # Each input gets a different lambda
+        lam = torch.from_numpy(np.random.uniform(0, 1, size=(sid, 1, 1))).float().to(x.device)
+        spec_mix = lam * x_1 + (1 - lam) * x_2
 
         _, _, _, z_mix = model(spec_mix, spec_mix)
-        lbls_mix = torch.cat((torch.diag(lam.squeeze()), torch.diag((1-lam).squeeze())), dim=1)
         z_mix = F.normalize(z_mix, dim=1)
 
-        logits_mix = torch.mm(z_mix, z.transpose(0, 1)) # N/2 * N
+        # Create labels with equal weighting regardless of lambda
+        lbls_mix = torch.cat((torch.eye(sid), torch.eye(sid)), dim=1).to(x.device)
+        logits_mix = torch.mm(z_mix, z.transpose(0, 1))
         logits_mix /= cfg['tau_mix']
         loss += crit(logits_mix, lbls_mix) / 2
-        
+
     return loss
+
+
 
 def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augment=None):
     model.train()
@@ -263,6 +267,9 @@ def main():
         if loss_epoch < best_loss:
             best_loss = loss_epoch
             save_ckp(checkpoint, model_name, model_folder, 'best')
+
+        if epoch % 25 == 0:
+            save_ckp(checkpoint, model_name, model_folder, epoch)
 
         if hit_rates is not None and hit_rates[0][0] > best_hr:
             best_hr = hit_rates[0][0]

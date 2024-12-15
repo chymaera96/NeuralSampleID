@@ -256,17 +256,17 @@ class GPUPeakExtractorv2(nn.Module):
     def __init__(self, cfg):
         super(GPUPeakExtractorv2, self).__init__()
 
-        self.blur_kernel = cfg['blur_kernel']
         self.n_filters = cfg['n_filters']
-        self.stride =cfg['peak_stride']
+        self.patch_bins = cfg['patch_bins']
+        self.patch_frames = cfg['patch_frames']
 
         self.convs = nn.Sequential(
-            nn.Conv2d(3, 
-                      self.n_filters, 
-                      kernel_size=self.blur_kernel, 
-                      stride=(self.stride, 1), 
-                      padding=(self.blur_kernel[0] // 2, self.blur_kernel[1] // 2)
-                      ),
+            nn.Conv2d(
+                in_channels=3, 
+                out_channels=self.n_filters,
+                kernel_size=(self.patch_bins, self.patch_frames),
+                stride=(self.patch_bins, self.patch_frames),
+            ),
             nn.ReLU(),
         )
 
