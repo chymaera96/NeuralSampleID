@@ -344,7 +344,7 @@ class GPUPeakExtractorv2(nn.Module):
             tensor = torch.cat((T_tensor.unsqueeze(1), F_tensor.unsqueeze(1), peaks), dim=1)
 
         feature = self.convs(tensor)
-        # print(f"Log: Convolution completed with shape {feature.shape}")
+        print(f"Log: Convolution completed with shape {feature.shape}")
         # self.l1 = torch.norm(feature, p=1)
 
         B, C, H, W = feature.shape
