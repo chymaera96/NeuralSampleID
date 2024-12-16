@@ -125,6 +125,7 @@ class Sample100Dataset(Dataset):
         self.norm = cfg['norm']
         self.sample_rate = cfg['fs']
         self.n_frames = cfg['n_frames']
+        self.dur = cfg['dur']
         self.silence = cfg['silence']
         self.error_threshold = cfg['error_threshold']
         self.transform = transform
@@ -233,8 +234,9 @@ class Sample100Dataset(Dataset):
             norm_val = qtile_norm(audio_resampled, q=self.norm)
             x = x / norm_val
         
-        if x.shape[-1] < self.sample_rate:
-            x = F.pad(x, (0, self.sample_rate - x.shape[-1]))
+        clip_frames = int(self.sample_rate * self.dur)
+        if x.shape[-1] < clip_frames:
+            x = F.pad(x, (0, clip_frames - x.shape[-1]))
 
         if self.transform is not None:
             x, _ = self.transform(x, None)
