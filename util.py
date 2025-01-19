@@ -111,7 +111,7 @@ def query_len_from_seconds(seconds, overlap, dur):
 
 def seconds_from_query_len(query_len, overlap, dur):
     hop = dur*(1-overlap)
-    return int((query_len-1)*hop + dur)
+    return (query_len-1)*hop + dur
 
 def load_ckp(checkpoint_fpath, model, optimizer, scheduler):
     checkpoint = torch.load(checkpoint_fpath)

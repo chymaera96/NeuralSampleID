@@ -254,7 +254,7 @@ def main():
         index_type = 'ivfpq'
 
     if args.query_lens is not None:
-        args.query_lens = [int(q) for q in args.query_lens.split(',')]
+        args.query_lens = [float(q) for q in args.query_lens.split(',')]
         test_seq_len = [query_len_from_seconds(q, cfg['overlap'], dur=cfg['dur'])
                         for q in args.query_lens]
         
