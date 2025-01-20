@@ -9,6 +9,7 @@ import yaml
 from prettytable import PrettyTable
 import re
 import matplotlib.pyplot as plt
+from audiomentations import BandPassFilter
 
 
 class DummyScaler:
@@ -254,6 +255,48 @@ def extract_losses(filename):
                 mixco_losses.append(mixco_loss)
 
     return simclr_losses, mixco_losses
+
+
+
+class BandEQ:
+    def __init__(self, num_bands=[1,8], center_freq=[50.0, 8000.0],
+                 bandwidth_fraction=[0.01,1.0], gain=[-20.0, 10.0]):
+        """
+        Band EQ using multiple band-pass filters with adjustable frequency, Q, and gain.
+        """
+        self.num_bands = np.random.randint(num_bands[0], num_bands[1] + 1)
+        self.min_center_freq = center_freq[0]
+        self.max_center_freq = center_freq[1]
+        self.min_bandwidth_fraction = bandwidth_fraction[0]
+        self.max_bandwidth_fraction = bandwidth_fraction[1]
+        self.min_gain = gain[0]
+        self.max_gain = gain[1]
+
+        self.band_pass_filters = [
+            BandPassFilter(
+                min_center_freq=self.min_center_freq,
+                max_center_freq=self.max_center_freq,
+                min_bandwidth_fraction=self.min_bandwidth_fraction,
+                max_bandwidth_fraction=self.max_bandwidth_fraction,
+                p=1.0  
+            ) for _ in range(num_bands)
+        ]
+
+        self.gains = torch.empty(num_bands).uniform_(self.min_gain, self.max_gain).tolist()
+
+    def apply_gain(self, audio, gain_db):
+
+        gain_factor = 10 ** (gain_db / 20)
+        return audio * gain_factor
+
+    def __call__(self, audio):
+
+        for filter, gain in zip(self.band_pass_filters, self.gains):
+            audio = filter(audio) 
+            audio = self.apply_gain(audio, gain) 
+
+        return audio
+
 
 
 def main():

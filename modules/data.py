@@ -116,10 +116,10 @@ class NeuralSampleIDDataset(Dataset):
             else:
                 x_i = x_i[:clip_frames]
 
-            if x_j.shape[1] < clip_frames:
-                x_j = F.pad(x_j, (0, clip_frames - x_j.shape[1]), mode='constant', value=0)
+            if len(x_j) < clip_frames:
+                x_j = F.pad(x_j, (0, clip_frames - len(x_j)))
             else:
-                x_j = x_j[:, :clip_frames]
+                x_j = x_j[:clip_frames]
 
             return x_i, x_j
 
