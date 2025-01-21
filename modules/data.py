@@ -72,15 +72,17 @@ class NeuralSampleIDDataset(Dataset):
 
             r = np.random.randint(0, len(a_i) - offset_mod)
             ri = np.random.randint(0, offset_mod - clip_frames)
+            rj = np.random.randint(0, offset_mod - clip_frames)
 
             clip_i = a_i[r:r + offset_mod]
             clip_j = a_j[:, r:r + offset_mod]
 
+            assert clip_i.shape == clip_j.shape[1:], f"Shapes of clip_i and clip_j do not match: {clip_i.shape} vs {clip_j.shape}"
+
             x_i = clip_i[ri:ri + clip_frames]
-            x_j = clip_j[:, ri:ri + clip_frames]
-            print(f"clip_j shape: {clip_j.shape}, x_j shape: {x_j.shape}")
-            print(f"clip_frames: {clip_frames}")
-            assert x_j.shape[1] == clip_frames, f"Allowed shape mismatch: {x_j.shape[1]} vs {clip_frames}"
+            x_j = clip_j[:, rj:rj + clip_frames]
+            
+            assert x_i.shape == x_j.shape[1:], f"Shapes of x_i and x_j do not match: {x_i.shape} vs {x_j.shape}"
 
 
             # Silence detection using SNR
@@ -88,7 +90,7 @@ class NeuralSampleIDDataset(Dataset):
             valid_channels = []
 
             for channel in x_j:
-                assert channel.shape == x_i.shape, f"Shapes of x_i and x_j do not match: {x_i.shape} vs {channel.shape}"
+                # assert channel.shape == x_i.shape, f"Shapes of x_i and x_j do not match: {x_i.shape} vs {channel.shape}"
                 noise_power = torch.mean((channel - x_i)**2)
                 snr = 10 * torch.log10(signal_power / (noise_power + 1e-8))
                 if snr >= -20:
