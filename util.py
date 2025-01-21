@@ -322,10 +322,10 @@ class BandEQ:
                 min_bandwidth_fraction=self.min_bandwidth_fraction,
                 max_bandwidth_fraction=self.max_bandwidth_fraction,
                 p=1.0  
-            ) for _ in range(num_bands)
+            ) for _ in range(self.num_bands)
         ]
 
-        self.gains = torch.empty(num_bands).uniform_(self.min_gain, self.max_gain).tolist()
+        self.gains = torch.empty(self.num_bands).uniform_(self.min_gain, self.max_gain).tolist()
 
     def apply_gain(self, audio, gain_db):
 
