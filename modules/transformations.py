@@ -13,9 +13,9 @@ import warnings
 
 from util import BandEQ
 
-class GPUTransformNeuralfp(nn.Module):
+class GPUTransformSampleID(nn.Module):
     def __init__(self, cfg, ir_dir, noise_dir, train=True, cpu=False, max_transforms_i=1, max_transforms_j=1):
-        super(GPUTransformNeuralfp, self).__init__()
+        super(GPUTransformSampleID, self).__init__()
         self.sample_rate = cfg['fs']
         self.ir_dir = ir_dir
         self.noise_dir = noise_dir

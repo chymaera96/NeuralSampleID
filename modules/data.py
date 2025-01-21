@@ -1,6 +1,7 @@
 import os
 import json
 import torch
+import pandas as pd
 from torch.utils.data import Dataset
 import torch.nn.functional as F
 import torchaudio
@@ -8,7 +9,7 @@ import numpy as np
 import warnings
 from itertools import compress
 
-from util import load_index, qtile_norm
+from util import load_index, load_nsid_index, qtile_norm
 
 class NeuralSampleIDDataset(Dataset):
     def __init__(self, cfg, path, transform=None, train=False):
@@ -19,16 +20,15 @@ class NeuralSampleIDDataset(Dataset):
         self.offset = cfg['offset']
         self.sample_rate = cfg['fs']
         self.dur = cfg['dur']
-        self.n_frames = cfg['n_frames']
         self.silence = cfg['silence']
         self.error_threshold = cfg['error_threshold']
 
         if train:
-            self.filenames = load_index(cfg, path, mode="train")
+            self.filenames = load_nsid_index(cfg)
         else:
-            self.filenames = load_index(cfg, path, mode="valid")
+            raise NotImplementedError("Validation pipeline not implemented yet")
 
-        print(f"Loaded {len(self.filenames)} files from {path}")
+        print(f"Dataset loaded with {len(self.filenames)} samples containing {len(self.filenames[0])} stems each")
         self.ignore_idx = []
         self.error_counts = {}
 

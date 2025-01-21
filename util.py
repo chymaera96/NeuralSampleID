@@ -61,6 +61,49 @@ def load_index(cfg, data_dir, ext=['wav','mp3'], shuffle_dataset=True, mode="tra
 
     return dataset
 
+def load_nsid_index(cfg, json_path= None, overwrite=False):
+    """
+    Load or create the nsid index.
+
+    Args:
+        htdemucs_dir (str): Directory containing the HTDemucs separated stems.
+        fma_dir (str): Directory containing the FMA dataset.
+        json_path (str): Path to the JSON file to save/load the index.
+        overwrite (bool): If True, overwrite the existing JSON file.
+
+    Returns:
+        list: List of dictionaries containing paths to the mix and stems.
+    """
+    htdemucs_dir = cfg['htdemucs_dir']
+    fma_dir = cfg['fma_dir']
+    data_dir = cfg['data_dir']
+
+    if json_path is None:
+        json_path = os.path.join(data_dir, 'nsid.json')
+
+    if os.path.exists(json_path) and not overwrite:
+        print(f"Loading indices from {json_path}")
+        with open(json_path, 'r') as fp:
+            index = json.load(fp)
+        return index
+
+    print(f"Creating index from {htdemucs_dir} and {fma_dir}")
+    index = []
+
+    for fname in os.listdir(htdemucs_dir):
+        dict = {}
+        dict['mix'] = os.path.join(fma_dir, fname + '.mp3')
+        dict['vocals'] = os.path.join(htdemucs_dir, fname, 'vocals.mp3')
+        dict['drums'] = os.path.join(htdemucs_dir, fname, 'drums.mp3')
+        dict['bass'] = os.path.join(htdemucs_dir, fname, 'bass.mp3')
+        dict['other'] = os.path.join(htdemucs_dir, fname, 'other.mp3')
+        index.append(dict)
+
+    with open(json_path, 'w') as fp:
+        json.dump(index, fp)
+
+    return index
+
 def load_augmentation_index(data_dir, splits, json_path=None, ext=['wav','mp3'], shuffle_dataset=True):
     dataset = {'train' : [], 'test' : [], 'validate': []}
     if json_path is None:

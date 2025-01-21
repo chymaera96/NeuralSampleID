@@ -16,8 +16,8 @@ torchaudio.set_audio_backend("soundfile")
 from util import *
 from simclr.ntxent import ntxent_loss, SoftCrossEntropy
 from simclr.simclr import SimCLR   
-from modules.transformations import GPUTransformNeuralfp
-from modules.data import NeuralfpDataset
+from modules.transformations import GPUTransformSampleID
+from modules.data import NeuralSampleIDDataset
 from encoder.graph_encoder import GraphEncoder
 from eval import eval_faiss
 # from test_fp import create_fp_db, create_dummy_db
@@ -100,7 +100,7 @@ def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augmen
         _, _, z_i, z_j = model(x_i, x_j)
 
         simclr_loss = ntxent_loss(z_i, z_j, cfg)
-        if cfg['beta'] > 0.0:
+        if cfg['beta'] > 0.0:       # Beta set to 0.0 as mixco support is not implemented
             mixco_loss = mixco(model, x_i, x_j, z_i, z_j, cfg)
         else:
             mixco_loss = torch.tensor(0.0)
@@ -158,17 +158,17 @@ def main():
     ir_train_idx = load_augmentation_index(ir_dir, splits=0.8)["train"]
     noise_val_idx = load_augmentation_index(noise_dir, splits=0.8)["test"]
     ir_val_idx = load_augmentation_index(ir_dir, splits=0.8)["test"]
-    gpu_augment = GPUTransformNeuralfp(cfg=cfg, ir_dir=ir_train_idx, noise_dir=noise_train_idx, train=True).to(device)
-    cpu_augment = GPUTransformNeuralfp(cfg=cfg, ir_dir=ir_train_idx, noise_dir=noise_train_idx, cpu=True)
-    val_augment = GPUTransformNeuralfp(cfg=cfg, ir_dir=ir_val_idx, noise_dir=noise_val_idx, train=False).to(device)
+    gpu_augment = GPUTransformSampleID(cfg=cfg, ir_dir=ir_train_idx, noise_dir=noise_train_idx, train=True).to(device)
+    cpu_augment = GPUTransformSampleID(cfg=cfg, ir_dir=ir_train_idx, noise_dir=noise_train_idx, cpu=True)
+    val_augment = GPUTransformSampleID(cfg=cfg, ir_dir=ir_val_idx, noise_dir=noise_val_idx, train=False).to(device)
 
     print("Loading dataset...")
-    train_dataset = NeuralfpDataset(cfg=cfg, path=train_dir, train=True, transform=cpu_augment)
+    train_dataset = NeuralSampleIDDataset(cfg=cfg, train=True, transform=cpu_augment)
     train_loader = torch.utils.data.DataLoader(
         train_dataset, batch_size=batch_size, shuffle=True,
         num_workers=8, pin_memory=True, drop_last=True)
     
-    valid_dataset = NeuralfpDataset(cfg=cfg, path=valid_dir, train=False)
+    valid_dataset = NeuralSampleIDDataset(cfg=cfg, train=False)
     print("Creating validation dataloaders...")
     dataset_size = len(valid_dataset)
     indices = list(range(dataset_size))
