@@ -78,7 +78,8 @@ class NeuralSampleIDDataset(Dataset):
 
             x_i = clip_i[ri:ri + clip_frames]
             x_j = clip_j[:, ri:ri + clip_frames]
-
+            print(f"clip_j shape: {clip_j.shape}, x_j shape: {x_j.shape}")
+            print(f"x_j shape: {x_j.shape}")
             assert any(len(stem) != clip_frames for stem in x_j), f"Allowed length: {clip_frames}, got {[len(stem) for stem in x_j]}"
 
             # Pad or truncate to sample_rate * dur
