@@ -77,7 +77,7 @@ class NeuralSampleIDDataset(Dataset):
             clip_i = a_i[r:r + offset_mod]
             clip_j = a_j[:, r:r + offset_mod]
 
-            assert clip_i.shape == clip_j.shape[1:], f"Shapes of clip_i and clip_j do not match: {clip_i.shape} vs {clip_j.shape}"
+            assert clip_i.shape == clip_j.shape[1:], f"Shapes of clip_i and clip_j do not match: {clip_i.shape} vs {clip_j.shape}. Also, a_i shape: {a_i.shape}, a_j shape: {a_j.shape}"
 
             x_i = clip_i[ri:ri + clip_frames]
             x_j = clip_j[:, rj:rj + clip_frames]
