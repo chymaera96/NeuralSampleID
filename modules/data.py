@@ -12,8 +12,7 @@ from itertools import compress
 from util import load_index, load_nsid_index, qtile_norm
 
 class NeuralSampleIDDataset(Dataset):
-    def __init__(self, cfg, path, transform=None, train=False):
-        self.path = path
+    def __init__(self, cfg, transform=None, train=False):
         self.transform = transform
         self.train = train
         self.norm = cfg['norm']
