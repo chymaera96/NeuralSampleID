@@ -314,18 +314,24 @@ def main():
     # plt.savefig('losses.jpg')
 
     # Create index file for sample_100 dataset
-    data_dir = '../datasets/sample_100/audio'
-    index = {'db': [], 'dummy': []}
-    for fname in os.listdir(data_dir):
-        fpath = os.path.join(data_dir, fname)
-        if fpath.endswith('.mp3'):
-            if fname.startswith('T'):
-                index['db'].append(fpath)
-            else:
-                index['dummy'].append(fpath)
-        
-    with open('data/sample_100.json', 'w') as fp:
-        json.dump(index, fp)
+    fma_dir = '/datasets/fma/fma_small'
+    htdemucs_dir = '/data/scratch/eez083/htdemucs/'
+
+    index = []
+
+    for fname in os.listdir(htdemucs_dir):
+        dict = {}
+        dict['mix'] = os.path.join(fma_dir, fname+'.mp3')
+        dict['vocals'] = os.path.join(htdemucs_dir, fname, 'vocals.mp3')
+        dict['drums'] = os.path.join(htdemucs_dir, fname, 'drums.mp3')
+        dict['bass'] = os.path.join(htdemucs_dir, fname, 'bass.mp3')
+        dict['other'] = os.path.join(htdemucs_dir, fname, 'other.mp3')
+        index.append(dict)
+    
+    print(index[:5])
+    print(f'Number of files: {len(index)}')
+
+    json.dump(index, open('nsid.json', 'w'))
 
 if __name__ == '__main__':
     main()
