@@ -79,6 +79,18 @@ class NeuralSampleIDDataset(Dataset):
             x_i = clip_i[ri:ri + clip_frames]
             x_j = clip_j[:, ri:ri + clip_frames]
 
+            # Pad or truncate to sample_rate * dur
+            if len(x_i) < clip_frames:
+                x_i = F.pad(x_i, (0, clip_frames - len(x_i)))
+            else:
+                x_i = x_i[:clip_frames]
+
+            if len(x_j) < clip_frames:
+                x_j = F.pad(x_j, (0, clip_frames - len(x_j)))
+            else:
+                x_j = x_j[:clip_frames]
+
+
             # Silence detection using SNR
             signal_power = torch.mean(x_i**2)
             valid_channels = []
@@ -105,17 +117,6 @@ class NeuralSampleIDDataset(Dataset):
 
             if x_i is None or x_j is None:
                 return self[idx + 1]
-
-            # Pad or truncate to sample_rate * dur
-            if len(x_i) < clip_frames:
-                x_i = F.pad(x_i, (0, clip_frames - len(x_i)))
-            else:
-                x_i = x_i[:clip_frames]
-
-            if len(x_j) < clip_frames:
-                x_j = F.pad(x_j, (0, clip_frames - len(x_j)))
-            else:
-                x_j = x_j[:clip_frames]
 
             return x_i, x_j
 
