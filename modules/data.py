@@ -21,11 +21,7 @@ class NeuralSampleIDDataset(Dataset):
         self.dur = cfg['dur']
         self.silence = cfg['silence']
         self.error_threshold = cfg['error_threshold']
-
-        if train:
-            self.filenames = load_nsid_index(cfg)
-        else:
-            raise NotImplementedError("Validation pipeline not implemented yet")
+        self.filenames = load_nsid_index(cfg)
 
         print(f"Dataset loaded with {len(self.filenames)} samples containing {len(self.filenames[0])} stems each")
         self.ignore_idx = []
