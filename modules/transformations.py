@@ -71,7 +71,7 @@ class GPUTransformSampleID(nn.Module):
 
         selected_transforms = np.random.choice(transform_options, size=min(max_transforms, len(transform_options)), replace=False)
         for transform in selected_transforms:
-            audio = transform(audio)
+            audio = transform(audio, sample_rate=self.sample_rate)
         return audio
 
     def train_transform_i(self, audio):
@@ -89,7 +89,7 @@ class GPUTransformSampleID(nn.Module):
     
     def forward(self, x_i, x_j):
         if self.cpu:
-            x_i = self.train_transform_i(x_i.numpy(), sample_rate=self.sample_rate)
+            x_i = self.train_transform_i(x_i.numpy())
             if x_j.ndim > 1:  
                 x_j = x_j.sum(dim=0)  
             # try:
@@ -99,7 +99,7 @@ class GPUTransformSampleID(nn.Module):
             #     # Increase length of x_j by 1 sample and retry
             #     x_j = F.pad(x_j, (0, 1))
             #     x_j = self.train_transform_j(x_j.numpy(), sample_rate=self.sample_rate)
-            x_j = self.train_transform_j(x_j.numpy(), sample_rate=self.sample_rate)
+            x_j = self.train_transform_j(x_j.numpy())
 
             return torch.from_numpy(x_i), torch.from_numpy(x_j)[:int(self.sample_rate * self.cfg['dur'])]
 
