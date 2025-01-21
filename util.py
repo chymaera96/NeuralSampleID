@@ -332,7 +332,7 @@ class BandEQ:
         gain_factor = 10 ** (gain_db / 20)
         return audio * gain_factor
 
-    def __call__(self, audio):
+    def __call__(self, audio, sample_rate=None):
 
         for filter, gain in zip(self.band_pass_filters, self.gains):
             audio = filter(audio) 
