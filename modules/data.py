@@ -84,6 +84,7 @@ class NeuralSampleIDDataset(Dataset):
             valid_channels = []
 
             for channel in x_j:
+                assert channel.shape == x_i.shape, f"Shapes of x_i and x_j do not match: {x_i.shape} vs {channel.shape}"
                 noise_power = torch.mean((channel - x_i)**2)
                 snr = 10 * torch.log10(signal_power / (noise_power + 1e-8))
                 if snr >= -20:
