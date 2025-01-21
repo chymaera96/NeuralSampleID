@@ -140,8 +140,6 @@ def main():
     args = parser.parse_args()
     cfg = load_config(args.config)
     writer = SummaryWriter(f'runs/{args.ckp}')
-    train_dir = override(cfg['train_dir'], args.train_dir)
-    valid_dir = override(cfg['val_dir'], args.val_dir)
     ir_dir = cfg['ir_dir']
     noise_dir = cfg['noise_dir']
     
