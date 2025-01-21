@@ -87,34 +87,34 @@ class GPUTransformSampleID(nn.Module):
         return self.apply_random_transforms(audio, self.train_transform_j_options, self.max_transforms_j)
 
     
-def forward(self, x_i, x_j):
-    if self.cpu:
-        x_i = self.train_transform_i(x_i.numpy(), sample_rate=self.sample_rate)
-        if x_j.ndim > 1:  
-            x_j = x_j.sum(dim=0)  
-        # try:
-        #     x_j = self.train_transform_j(x_j.numpy(), sample_rate=self.sample_rate)
-        # except ValueError:
-        #     print("Error loading noise file. Hack to solve issue...")
-        #     # Increase length of x_j by 1 sample and retry
-        #     x_j = F.pad(x_j, (0, 1))
-        #     x_j = self.train_transform_j(x_j.numpy(), sample_rate=self.sample_rate)
-        x_j = self.train_transform_j(x_j.numpy(), sample_rate=self.sample_rate)
+    def forward(self, x_i, x_j):
+        if self.cpu:
+            x_i = self.train_transform_i(x_i.numpy(), sample_rate=self.sample_rate)
+            if x_j.ndim > 1:  
+                x_j = x_j.sum(dim=0)  
+            # try:
+            #     x_j = self.train_transform_j(x_j.numpy(), sample_rate=self.sample_rate)
+            # except ValueError:
+            #     print("Error loading noise file. Hack to solve issue...")
+            #     # Increase length of x_j by 1 sample and retry
+            #     x_j = F.pad(x_j, (0, 1))
+            #     x_j = self.train_transform_j(x_j.numpy(), sample_rate=self.sample_rate)
+            x_j = self.train_transform_j(x_j.numpy(), sample_rate=self.sample_rate)
 
-        return torch.from_numpy(x_i), torch.from_numpy(x_j)[:int(self.sample_rate * self.cfg['dur'])]
+            return torch.from_numpy(x_i), torch.from_numpy(x_j)[:int(self.sample_rate * self.cfg['dur'])]
 
-    if self.train:
-        X_i = self.logmelspec(x_i)
-        assert X_i.device == torch.device('cuda:0'), f"X_i device: {X_i.device}"
-        X_j = self.logmelspec(x_j)
+        if self.train:
+            X_i = self.logmelspec(x_i)
+            assert X_i.device == torch.device('cuda:0'), f"X_i device: {X_i.device}"
+            X_j = self.logmelspec(x_j)
 
-    else:
-        # Test-time transformation: x_i is waveform and x_j is None
-        X_i = self.logmelspec(x_i.squeeze(0)).transpose(1, 0)
-        try:
-            X_i = X_i.unfold(0, size=self.n_frames, step=int(self.n_frames * (1 - self.overlap)))
-        except RuntimeError:
-            print("Error in unfolding. x_i shape: ", X_i.shape)
-        X_j = None
+        else:
+            # Test-time transformation: x_i is waveform and x_j is None
+            X_i = self.logmelspec(x_i.squeeze(0)).transpose(1, 0)
+            try:
+                X_i = X_i.unfold(0, size=self.n_frames, step=int(self.n_frames * (1 - self.overlap)))
+            except RuntimeError:
+                print("Error in unfolding. x_i shape: ", X_i.shape)
+            X_j = None
 
-    return X_i, X_j
+        return X_i, X_j
