@@ -70,7 +70,7 @@ class NeuralSampleIDDataset(Dataset):
             if len(a_i) < offset_mod or any([len(channel) < offset_mod for channel in a_j]):
                 return self[idx + 1]
 
-            r = np.random.randint(0, len(a_i) - offset_mod)
+            r = np.random.randint(0, min(len(a_i), a_j.shape[1]) - offset_mod)
             ri = np.random.randint(0, offset_mod - clip_frames)
             rj = np.random.randint(0, offset_mod - clip_frames)
 
