@@ -51,67 +51,71 @@ class NeuralSampleIDDataset(Dataset):
         if len(audio_dict['mix']) <= clip_frames:
             return self[idx + 1]
 
-        bass_mix = audio_dict['bass'] + audio_dict['other']
-        vocals = audio_dict['vocals']
-        drums = audio_dict['drums']
-        combined_stems = {
-            'bass_mix': bass_mix,
-            'vocals': vocals,
-            'drums': drums,
-        }
+        if self.train:
+            bass_mix = audio_dict['bass'] + audio_dict['other']
+            vocals = audio_dict['vocals']
+            drums = audio_dict['drums']
+            combined_stems = {
+                'bass_mix': bass_mix,
+                'vocals': vocals,
+                'drums': drums,
+            }
 
-        # Silence detection using SNR
-        valid_stems = []
-        for key, stem in combined_stems.items():
-            other_keys = [k for k in combined_stems.keys() if k != key]
-            signal = sum(combined_stems[other] for other in other_keys)
-            noise = stem
-            signal_power = torch.mean(signal**2)
-            noise_power = torch.mean((signal - noise)**2)
-            snr = 10 * torch.log10(signal_power / (noise_power + 1e-8))
+            # Silence detection using SNR
+            valid_stems = []
+            for key, stem in combined_stems.items():
+                other_keys = [k for k in combined_stems.keys() if k != key]
+                signal = sum(combined_stems[other] for other in other_keys)
+                noise = stem
+                signal_power = torch.mean(signal**2)
+                noise_power = torch.mean((signal - noise)**2)
+                snr = 10 * torch.log10(signal_power / (noise_power + 1e-8))
 
-            if snr >= -20:  # SNR threshold
-                valid_stems.append(key)
+                if snr >= -20:  # SNR threshold
+                    valid_stems.append(key)
 
-        if len(valid_stems) < 2:  # Not enough stems to split into x_i and x_j
-            print(f"Skipping due to insufficient valid stems")
-            return self[idx + 1]
+            if len(valid_stems) < 2:  # Not enough stems to split into x_i and x_j
+                print(f"Skipping due to insufficient valid stems")
+                return self[idx + 1]
 
-        # Sample up to N-1 stems for x_j and the remaining for x_i
-        np.random.shuffle(valid_stems)
-        x_j_keys = valid_stems[:len(valid_stems) - 1]
-        x_i_keys = valid_stems[len(valid_stems) - 1:]
+            # Sample up to N-1 stems for x_j and the remaining for x_i
+            np.random.shuffle(valid_stems)
+            x_j_keys = valid_stems[:len(valid_stems) - 1]
+            x_i_keys = valid_stems[len(valid_stems) - 1:]
 
-        x_i = torch.cat([combined_stems[key] for key in x_i_keys])      # x_i = non-sample
-        x_j = torch.cat([combined_stems[key] for key in x_j_keys])      # x_j = sample
+            x_i = torch.cat([combined_stems[key] for key in x_i_keys])      # x_i = non-sample
+            x_j = torch.cat([combined_stems[key] for key in x_j_keys])      # x_j = sample
 
-        if self.transform is not None:
-            x_i, x_j = self.transform(x_i, x_j)
+            if self.transform is not None:
+                x_i, x_j = self.transform(x_i, x_j)
 
-        if x_i is None or x_j is None:
-            return self[idx + 1]
+            if x_i is None or x_j is None:
+                return self[idx + 1]
+            
+            
+            # Ensure lengths match clip_frames
+            if len(x_i) < clip_frames:
+                x_i = F.pad(x_i, (0, clip_frames - len(x_i)))
+            else:
+                x_i = x_i[:clip_frames]
+
+            if len(x_j) < clip_frames:
+                x_j = F.pad(x_j, (0, clip_frames - len(x_j)))
+            else:
+                x_j = x_j[:clip_frames]
+
+            # Apply normalization if required
+            if self.norm is not None:
+                norm_val = qtile_norm(torch.cat([x_i, x_j]), q=self.norm)
+                x_i = x_i / norm_val
+                x_j = x_j / norm_val
+
+            print(f"In the dataset class x_i shape: {x_i.shape}, x_j shape: {x_j.shape}")
+
+            return x_i, x_j
         
-        
-        # Ensure lengths match clip_frames
-        if len(x_i) < clip_frames:
-            x_i = F.pad(x_i, (0, clip_frames - len(x_i)))
         else:
-            x_i = x_i[:clip_frames]
-
-        if len(x_j) < clip_frames:
-            x_j = F.pad(x_j, (0, clip_frames - len(x_j)))
-        else:
-            x_j = x_j[:clip_frames]
-
-        # Apply normalization if required
-        if self.norm is not None:
-            norm_val = qtile_norm(torch.cat([x_i, x_j]), q=self.norm)
-            x_i = x_i / norm_val
-            x_j = x_j / norm_val
-
-        print(f"In the dataset class x_i shape: {x_i.shape}, x_j shape: {x_j.shape}")
-
-        return x_i, x_j
+            raise NotImplementedError("Validation pipeline not implemented yet")
     
     def __len__(self):
         return len(self.filenames)
