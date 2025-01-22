@@ -109,6 +109,9 @@ class NeuralSampleIDDataset(Dataset):
 
 
         return x_i, x_j
+    
+    def __len__(self):
+        return len(self.filenames)
 
 
 
