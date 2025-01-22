@@ -83,8 +83,9 @@ class NeuralSampleIDDataset(Dataset):
             x_j_keys = valid_stems[:len(valid_stems) - 1]
             x_i_keys = valid_stems[len(valid_stems) - 1:]
 
-            x_i = torch.cat([combined_stems[key] for key in x_i_keys])      # x_i = non-sample
-            x_j = torch.cat([combined_stems[key] for key in x_j_keys])      # x_j = sample
+            # stack x_i and x_j stems
+            x_i = torch.stack([audio_dict[key] for key in x_i_keys])
+            x_j = torch.stack([audio_dict[key] for key in x_j_keys])
 
             if self.transform is not None:
                 x_i, x_j = self.transform(x_i, x_j)
