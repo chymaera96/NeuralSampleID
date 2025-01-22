@@ -1,7 +1,9 @@
 import random
 import numpy as np
 import torch
-from audiomentations.core.transforms_interface import BaseWaveformTransform, BandPassFilter
+from audiomentations.core.transforms_interface import BaseWaveformTransform
+from audiomentations import BandPassFilter
+
 
 class BandEQ:
     def __init__(self, num_bands=[1,8], center_freq=[50.0, 8000.0],
