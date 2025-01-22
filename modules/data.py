@@ -52,6 +52,7 @@ class NeuralSampleIDDataset(Dataset):
             return self[idx + 1]
 
         if self.train:
+            # Combine bass and other stems
             bass_mix = audio_dict['bass'] + audio_dict['other']
             vocals = audio_dict['vocals']
             drums = audio_dict['drums']

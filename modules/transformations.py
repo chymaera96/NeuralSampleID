@@ -97,7 +97,7 @@ class GPUTransformSampleID(nn.Module):
     def forward(self, x_i, x_j):
         if self.cpu:
 
-            print(f"In CPU transform x_s shape: {x_s.shape}, x_ns shape: {x_ns.shape}")    
+            print(f"In CPU transform x_i shape: {x_i.shape}, x_ns shape: {x_j.shape}")    
             x_s = x_j.sum(dim=0) if x_j.ndim > 1 else x_j
             x_ns = x_i.sum(dim=0) if x_i.ndim > 1 else x_i
             
