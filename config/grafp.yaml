@@ -46,7 +46,7 @@ beta: 0.0
 error_threshold: 5
 
 # Augmentation hyperparameters
-n_frames: 128 # depends on the spectrogram parameters
+n_frames: 16 # depends on the spectrogram parameters
 overlap: 0.875
 tr_snr: [0, 20]
 val_snr: [0, 10]
