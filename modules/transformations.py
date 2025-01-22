@@ -11,10 +11,10 @@ from audiomentations import \
 from torchaudio.transforms import MelSpectrogram, TimeMasking, FrequencyMasking, AmplitudeToDB
 import warnings
 
-from util import BandEQ
+from fx_util import BandEQ, Compressor
 
 class GPUTransformSampleID(nn.Module):
-    def __init__(self, cfg, ir_dir, noise_dir, train=True, cpu=False, max_transforms_i=1, max_transforms_j=1):
+    def __init__(self, cfg, ir_dir, noise_dir, train=True, cpu=False, max_transforms_1=1, max_transforms_2=1):
         super(GPUTransformSampleID, self).__init__()
         self.sample_rate = cfg['fs']
         self.ir_dir = ir_dir
@@ -27,16 +27,21 @@ class GPUTransformSampleID(nn.Module):
         self.cfg = cfg
 
         # Maximum number of transforms to apply
-        self.max_transforms_i = max_transforms_i
-        self.max_transforms_j = max_transforms_j
+        self.max_transforms_1 = max_transforms_1
+        self.max_transforms_2 = max_transforms_2
 
-        self.train_transform_i_options = [
+        self.train_transform_1_options = [
             PitchShift(min_semitones=-cfg['pitch_shift'], max_semitones=cfg['pitch_shift'], p=1.0),
             TimeStretch(min_rate=cfg['min_rate'], max_rate=cfg['max_rate'], p=1.0),
         ]
 
-        self.train_transform_j_options = [
+        self.train_transform_2_options = [
             # BandEQ(),
+            # Compressor(min_threshold=-24, max_threshold=-12, 
+            #            min_ratio=1.5, max_ratio=4.0, 
+            #            min_attack=0.001, max_attack=0.1, 
+            #            min_release=0.01, max_release=0.5,
+            #            p=1.0),
             # BitCrush(min_bit_depth=cfg['min_bit_depth'], max_bit_depth=cfg['min_bit_depth'], p=1.0),
             Gain(min_gain_db=-cfg['gain'], max_gain_db=cfg['gain'], p=1.0),
             ApplyImpulseResponse(ir_path=self.ir_dir, p=1.0),
@@ -74,34 +79,39 @@ class GPUTransformSampleID(nn.Module):
             audio = transform(audio, sample_rate=self.sample_rate)
         return audio
 
-    def train_transform_i(self, audio):
+    def train_transform_1(self, audio):
         """
-        Applies at most max_transforms_i transforms from train_transform_i options.
+        Applies at most max_transforms_1 transforms from train_transform_1 options.
         """
-        return self.apply_random_transforms(audio, self.train_transform_i_options, self.max_transforms_i)
+        return self.apply_random_transforms(audio, self.train_transform_1_options, self.max_transforms_1)
 
-    def train_transform_j(self, audio):
+    def train_transform_2(self, audio):
         """
-        Applies at most max_transforms_j transforms from train_transform_j options.
+        Applies at most max_transforms_2 transforms from train_transform_2 options.
         """
-        return self.apply_random_transforms(audio, self.train_transform_j_options, self.max_transforms_j)
+        return self.apply_random_transforms(audio, self.train_transform_2_options, self.max_transforms_2)
 
     
-    def forward(self, x_i, x_j):
+    def forward(self, x_ns, x_s):
         if self.cpu:
-            x_i = self.train_transform_i(x_i.numpy())
-            if x_j.ndim > 1:  
-                x_j = x_j.sum(dim=0)  
+            if x_s.ndim > 1:  
+                x_s = x_s.sum(dim=0)  
+            if x_ns.ndim > 1:
+                x_ns = x_ns.sum(dim=0)
+            
+            x_i = self.train_transform_1(x_s.numpy()) + x_ns.numpy()
+            x_i = self.train_transform_2(x_i)
+            x_j = x_s
             # try:
-            #     x_j = self.train_transform_j(x_j.numpy(), sample_rate=self.sample_rate)
+            #     x_j = self.train_transform_2(x_j.numpy(), sample_rate=self.sample_rate)
             # except ValueError:
             #     print("Error loading noise file. Hack to solve issue...")
             #     # Increase length of x_j by 1 sample and retry
             #     x_j = F.pad(x_j, (0, 1))
-            #     x_j = self.train_transform_j(x_j.numpy(), sample_rate=self.sample_rate)
-            x_j = self.train_transform_j(x_j.numpy())
+            #     x_j = self.train_transform_2(x_j.numpy(), sample_rate=self.sample_rate)
+            x_j = self.train_transform_2(x_j.numpy())
 
-            return torch.from_numpy(x_i), torch.from_numpy(x_j)[:int(self.sample_rate * self.cfg['dur'])]
+            return torch.from_numpy(x_i), torch.from_numpy(x_j)
 
         if self.train:
             X_i = self.logmelspec(x_i)

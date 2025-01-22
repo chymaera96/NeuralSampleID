@@ -11,6 +11,7 @@ from itertools import compress
 
 from util import load_index, load_nsid_index, qtile_norm
 
+
 class NeuralSampleIDDataset(Dataset):
     def __init__(self, cfg, transform=None, train=False):
         self.transform = transform
@@ -31,7 +32,7 @@ class NeuralSampleIDDataset(Dataset):
         if idx in self.ignore_idx:
             return self[idx + 1]
 
-        datapath = self.filenames[idx]  # List of filepaths per sample
+        datapath = self.filenames[idx]  
         try:
             audio_dict = {stem: torchaudio.load(path)[0].mean(dim=0) for stem, path in datapath.items()}
             sr = torchaudio.load(datapath['mix'])[1]
@@ -50,87 +51,67 @@ class NeuralSampleIDDataset(Dataset):
         if len(audio_dict['mix']) <= clip_frames:
             return self[idx + 1]
 
-        # For training pipeline, output random frame of the audio
-        if self.train:
-            a_i = audio_dict['mix']
-            stem_keys = list(audio_dict.keys())
-            stem_keys.remove('mix')
+        bass_mix = audio_dict['bass'] + audio_dict['other']
+        vocals = audio_dict['vocals']
+        drums = audio_dict['drums']
+        combined_stems = {
+            'bass_mix': bass_mix,
+            'vocals': vocals,
+            'drums': drums,
+        }
 
-            # Randomly sample stems to include in x_j
-            selected_stems = np.random.choice([True, False], size=len(stem_keys))
-            selected_keys = list(compress(stem_keys, selected_stems))
+        # Silence detection using SNR
+        valid_stems = []
+        for key, stem in combined_stems.items():
+            other_keys = [k for k in combined_stems.keys() if k != key]
+            signal = sum(combined_stems[other] for other in other_keys)
+            noise = stem
+            signal_power = torch.mean(signal**2)
+            noise_power = torch.mean((signal - noise)**2)
+            snr = 10 * torch.log10(signal_power / (noise_power + 1e-8))
 
-            if not selected_keys:
-                return self[idx + 1]
+            if snr >= -20:  # SNR threshold
+                valid_stems.append(key)
 
-            a_j = torch.stack([audio_dict[stem] for stem in selected_keys], dim=0)
+        if len(valid_stems) < 2:  # Not enough stems to split into x_i and x_j
+            return self[idx + 1]
 
-            offset_mod = int(self.sample_rate * (self.offset) + clip_frames)
+        # Sample up to N-1 stems for x_j and the remaining for x_i
+        np.random.shuffle(valid_stems)
+        x_j_keys = valid_stems[:len(valid_stems) - 1]
+        x_i_keys = valid_stems[len(valid_stems) - 1:]
 
-            if len(a_i) < offset_mod or any([len(channel) < offset_mod for channel in a_j]):
-                return self[idx + 1]
+        x_i = torch.cat([combined_stems[key] for key in x_i_keys])      # x_i = non-sample
+        x_j = torch.cat([combined_stems[key] for key in x_j_keys])      # x_j = sample
 
-            r = np.random.randint(0, min(len(a_i), a_j.shape[1]) - offset_mod)
-            ri = np.random.randint(0, offset_mod - clip_frames)
-            rj = np.random.randint(0, offset_mod - clip_frames)
+        if self.transform is not None:
+            x_i, x_j = self.transform(x_i, x_j)
 
-            clip_i = a_i[r:r + offset_mod]
-            clip_j = a_j[:, r:r + offset_mod]
-
-            assert clip_i.shape == clip_j.shape[1:], f"Shapes of clip_i and clip_j do not match: {clip_i.shape} vs {clip_j.shape}. Also, a_i shape: {a_i.shape}, a_j shape: {a_j.shape}"
-
-            x_i = clip_i[ri:ri + clip_frames]
-            x_j = clip_j[:, rj:rj + clip_frames]
-            
-            assert x_i.shape == x_j.shape[1:], f"Shapes of x_i and x_j do not match: {x_i.shape} vs {x_j.shape}"
-
-
-            # Silence detection using SNR
-            signal_power = torch.mean(x_i**2)
-            valid_channels = []
-
-            for channel in x_j:
-                # assert channel.shape == x_i.shape, f"Shapes of x_i and x_j do not match: {x_i.shape} vs {channel.shape}"
-                noise_power = torch.mean((channel - x_i)**2)
-                snr = 10 * torch.log10(signal_power / (noise_power + 1e-8))
-                if snr >= -20:
-                    valid_channels.append(channel)
-
-            if not valid_channels:
-                return self[idx + 1]
-
-            x_j = torch.stack(valid_channels, dim=0)
-
-            if self.norm is not None:
-                norm_val = qtile_norm(a_i, q=self.norm)
-                x_i = x_i / norm_val
-                x_j = x_j / norm_val
-
-            if self.transform is not None:
-                x_i, x_j = self.transform(x_i, x_j)
-
-            if x_i is None or x_j is None:
-                return self[idx + 1]
-            
-            # Pad or truncate to sample_rate * dur
-            if len(x_i) < clip_frames:
-                x_i = F.pad(x_i, (0, clip_frames - len(x_i)))
-            else:
-                x_i = x_i[:clip_frames]
-
-            if len(x_j) < clip_frames:
-                x_j = F.pad(x_j, (0, clip_frames - len(x_j)))
-            else:
-                x_j = x_j[:clip_frames]
-
-            return x_i, x_j
-
-        # For validation / test, output consecutive (overlapping) frames
+        if x_i is None or x_j is None:
+            return self[idx + 1]
+        
+        # Ensure lengths match clip_frames
+        if len(x_i) < clip_frames:
+            x_i = F.pad(x_i, (0, clip_frames - len(x_i)))
         else:
-            raise NotImplementedError("Validation pipeline not implemented yet")
+            x_i = x_i[:clip_frames]
 
-    def __len__(self):
-        return len(self.filenames)
+        if len(x_j) < clip_frames:
+            x_j = F.pad(x_j, (0, clip_frames - len(x_j)))
+        else:
+            x_j = x_j[:clip_frames]
+
+        # Apply normalization if required
+        if self.norm is not None:
+            norm_val = qtile_norm(torch.cat([x_i, x_j]), q=self.norm)
+            x_i = x_i / norm_val
+            x_j = x_j / norm_val
+
+
+        return x_i, x_j
+
+
+
 
     
 
