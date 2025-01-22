@@ -98,6 +98,8 @@ class GPUTransformSampleID(nn.Module):
         if self.cpu:
             x_s = x_j.sum(dim=0) if x_j.ndim > 1 else x_j
             x_ns = x_i.sum(dim=0) if x_i.ndim > 1 else x_i
+
+            print(f"In CPU transform x_s shape: {x_s.shape}, x_ns shape: {x_ns.shape}")
             
             x_i = self.train_transform_2(self.train_transform_1(x_s.numpy()) + x_ns.numpy())
             x_j = x_s 
