@@ -30,12 +30,8 @@ class GPUTransformSampleID(nn.Module):
         self.max_transforms_1 = max_transforms_1
         self.max_transforms_2 = max_transforms_2
 
-        self.train_transform_1_options = [
-            PitchShift(min_semitones=-cfg['pitch_shift'], max_semitones=cfg['pitch_shift'], p=1.0),
-            TimeStretch(min_rate=cfg['min_rate'], max_rate=cfg['max_rate'], p=1.0),
-        ]
 
-        self.train_transform_2_options = [
+        self.train_transform_1_options = [
             # BandEQ(),
             # Compressor(min_threshold=-24, max_threshold=-12, 
             #            min_ratio=1.5, max_ratio=4.0, 
@@ -46,6 +42,12 @@ class GPUTransformSampleID(nn.Module):
             Gain(min_gain_db=-cfg['gain'], max_gain_db=cfg['gain'], p=1.0),
             ApplyImpulseResponse(ir_path=self.ir_dir, p=1.0),
         ]
+
+        self.train_transform_2_options = [
+            PitchShift(min_semitones=-cfg['pitch_shift'], max_semitones=cfg['pitch_shift'], p=1.0),
+            TimeStretch(min_rate=cfg['min_rate'], max_rate=cfg['max_rate'], p=1.0),
+        ]
+
 
         self.val_transform = Identity()
 
@@ -100,7 +102,7 @@ class GPUTransformSampleID(nn.Module):
             x_i = self.train_transform_2(self.train_transform_1(x_s.numpy()) + x_ns.numpy())
             x_j = x_s 
 
-            print(f"In CPU transform x_i shape: {x_i.shape}, x_j shape: {x_j.shape}")
+            # print(f"In CPU transform x_i shape: {x_i.shape}, x_j shape: {x_j.shape}")
             
             return torch.from_numpy(x_i), x_j
 
