@@ -102,16 +102,8 @@ class GPUTransformSampleID(nn.Module):
             x_i = self.train_transform_1(x_s.numpy()) + x_ns.numpy()
             x_i = self.train_transform_2(x_i)
             x_j = x_s
-            # try:
-            #     x_j = self.train_transform_2(x_j.numpy(), sample_rate=self.sample_rate)
-            # except ValueError:
-            #     print("Error loading noise file. Hack to solve issue...")
-            #     # Increase length of x_j by 1 sample and retry
-            #     x_j = F.pad(x_j, (0, 1))
-            #     x_j = self.train_transform_2(x_j.numpy(), sample_rate=self.sample_rate)
-            x_j = self.train_transform_2(x_j.numpy())
 
-            return torch.from_numpy(x_i), torch.from_numpy(x_j)
+            return torch.from_numpy(x_i), x_j
 
         if self.train:
             X_i = self.logmelspec(x_i)
