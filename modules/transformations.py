@@ -99,6 +99,8 @@ class GPUTransformSampleID(nn.Module):
             
             x_i = self.train_transform_2(self.train_transform_1(x_s.numpy()) + x_ns.numpy())
             x_j = x_s 
+
+            print(f"In CPU transform x_i shape: {x_i.shape}, x_j shape: {x_j.shape}")
             
             return torch.from_numpy(x_i), x_j
 
@@ -107,6 +109,7 @@ class GPUTransformSampleID(nn.Module):
             X_i = self.logmelspec(x_i)
             assert X_i.device == torch.device('cuda:0'), f"X_i device: {X_i.device}"
             X_j = self.logmelspec(x_j)
+
 
         else:
             # Test-time transformation: x_i is waveform and x_j is None
@@ -117,4 +120,5 @@ class GPUTransformSampleID(nn.Module):
                 print("Error in unfolding. x_i shape: ", X_i.shape)
             X_j = None
 
+        print(f"In GPU transform X_i shape: {X_i.shape}, X_j shape: {X_j.shape}")
         return X_i, X_j

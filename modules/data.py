@@ -109,6 +109,7 @@ class NeuralSampleIDDataset(Dataset):
             x_i = x_i / norm_val
             x_j = x_j / norm_val
 
+        print(f"In the dataset class x_i shape: {x_i.shape}, x_j shape: {x_j.shape}")
 
         return x_i, x_j
     
