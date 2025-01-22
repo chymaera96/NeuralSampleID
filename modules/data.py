@@ -74,6 +74,7 @@ class NeuralSampleIDDataset(Dataset):
                 valid_stems.append(key)
 
         if len(valid_stems) < 2:  # Not enough stems to split into x_i and x_j
+            print(f"Skipping due to insufficient valid stems")
             return self[idx + 1]
 
         # Sample up to N-1 stems for x_j and the remaining for x_i
@@ -89,6 +90,7 @@ class NeuralSampleIDDataset(Dataset):
 
         if x_i is None or x_j is None:
             return self[idx + 1]
+        
         
         # Ensure lengths match clip_frames
         if len(x_i) < clip_frames:
