@@ -264,6 +264,12 @@ def calculate_output_sparsity(output):
     sparsity = zero_elements / total_elements * 100
     return sparsity
 
+def calculate_snr(signal, noise):
+    signal_power = torch.mean(signal ** 2)
+    noise_power = torch.mean(noise ** 2)
+    snr = 10 * torch.log10(signal_power / (noise_power + 1e-10))
+    return snr
+
     # Get paths of files not in the index
 def get_test_index(data_dir):
     train_idx = load_index(data_dir)
