@@ -39,7 +39,7 @@ class GPUTransformSampleID(nn.Module):
             #            min_release=0.01, max_release=0.5,
             #            p=1.0),
             # BitCrush(min_bit_depth=cfg['min_bit_depth'], max_bit_depth=cfg['min_bit_depth'], p=1.0),
-            Gain(min_gain_db=-cfg['gain'], max_gain_db=cfg['gain'], p=1.0),
+            # Gain(min_gain_db=-cfg['gain'], max_gain_db=cfg['gain'], p=1.0),
             ApplyImpulseResponse(ir_path=self.ir_dir, p=1.0),
         ]
 
