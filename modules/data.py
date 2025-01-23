@@ -32,7 +32,7 @@ class NeuralSampleIDDataset(Dataset):
         if idx in self.ignore_idx:
             return self[idx + 1]
 
-        datapath = self.filenames[idx]  
+        datapath = self.filenames[idx]
         try:
             audio_dict = {stem: torchaudio.load(path)[0].mean(dim=0) for stem, path in datapath.items()}
             sr = torchaudio.load(datapath['mix'])[1]
@@ -47,78 +47,78 @@ class NeuralSampleIDDataset(Dataset):
         audio_dict = {stem: resampler(audio) for stem, audio in audio_dict.items()}
 
         clip_frames = int(self.sample_rate * self.dur)
+        offset_frames = int(self.sample_rate * self.offset)
 
-        if len(audio_dict['mix']) <= clip_frames:
+        bass_mix = audio_dict['bass'] + audio_dict['other']
+        vocals = audio_dict['vocals']
+        drums = audio_dict['drums']
+
+        total_frames = min(len(bass_mix), len(vocals), len(drums))
+        segment_length = clip_frames + offset_frames
+
+        if total_frames < segment_length:
             return self[idx + 1]
 
-        if self.train:
-            # Combine bass and other stems
-            bass_mix = audio_dict['bass'] + audio_dict['other']
-            vocals = audio_dict['vocals']
-            drums = audio_dict['drums']
-            combined_stems = {
-                'bass_mix': bass_mix,
-                'vocals': vocals,
-                'drums': drums,
-            }
+        start_idx = np.random.randint(0, total_frames - segment_length + 1)
+        bass_mix_segment = bass_mix[start_idx:start_idx + segment_length]
+        vocals_segment = vocals[start_idx:start_idx + segment_length]
+        drums_segment = drums[start_idx:start_idx + segment_length]
 
-            # Silence detection using SNR
-            valid_stems = []
-            for key, stem in combined_stems.items():
-                other_keys = [k for k in combined_stems.keys() if k != key]
-                signal = sum(combined_stems[other] for other in other_keys)
-                noise = stem
-                signal_power = torch.mean(signal**2)
-                noise_power = torch.mean((signal - noise)**2)
-                snr = 10 * torch.log10(signal_power / (noise_power + 1e-8))
+        segment = torch.stack([bass_mix_segment, vocals_segment, drums_segment], dim=0)
 
-                if snr >= -20:  # SNR threshold
-                    valid_stems.append(key)
 
-            if len(valid_stems) < 2:  # Not enough stems to split into x_i and x_j
-                print(f"Skipping due to insufficient valid stems")
-                return self[idx + 1]
+        # Step 3: Silence detection using SNR
+        valid_channels = []
+        for i, stem in enumerate(segment):
+            signal = segment.sum(dim=0) - stem
+            signal_power = torch.mean(signal**2)
+            noise_power = torch.mean((signal - stem)**2)
+            snr = 10 * torch.log10(signal_power / (noise_power + 1e-8))
 
-            # Sample up to N-1 stems for x_j and the remaining for x_i
-            np.random.shuffle(valid_stems)
-            x_j_keys = valid_stems[:len(valid_stems) - 1]
-            x_i_keys = valid_stems[len(valid_stems) - 1:]
+            if snr >= -20:  # SNR threshold
+                valid_channels.append(i)
 
-            # stack x_i and x_j stems
-            x_i = torch.stack([combined_stems[key] for key in x_i_keys])
-            x_j = torch.stack([combined_stems[key] for key in x_j_keys])
+        if len(valid_channels) < 2:  # Not enough valid channels
+            return self[idx + 1]
 
-            if self.transform is not None:
-                x_i, x_j = self.transform(x_i, x_j)
+        np.random.shuffle(valid_channels)
+        x_j_channels = valid_channels[:len(valid_channels) - 1]     
+        x_i_channels = valid_channels[len(valid_channels) - 1:]
+        x_j = segment[x_j_channels].sum(dim=0)              # x_j = up to N-1 stems
+        x_i = segment[x_i_channels].sum(dim=0)              # x_i = remaining stems 
 
-            if x_i is None or x_j is None:
-                return self[idx + 1]
-            
-            
-            # Ensure lengths match clip_frames
-            if len(x_i) < clip_frames:
-                x_i = F.pad(x_i, (0, clip_frames - len(x_i)))
-            else:
-                x_i = x_i[:clip_frames]
+        # Introduce offset by extracting a random dur-length segment
+        x_i_start = np.random.randint(0, offset_frames)
+        x_j_start = np.random.randint(0, offset_frames)
+        x_i = x_i[x_i_start:x_i_start + clip_frames]
+        x_j = x_j[x_j_start:x_j_start + clip_frames]
 
-            if len(x_j) < clip_frames:
-                x_j = F.pad(x_j, (0, clip_frames - len(x_j)))
-            else:
-                x_j = x_j[:clip_frames]
+        # Step 6: Pass x_i and x_j to transform
+        if self.transform is not None:
+            x_i, x_j = self.transform(x_i, x_j)
 
-            # Apply normalization if required
-            if self.norm is not None:
-                norm_val = qtile_norm(torch.cat([x_i, x_j]), q=self.norm)
-                x_i = x_i / norm_val
-                x_j = x_j / norm_val
+        if x_i is None or x_j is None:
+            return self[idx + 1]
 
-            print(f"In the dataset class x_i shape: {x_i.shape}, x_j shape: {x_j.shape}")
-
-            return x_i, x_j
-        
+        # Step 7: Padding or slicing to ensure lengths are consistent
+        if len(x_i) < clip_frames:
+            x_i = F.pad(x_i, (0, clip_frames - len(x_i)))
         else:
-            raise NotImplementedError("Validation pipeline not implemented yet")
-    
+            x_i = x_i[:clip_frames]
+
+        if len(x_j) < clip_frames:
+            x_j = F.pad(x_j, (0, clip_frames - len(x_j)))
+        else:
+            x_j = x_j[:clip_frames]
+
+        # Apply normalization if required
+        if self.norm is not None:
+            norm_val = qtile_norm(torch.cat([x_i, x_j]), q=self.norm)
+            x_i = x_i / norm_val
+            x_j = x_j / norm_val
+
+        return x_i, x_j
+
     def __len__(self):
         return len(self.filenames)
 
