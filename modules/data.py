@@ -75,7 +75,7 @@ class NeuralSampleIDDataset(Dataset):
             noise_power = torch.mean((signal - stem)**2)
             snr = 10 * torch.log10(signal_power / (noise_power + 1e-8))
 
-            if snr >= -20:  # SNR threshold
+            if snr >= -10:  # SNR threshold
                 valid_channels.append(i)
 
         if len(valid_channels) < 2:  # Not enough valid channels
@@ -109,10 +109,10 @@ class NeuralSampleIDDataset(Dataset):
         else:
             x_j = x_j[:clip_frames]
 
-        if self.norm is not None:
-            norm_val = qtile_norm(torch.cat([x_i, x_j]), q=self.norm)
-            x_i = x_i / norm_val
-            x_j = x_j / norm_val
+        # if self.norm is not None:
+        #     norm_val = qtile_norm(torch.cat([x_i, x_j]), q=self.norm)
+        #     x_i = x_i / norm_val
+        #     x_j = x_j / norm_val
 
         return x_i, x_j
 
