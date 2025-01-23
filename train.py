@@ -105,7 +105,7 @@ def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augmen
         else:
             mixco_loss = torch.tensor(0.0)
     
-        loss = simclr_loss + cfg['beta'] * mixco_loss.item()
+        loss = simclr_loss #+ cfg['beta'] * mixco_loss.item()
         # Assert that loss is not NaN
         assert not torch.isnan(loss), "Loss is NaN"
 
