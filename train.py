@@ -110,6 +110,10 @@ def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augmen
         assert not torch.isnan(loss), "Loss is NaN"
 
         scaler.scale(loss).backward()
+
+        #Added gradient clipping
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+        
         scaler.step(optimizer)
         scaler.update()
 
