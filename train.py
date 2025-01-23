@@ -93,13 +93,15 @@ def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augmen
         x_i = x_i.to(device)
         x_j = x_j.to(device)
 
-        # with torch.autocast(device_type='cuda', dtype=torch.float16, enabled=True):
         with torch.no_grad():
             x_i, x_j = augment(x_i, x_j)
 
         _, _, z_i, z_j = model(x_i, x_j)
 
         simclr_loss = ntxent_loss(z_i, z_j, cfg)
+        if torch.isnan(simclr_loss):
+            print(f"NaN detected in loss at step {idx}, skipping batch")
+            continue
         if cfg['beta'] > 0.0:       # Beta set to 0.0 as mixco support is not implemented
             mixco_loss = mixco(model, x_i, x_j, z_i, z_j, cfg)
         else:
@@ -113,7 +115,7 @@ def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augmen
 
         #Added gradient clipping
         torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
-        
+
         scaler.step(optimizer)
         scaler.update()
 

@@ -29,13 +29,13 @@ class SimCLR(nn.Module):
             x_i = self.peak_extractor(x_i)
         h_i = self.encoder(x_i)
         z_i = self.projector(h_i)
-        z_i = F.normalize(z_i, p=2)
+        z_i = F.normalize(z_i, p=2, eps=1e-10)
 
         if self.cfg['arch'] == 'grafp':
             x_j = self.peak_extractor(x_j)
         h_j = self.encoder(x_j)
         z_j = self.projector(h_j)
-        z_j = F.normalize(z_j, p=2)
+        z_j = F.normalize(z_j, p=2, eps=1e-10)
 
 
         return h_i, h_j, z_i, z_j

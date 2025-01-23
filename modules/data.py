@@ -114,6 +114,11 @@ class NeuralSampleIDDataset(Dataset):
         #     x_i = x_i / norm_val
         #     x_j = x_j / norm_val
 
+        # Check for silence
+        if torch.mean(x_i**2) < self.silence or torch.mean(x_j**2) < self.silence:
+            print("Silence detected. Skipping...")
+            return self[idx + 1]
+
         return x_i, x_j
 
     def __len__(self):
