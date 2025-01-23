@@ -188,7 +188,7 @@ class Compressor(BaseWaveformTransform):
     
 
 
-class Identity(BasicTransform):
+class Identity(BaseTransform):
     """
     A no-op augmentation that simply returns the input audio unchanged.
     """
