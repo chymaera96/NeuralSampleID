@@ -195,6 +195,18 @@ class Identity(BaseTransform):
     def __init__(self, p=1.0):
         super().__init__(p)
 
-    def apply(self, samples, sample_rate):
-        # Return the input samples unchanged
+    def __call__(self, samples, sample_rate):
+        """
+        Apply the transformation if the random probability check passes.
+        """
+        if self.should_apply():
+            return self.apply(samples, sample_rate)
         return samples
+
+    def apply(self, samples, sample_rate):
+        """
+        Return the input samples unchanged.
+        """
+        return samples
+
+
