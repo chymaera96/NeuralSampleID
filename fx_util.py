@@ -2,6 +2,8 @@ import random
 import numpy as np
 import torch
 from audiomentations.core.transforms_interface import BaseWaveformTransform
+from audiomentations.core.transforms_interface import BaseTransform
+
 from audiomentations import BandPassFilter
 
 
@@ -183,3 +185,16 @@ class Compressor(BaseWaveformTransform):
         compressed_samples = samples * gain_linear
 
         return compressed_samples
+    
+
+
+class Identity(BasicTransform):
+    """
+    A no-op augmentation that simply returns the input audio unchanged.
+    """
+    def __init__(self, p=1.0):
+        super().__init__(p)
+
+    def apply(self, samples, sample_rate):
+        # Return the input samples unchanged
+        return samples

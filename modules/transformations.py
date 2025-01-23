@@ -3,7 +3,7 @@ import torch.nn as nn
 import numpy as np
 import torch.nn.functional as F
 # from torch_audiomentations import Compose,AddBackgroundNoise, ApplyImpulseResponse, ApplyPitchShift
-from torch_audiomentations import Identity
+# from torch_audiomentations import Identity
 from audiomentations import \
     Compose, ApplyImpulseResponse, \
     PitchShift, BitCrush, TimeStretch, \
@@ -11,7 +11,7 @@ from audiomentations import \
 from torchaudio.transforms import MelSpectrogram, TimeMasking, FrequencyMasking, AmplitudeToDB
 import warnings
 
-from fx_util import BandEQ, Compressor
+from fx_util import BandEQ, Compressor, Identity
 
 class GPUTransformSampleID(nn.Module):
     def __init__(self, cfg, ir_dir, noise_dir, train=True, cpu=False, max_transforms_1=1, max_transforms_2=1):
