@@ -67,7 +67,7 @@ class NeuralSampleIDDataset(Dataset):
         segment = torch.stack([bass_mix_segment, vocals_segment, drums_segment], dim=0)
 
 
-        # Step 3: Silence detection using SNR
+        # Silence detection using SNR
         valid_channels = []
         for i, stem in enumerate(segment):
             signal = segment.sum(dim=0) - stem
@@ -93,14 +93,12 @@ class NeuralSampleIDDataset(Dataset):
         x_i = x_i[x_i_start:x_i_start + clip_frames]
         x_j = x_j[x_j_start:x_j_start + clip_frames]
 
-        # Step 6: Pass x_i and x_j to transform
         if self.transform is not None:
             x_i, x_j = self.transform(x_i, x_j)
 
         if x_i is None or x_j is None:
             return self[idx + 1]
 
-        # Step 7: Padding or slicing to ensure lengths are consistent
         if len(x_i) < clip_frames:
             x_i = F.pad(x_i, (0, clip_frames - len(x_i)))
         else:
@@ -111,7 +109,6 @@ class NeuralSampleIDDataset(Dataset):
         else:
             x_j = x_j[:clip_frames]
 
-        # Apply normalization if required
         if self.norm is not None:
             norm_val = qtile_norm(torch.cat([x_i, x_j]), q=self.norm)
             x_i = x_i / norm_val
