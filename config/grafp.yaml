@@ -19,7 +19,7 @@ annot_path: '/data/home/acw723/datasets/sample_100/samples.csv'
 arch: 'grafp'
 fs: 16000
 dur: 4.08
-offset: 0.05
+offset: 0.01
 norm: 0.95
 win_len: 1024
 hop_len: 512
