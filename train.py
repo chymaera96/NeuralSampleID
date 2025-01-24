@@ -101,8 +101,6 @@ def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augmen
 
         simclr_loss = ntxent_loss(z_i, z_j, cfg)
 
-        if idx == 5:
-            simclr_loss = torch.tensor(float('nan'))   # Testing nan behaviour
 
         if torch.isnan(simclr_loss):
             print(f"NaN detected in loss at step {idx}, skipping batch")
