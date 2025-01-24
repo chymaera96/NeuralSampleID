@@ -48,7 +48,6 @@ class GPUTransformSampleID(nn.Module):
             TimeStretch(min_rate=cfg['min_rate'], max_rate=cfg['max_rate'], p=1.0),
         ]
 
-
         self.val_transform = Identity()
 
         self.logmelspec = nn.Sequential(
