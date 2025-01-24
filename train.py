@@ -27,6 +27,7 @@ root = os.path.dirname(__file__)
 model_folder = os.path.join(root,"checkpoint")
 parent_dir = os.path.abspath(os.path.join(root, os.pardir))
 sys.path.append(parent_dir)
+nan_counter = 0
 
 device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
@@ -100,7 +101,7 @@ def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augmen
 
         simclr_loss = ntxent_loss(z_i, z_j, cfg)
 
-        if idx == 20:
+        if idx == 5:
             simclr_loss = torch.tensor(float('nan'))    # Testing nan behaviour
 
         if torch.isnan(simclr_loss):
@@ -162,7 +163,6 @@ def main():
     model_name = args.ckp
     random_seed = args.seed
     shuffle_dataset = True
-    nan_counter = 0
 
     print("Intializing augmentation pipeline...")
     noise_train_idx = load_augmentation_index(noise_dir, splits=0.8)["train"]
