@@ -33,7 +33,7 @@ class GPUTransformSampleID(nn.Module):
 
         self.train_transform_1_options = [
             BandEQ(),
-            Compressor(min_threshold=cfg['DC_threshold'][0], max_threshold=cfg['DC_threshold'][1],
+            Compressor(min_threshold_db=cfg['DC_threshold'][0], max_threshold_db=cfg['DC_threshold'][1],
                        ratio=cfg['DC_ratio'],
                        min_attack=cfg['DC_attack'][0], max_attack=cfg['DC_attack'][1],
                        min_release=cfg['DC_release'][0], max_release=cfg['DC_release'][1],
