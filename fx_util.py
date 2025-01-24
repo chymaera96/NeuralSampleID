@@ -94,12 +94,13 @@ class Compressor(BaseWaveformTransform):
         Randomize only threshold, ratio, attack, and release parameters.
         """
         super().randomize_parameters(samples, sample_rate) 
-        self.parameters = {
-            "threshold": random.uniform(self.min_threshold, self.max_threshold),
-            "ratio": random.choice(self.ratio),
-            "attack": random.uniform(self.min_attack, self.max_attack),
-            "release": random.uniform(self.min_release, self.max_release),
-        }
+        if self.parameters["should_apply"]:  # Only randomize further if we should apply
+            self.parameters.update({
+                "threshold": random.uniform(self.min_threshold, self.max_threshold),
+                "ratio": random.choice(self.ratio),
+                "attack": random.uniform(self.min_attack, self.max_attack),
+                "release": random.uniform(self.min_release, self.max_release),
+            })
 
     def calculate_attack_release_filters(self, attack_time, release_time, sample_rate):
         """
