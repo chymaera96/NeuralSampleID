@@ -313,6 +313,8 @@ def save_nan_batch(x_i, x_j, save_dir="nan_batches", counter=0):
     Save batches with NaN losses for later visualization.
     """
     os.makedirs(save_dir, exist_ok=True)
+    x_i = x_i.detach().cpu()
+    x_j = x_j.detach().cpu()
     x_i_path = os.path.join(save_dir, f"x_i_{counter}.pt")
     x_j_path = os.path.join(save_dir, f"x_j_{counter}.pt")
     torch.save(x_i, x_i_path)
