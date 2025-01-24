@@ -56,8 +56,7 @@ class Compressor(BaseWaveformTransform):
         self,
         min_threshold=-24,
         max_threshold=-12,
-        min_ratio=1.5,
-        max_ratio=4.0,
+        ratio = [2, 4, 8, 20],
         min_attack=0.001,
         max_attack=0.1,
         min_release=0.01,
@@ -82,8 +81,7 @@ class Compressor(BaseWaveformTransform):
         super().__init__(p)
         self.min_threshold = min_threshold
         self.max_threshold = max_threshold
-        self.min_ratio = min_ratio
-        self.max_ratio = max_ratio
+        self.ratio = ratio
         self.min_attack = min_attack
         self.max_attack = max_attack
         self.min_release = min_release
@@ -97,7 +95,7 @@ class Compressor(BaseWaveformTransform):
         """
         self.parameters = {
             "threshold": random.uniform(self.min_threshold, self.max_threshold),
-            "ratio": random.uniform(self.min_ratio, self.max_ratio),
+            "ratio": random.choice(self.ratio),
             "attack": random.uniform(self.min_attack, self.max_attack),
             "release": random.uniform(self.min_release, self.max_release),
         }

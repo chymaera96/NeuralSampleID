@@ -32,12 +32,12 @@ class GPUTransformSampleID(nn.Module):
 
 
         self.train_transform_1_options = [
-            # BandEQ(),
-            # Compressor(min_threshold=-24, max_threshold=-12, 
-            #            min_ratio=1.5, max_ratio=4.0, 
-            #            min_attack=0.001, max_attack=0.1, 
-            #            min_release=0.01, max_release=0.5,
-            #            p=1.0),
+            BandEQ(),
+            Compressor(min_threshold=cfg['DC_threshold'][0], max_threshold=cfg['DC_threshold'][1],
+                       ratio=cfg['DC_ratio'],
+                       min_attack=cfg['DC_attack'][0], max_attack=cfg['DC_attack'][1],
+                       min_release=cfg['DC_release'][0], max_release=cfg['DC_release'][1],
+                       p=1.0),
             # BitCrush(min_bit_depth=cfg['min_bit_depth'], max_bit_depth=cfg['min_bit_depth'], p=1.0),
             Gain(min_gain_db=-cfg['gain'], max_gain_db=cfg['gain'], p=1.0),
             ApplyImpulseResponse(ir_path=self.ir_dir, p=1.0),
@@ -60,10 +60,10 @@ class GPUTransformSampleID(nn.Module):
             AmplitudeToDB()
         )
 
-        self.spec_aug = nn.Sequential(
-            TimeMasking(cfg['time_mask'], True),
-            FrequencyMasking(cfg['freq_mask'], True)
-        )
+        # self.spec_aug = nn.Sequential(
+        #     TimeMasking(cfg['time_mask'], True),
+        #     FrequencyMasking(cfg['freq_mask'], True)
+        # )
 
         self.melspec = MelSpectrogram(sample_rate=self.sample_rate, 
                                       win_length=cfg['win_len'], 

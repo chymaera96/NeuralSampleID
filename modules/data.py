@@ -114,10 +114,10 @@ class NeuralSampleIDDataset(Dataset):
         #     x_i = x_i / norm_val
         #     x_j = x_j / norm_val
 
-        # # Check for silence
-        # if x_i.abs().max() < self.silence or x_j.abs().max() < self.silence:
-        #     print("Silence detected. Skipping...")
-        #     return self[idx + 1]
+        # Check for silence
+        if x_i.abs().max() < self.silence or x_j.abs().max() < self.silence:
+            print("Silence detected. Skipping...")
+            return self[idx + 1]
 
         return x_i, x_j
 

@@ -48,19 +48,25 @@ error_threshold: 5
 # Augmentation hyperparameters
 n_frames: 32 # depends on the spectrogram parameters
 overlap: 0.875
-tr_snr: [0, 20]
-val_snr: [0, 10]
-test_snr: [19, 21]
 pitch_shift: 3
+gain: 10
+
+# Time Stretching hyperparameters
 min_rate: 0.7
 max_rate: 1.5
+
+# BitCrusher hyperparameters
 min_bit_depth: 2
 max_bit_depth: 10
-gain: 10
-time_mask: 8
-freq_mask: 16
-noise_prob: 1.0
-ir_prob: 1.0
+
+# Dynamic range compression hyperparameters
+DC_threshold: [-30, 0]
+DC_ratio: [2, 4, 8, 20]
+DC_attack: [0.001, 0.1]
+DC_release: [0.05, 1.0]
+
+# time_mask: 8
+# freq_mask: 16
 
 # Model architecture
 d: 128
