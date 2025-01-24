@@ -46,6 +46,7 @@ class BandEQ:
 
         return audio
 
+
 class Compressor(BaseWaveformTransform):
     """
     Apply dynamic range compression to the audio waveform using a feed-forward design.
@@ -56,7 +57,7 @@ class Compressor(BaseWaveformTransform):
         self,
         min_threshold=-24,
         max_threshold=-12,
-        ratio = [2, 4, 8, 20],
+        ratio=[2, 4, 8, 20],
         min_attack=0.001,
         max_attack=0.1,
         min_release=0.01,
@@ -68,8 +69,7 @@ class Compressor(BaseWaveformTransform):
         """
         :param min_threshold: Minimum threshold in dB
         :param max_threshold: Maximum threshold in dB
-        :param min_ratio: Minimum compression ratio
-        :param max_ratio: Maximum compression ratio
+        :param ratio: List of possible compression ratios
         :param min_attack: Minimum attack time in seconds
         :param max_attack: Maximum attack time in seconds
         :param min_release: Minimum release time in seconds
@@ -93,6 +93,7 @@ class Compressor(BaseWaveformTransform):
         """
         Randomize only threshold, ratio, attack, and release parameters.
         """
+        super().randomize_parameters(samples, sample_rate) 
         self.parameters = {
             "threshold": random.uniform(self.min_threshold, self.max_threshold),
             "ratio": random.choice(self.ratio),
@@ -125,12 +126,12 @@ class Compressor(BaseWaveformTransform):
         # Knee region
         knee_mask = (level_db >= knee_lower) & (level_db <= knee_upper)
         knee_range = level_db[knee_mask] - knee_lower
-        slope = (1 - 1/ratio) * knee_range / self.knee_db
+        slope = (1 - 1 / ratio) * knee_range / self.knee_db
         gain_reduction[knee_mask] = -slope * knee_range / 2
         
         # Above knee
         above_mask = level_db > knee_upper
-        gain_reduction[above_mask] = -(level_db[above_mask] - threshold) * (1 - 1/ratio)
+        gain_reduction[above_mask] = -(level_db[above_mask] - threshold) * (1 - 1 / ratio)
         
         return gain_reduction
 
@@ -153,8 +154,11 @@ class Compressor(BaseWaveformTransform):
         """
         Apply compression to the audio samples.
         """
+        if not self.should_apply:  # Check if transform should apply
+            return samples  # Return original samples if not applying
+
         if not self.parameters:
-            raise RuntimeError("Parameters not randomized! Call randomize_parameters()")
+            raise RuntimeError("Parameters not randomized! Call randomize_parameters().")
 
         # Get randomized parameters
         threshold = self.parameters["threshold"]
@@ -183,8 +187,8 @@ class Compressor(BaseWaveformTransform):
         compressed_samples = samples * gain_linear
 
         return compressed_samples
-    
 
+    
 
 
 class Identity(BaseTransform):
