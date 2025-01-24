@@ -85,7 +85,7 @@ def mixco(model, xis, xjs, zis, zjs, cfg):
 def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augment=None):
     model.train()
     loss_epoch = 0
-    # return loss_epoch
+    nan_counter = 0  # Counter for saving NaN batches
 
     for idx, (x_i, x_j) in enumerate(train_loader):
 
@@ -101,19 +101,20 @@ def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augmen
         simclr_loss = ntxent_loss(z_i, z_j, cfg)
         if torch.isnan(simclr_loss):
             print(f"NaN detected in loss at step {idx}, skipping batch")
+            nan_counter = save_nan_batch(x_i, x_j, save_dir="nan_batches", counter=nan_counter)
             continue
+
         if cfg['beta'] > 0.0:       # Beta set to 0.0 as mixco support is not implemented
             mixco_loss = mixco(model, x_i, x_j, z_i, z_j, cfg)
         else:
             mixco_loss = torch.tensor(0.0)
-    
-        loss = simclr_loss #+ cfg['beta'] * mixco_loss.item()
-        # Assert that loss is not NaN
+
+        loss = simclr_loss
         assert not torch.isnan(loss), "Loss is NaN"
 
         scaler.scale(loss).backward()
 
-        #Added gradient clipping
+        # Added gradient clipping
         torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
 
         scaler.step(optimizer)
@@ -124,7 +125,6 @@ def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augmen
 
         loss_epoch += loss.item()
 
-    return loss_epoch
 
 def validate(epoch, query_loader, dummy_loader, augment, model, output_root_dir):
     # model.eval()
