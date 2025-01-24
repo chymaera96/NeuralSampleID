@@ -85,7 +85,7 @@ def mixco(model, xis, xjs, zis, zjs, cfg):
 def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augment=None):
     model.train()
     loss_epoch = 0
-    nan_counter = 0  # Counter for saving NaN batches
+    global nan_counter
 
     for idx, (x_i, x_j) in enumerate(train_loader):
 
@@ -99,6 +99,10 @@ def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augmen
         _, _, z_i, z_j = model(x_i, x_j)
 
         simclr_loss = ntxent_loss(z_i, z_j, cfg)
+
+        if idx == 20:
+            simclr_loss = torch.tensor(float('nan'))    # Testing nan behaviour
+
         if torch.isnan(simclr_loss):
             print(f"NaN detected in loss at step {idx}, skipping batch")
             nan_counter = save_nan_batch(x_i, x_j, save_dir="nan_batches", counter=nan_counter)
@@ -124,6 +128,8 @@ def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augmen
             print(f"Step [{idx}/{len(train_loader)}]\t SimCLR Loss: {simclr_loss.item()} \t MixCo Loss: {mixco_loss.item()}")
 
         loss_epoch += loss.item()
+
+    return loss_epoch
 
 
 def validate(epoch, query_loader, dummy_loader, augment, model, output_root_dir):
@@ -156,6 +162,7 @@ def main():
     model_name = args.ckp
     random_seed = args.seed
     shuffle_dataset = True
+    nan_counter = 0
 
     print("Intializing augmentation pipeline...")
     noise_train_idx = load_augmentation_index(noise_dir, splits=0.8)["train"]
