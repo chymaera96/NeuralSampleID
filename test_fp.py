@@ -23,7 +23,7 @@ load_augmentation_index
 from modules.data import Sample100Dataset
 from encoder.graph_encoder import GraphEncoder
 from simclr.simclr import SimCLR   
-from modules.transformations import GPUTransformNeuralfp
+from modules.transformations import GPUTransformSampleID
 from eval import get_index, load_memmap_data, eval_faiss
 
 
@@ -225,7 +225,7 @@ def main():
     else:
         noise_test_idx = load_augmentation_index(noise_dir, splits=0.8)["test"]
     ir_test_idx = load_augmentation_index(ir_dir, splits=0.8)["test"]
-    test_augment = GPUTransformNeuralfp(cfg=cfg, ir_dir=ir_test_idx, 
+    test_augment = GPUTransformSampleID(cfg=cfg, ir_dir=ir_test_idx, 
                                         noise_dir=noise_test_idx, 
                                         train=False).to(device)
 
