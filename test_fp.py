@@ -20,7 +20,7 @@ from util import \
 create_fp_dir, load_config, \
 query_len_from_seconds, seconds_from_query_len, \
 load_augmentation_index
-from modules.data import NeuralfpDataset, Sample100Dataset
+from modules.data import Sample100Dataset
 from encoder.graph_encoder import GraphEncoder
 from simclr.simclr import SimCLR   
 from modules.transformations import GPUTransformNeuralfp
