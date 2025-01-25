@@ -12,6 +12,6 @@
 
 module load python/3.10.7
 source ../grafp_venv/bin/activate
-python test_fp.py --query_lens=4,5,7,10,15,20 \
+python test_fp.py --query_lens=5,7,10,15,20 \
                   --text=tc14_ivfpq \
                   --test_dir=../datasets/sample_100/audio
