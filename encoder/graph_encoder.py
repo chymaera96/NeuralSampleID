@@ -118,15 +118,12 @@ class GraphEncoder(nn.Module):
         if size == 't':
             self.blocks = [2,2,6,2]
             self.channels = [64, 128, 256, 512]
-            self.emb_dims = 1024
         elif size == 's':
             self.blocks = [2, 2, 6, 2]
             self.channels = [80, 160, 400, 640]
-            self.emb_dims = 1024
         elif size == 'm':
             self.blocks = [2,2,16,2]
             self.channels = [96, 192, 384, 768]
-            self.emb_dims = 1024
         else:
             self.blocks = [2,2,18,2]
             self.channels = [128, 256, 512, 1024]
@@ -178,7 +175,7 @@ class GraphEncoder(nn.Module):
 
         # Linear projection for common subspace in contrastive learning
 
-        self.proj = nn.Conv2d(self.channels[-1], 1024, 1, bias=True)
+        self.proj = nn.Conv2d(self.channels[-1], self.emb_dims, 1, bias=True)
     
     def model_init(self):
         for m in self.modules():
