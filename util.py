@@ -186,7 +186,7 @@ def create_fp_dir(resume=None, ckp=None, epoch=1, train=True):
     if train:
         parent_dir = 'logs/emb/valid'
     else:
-        parent_dir = '/data/scratch/logs/emb/test'
+        parent_dir = '/data/scratch/acw723/logs/emb/valid'
 
     if not os.path.exists(parent_dir):
         os.makedirs(parent_dir)
