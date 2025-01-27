@@ -334,8 +334,8 @@ def eval_faiss(emb_dir,
                 else:
                     q_match = q     
                 score = np.mean(np.sum(q_match * candidate_seq, axis=1))
-                # hist[match] += score
-                hist[match] += 1
+                hist[match] += score
+                # hist[match] += 1
                 # To-do: use cosine distance for better matching score
 
             """ Evaluate """
