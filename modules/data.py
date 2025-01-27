@@ -258,11 +258,11 @@ class Sample100Dataset(Dataset):
         clip_frames = int(self.sample_rate * self.dur)
         # if x.shape[-1] < clip_frames:
         #     x = F.pad(x, (0, clip_frames - x.shape[-1]))
-        if x.shape[-1] < clip_frames:
-            repeat_times = (clip_frames // x.shape[-1]) + 1
-            x = torch.tile(x, (1, repeat_times))  # Repeat x along the last dimension
-            x = x[:, :clip_frames]
-
+        if x.shape[0] < clip_frames:
+            repeat_times = (clip_frames // x.shape[0]) + 1
+            x = torch.tile(x, (repeat_times,))  # Repeat x along its only dimension
+            x = x[:clip_frames] 
+            
         if self.transform is not None:
             x, _ = self.transform(x, None)
 
