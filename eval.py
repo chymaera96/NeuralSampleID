@@ -302,7 +302,7 @@ def eval_faiss(emb_dir,
             hist = defaultdict(int)
             assert test_id <= len(query)
             q = query[test_id:(test_id + sl), :] # shape(q) = (length, dim)
-            q_id = query_lookup[test_id]    # query ID
+            q_id = query_lookup[test_id].split("_")[0]    # query ID; split to remove the segment number
 
             # segment-level top k search for each segment
             _, I = index.search(

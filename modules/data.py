@@ -148,8 +148,10 @@ class Sample100Dataset(Dataset):
             self.filenames = {}
 
         self.annotations = pd.read_csv(annot_path)
-        with open(f'{cfg["data_dir"]}/query_dict.json', 'r') as fp:
+        with open(f'{cfg["data_dir"]}/sample100_query_index.json', 'r') as fp:
             self.query_dict = json.load(fp)
+        
+        self.ref_names = list(set([rel['ref_file'] for rel in self.annotations]))
 
         self.error_counts = {}
         self.ignore_idx = set()
@@ -174,8 +176,8 @@ class Sample100Dataset(Dataset):
         
         if self.mode == "query":
 
-            rel = self.annotations.iloc[idx]
-            fname = rel['sample_track_id']
+            rel = self.annotations[idx]
+            fname = rel['query_file']
             query_path = os.path.join(self.path, fname+'.mp3')
             try:
                 audio, sr = torchaudio.load(query_path)
@@ -189,19 +191,27 @@ class Sample100Dataset(Dataset):
             resampler = torchaudio.transforms.Resample(sr, self.sample_rate)
             audio_resampled = resampler(audio_mono)    
             try:
-                segment = np.array(self.query_dict[rel['sample_id']][0]) * self.sample_rate
+                s = rel['start_time']
+                e = rel['end_time']
             except KeyError:
                 self.ignore_idx.add(idx)
                 next_idx = self._get_safe_index(idx)
                 return self[next_idx]
 
-            x = audio_resampled[int(segment[0]): int(segment[1])]
+            if e == -1:
+                x = audio_resampled[int(s*self.sample_rate):]
+            elif (e - s) < self.dur / 2:
+                self.ignore_idx.add(idx)
+                next_idx = self._get_safe_index(idx)
+                return self[next_idx]
+            else:
+                x = audio_resampled[int(s*self.sample_rate):int(e*self.sample_rate)]
     
 
         elif self.mode == "ref":
 
-            rel = self.annotations.iloc[idx]
-            fname = rel['original_track_id']
+            rel = self.ref_names[idx]
+            fname = rel['ref_file']
             ref_path = os.path.join(self.path, fname+'.mp3')
             assert os.path.exists(ref_path), f"File not found: {ref_path}"
             try:
@@ -241,13 +251,17 @@ class Sample100Dataset(Dataset):
         else:
             raise ValueError("Invalid Evaluation mode")
 
-        if self.norm is not None:
-            norm_val = qtile_norm(audio_resampled, q=self.norm)
-            x = x / norm_val
+        # if self.norm is not None:
+        #     norm_val = qtile_norm(audio_resampled, q=self.norm)
+        #     x = x / norm_val
         
         clip_frames = int(self.sample_rate * self.dur)
+        # if x.shape[-1] < clip_frames:
+        #     x = F.pad(x, (0, clip_frames - x.shape[-1]))
         if x.shape[-1] < clip_frames:
-            x = F.pad(x, (0, clip_frames - x.shape[-1]))
+            repeat_times = (clip_frames // x.shape[-1]) + 1
+            x = torch.tile(x, (1, repeat_times))  # Repeat x along the last dimension
+            x = x[:, :clip_frames]
 
         if self.transform is not None:
             x, _ = self.transform(x, None)
@@ -259,6 +273,7 @@ class Sample100Dataset(Dataset):
     def __len__(self):
         if self.mode == "dummy":
             return len(self.filenames['dummy'])
-
+        elif self.mode == "ref":
+            return len(self.ref_names)
         else:
             return len(self.annotations)
