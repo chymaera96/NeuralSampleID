@@ -210,8 +210,8 @@ class Sample100Dataset(Dataset):
 
         elif self.mode == "ref":
 
-            rel = self.ref_names[idx]
-            fname = rel['ref_file']
+            fname = self.ref_names[idx]
+            # fname = rel['ref_file']
             ref_path = os.path.join(self.path, fname+'.mp3')
             assert os.path.exists(ref_path), f"File not found: {ref_path}"
             try:
