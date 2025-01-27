@@ -147,9 +147,9 @@ class Sample100Dataset(Dataset):
         else:
             self.filenames = {}
 
-        self.annotations = pd.read_csv(annot_path)
-        with open(f'{cfg["data_dir"]}/sample100_query_index.json', 'r') as fp:
-            self.query_dict = json.load(fp)
+        # self.annotations = pd.read_csv(annot_path)
+        with open(self.annot_path, 'r') as fp:
+            self.annotations = json.load(fp)
         
         self.ref_names = list(set([rel['ref_file'] for rel in self.annotations]))
 
