@@ -288,8 +288,8 @@ def main():
             # create_ref_db(ref_db_loader, augment=test_augment,
             #                 model=model, output_root_dir=fp_dir, verbose=True)
             
-            create_query_db(query_db_loader, augment=test_augment,
-                            model=model, output_root_dir=fp_dir, verbose=True)
+            # create_query_db(query_db_loader, augment=test_augment,
+            #                 model=model, output_root_dir=fp_dir, verbose=True)
             
             
             text = f'{args.text}_{str(epoch)}'
