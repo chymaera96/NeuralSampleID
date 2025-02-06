@@ -23,9 +23,9 @@ dur: 5.0
 offset: 2.5
 norm: 0.95
 hop_len: 512
-win_len: null
-n_fft: null
-n_mels: null
+win_len: 1024
+n_fft: 1024
+n_mels: 64
 n_peaks: 512  # max number of peaks to consider
 silence: 1.0e-5
 
