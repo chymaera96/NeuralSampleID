@@ -19,9 +19,9 @@ class SimCLR(nn.Module):
         else:
             self.peak_extractor = None
 
-        if self.arch == 'resnet-ibn':
+        if self.cfg['arch'] == 'resnet-ibn':
             self.projector = nn.Identity()
-        elif self.arch == 'grafp':              
+        elif self.cfg['arch'] == 'grafp':              
             self.projector = nn.Sequential(nn.Linear(h, d*u),
                                         nn.ELU(),
                                         nn.Linear(d*u, d)
