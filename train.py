@@ -95,10 +95,8 @@ def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augmen
         x_i = x_i.to(device)
         x_j = x_j.to(device)
 
-        print(f"x_i shape before augmentation: {x_i.shape}")
         with torch.no_grad():
             x_i, x_j = augment(x_i, x_j)
-        print(f"x_i shape after augmentation: {x_i.shape}")
 
         _, _, z_i, z_j = model(x_i, x_j)
 

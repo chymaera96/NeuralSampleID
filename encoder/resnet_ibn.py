@@ -139,6 +139,6 @@ class ResNetIBN(nn.Module):
         # print(f"Layer4: {x.shape}")
 
         x = self.global_pool(x).view(x.size(0), -1)
-        print(f"Global Pool: {x.shape}")
+        # print(f"Global Pool: {x.shape}")
         return x
 
