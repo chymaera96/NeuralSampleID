@@ -113,11 +113,11 @@ class ResNetIBN(nn.Module):
         self.global_pool = GeMPooling()
         
     
-    def _make_layer(self, in_channels, out_channels, blocks, stride):
+    def _make_layer(self, block, in_channels, out_channels, blocks, stride):
         layers = []
-        layers.append(ResidualBlock(in_channels, out_channels, stride))
+        layers.append(block(in_channels, out_channels, stride))
         for _ in range(1, blocks):
-            layers.append(ResidualBlock(out_channels, out_channels))
+            layers.append(block(out_channels, out_channels))
         return nn.Sequential(*layers)
     
     def forward(self, x):
