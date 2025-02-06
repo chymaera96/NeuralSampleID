@@ -122,7 +122,6 @@ class ResNetIBN(nn.Module):
 
     def forward(self, x):
         x = self.conv1(x.unsqueeze(1))
-        print(f"Input: {x.shape}")
         # print(f"Conv1: {x.shape}")
         x = self.bn1(x)
         x = self.relu(x)
