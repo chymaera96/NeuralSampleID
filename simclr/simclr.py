@@ -19,10 +19,13 @@ class SimCLR(nn.Module):
         else:
             self.peak_extractor = None
 
-        self.projector = nn.Sequential(nn.Linear(h, d*u),
-                                       nn.ELU(),
-                                       nn.Linear(d*u, d)
-                                        # nn.Linear(d*u, dim)
+        if self.arch == 'resnet-ibn':
+            self.projector = nn.Identity()
+        elif self.arch == 'grafp':              
+            self.projector = nn.Sequential(nn.Linear(h, d*u),
+                                        nn.ELU(),
+                                        nn.Linear(d*u, d)
+                                            # nn.Linear(d*u, dim)
                                )
 
     def forward(self, x_i, x_j):

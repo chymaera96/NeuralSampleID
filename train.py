@@ -19,6 +19,7 @@ from simclr.simclr import SimCLR
 from modules.transformations import GPUTransformSampleID
 from modules.data import NeuralSampleIDDataset
 from encoder.graph_encoder import GraphEncoder
+from encoder.resnet_ibn import ResidualIBN
 from eval import eval_faiss
 # from test_fp import create_fp_db, create_dummy_db
 
@@ -213,6 +214,8 @@ def main():
         raise NotImplementedError
     elif args.encoder == 'grafp':
         model = SimCLR(cfg, encoder=GraphEncoder(cfg=cfg, in_channels=cfg['n_filters'], k=args.k))
+    elif args.encoder == 'resnet-ibn':
+        model = SimCLR(cfg, encoder=ResidualIBN())
         if torch.cuda.device_count() > 1:
             print("Using", torch.cuda.device_count(), "GPUs!")
             # model = DataParallel(model).to(device)

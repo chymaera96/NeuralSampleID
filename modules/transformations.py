@@ -10,6 +10,8 @@ from audiomentations import \
     SevenBandParametricEQ, Limiter, Gain
 from torchaudio.transforms import MelSpectrogram, TimeMasking, FrequencyMasking, AmplitudeToDB
 import warnings
+from nnAudio.Spectrogram import CQT
+
 
 from fx_util import BandEQ, Compressor
 
@@ -40,7 +42,7 @@ class GPUTransformSampleID(nn.Module):
                        p=1.0),
             # BitCrush(min_bit_depth=cfg['min_bit_depth'], max_bit_depth=cfg['min_bit_depth'], p=1.0),
             Gain(min_gain_db=-cfg['gain'], max_gain_db=cfg['gain'], p=1.0),
-            ApplyImpulseResponse(ir_path=self.ir_dir, p=1.0),
+            # ApplyImpulseResponse(ir_path=self.ir_dir, p=1.0),
         ]
 
         self.train_transform_2_options = [
@@ -69,6 +71,15 @@ class GPUTransformSampleID(nn.Module):
                                       hop_length=cfg['hop_len'], 
                                       n_fft=cfg['n_fft'], 
                                       n_mels=cfg['n_mels'])
+        
+        self.cqt = CQT(sr=self.sample_rate, hop_length=cfg['hop_len'])
+
+        if self.cfg['arch'] == 'grafp':
+            self.spec_func = self.logmelspec
+        elif self.cfg['arch'] == 'resnet-ibn':
+            self.spec_func = self.cqt
+        else:
+            raise ValueError(f"Invalid architecture: {self.cfg['arch']}")
 
     def apply_random_transforms(self, audio, transform_options, max_transforms):
 
@@ -95,7 +106,6 @@ class GPUTransformSampleID(nn.Module):
     
     def forward(self, x_i, x_j):
         if self.cpu:
-
             # print(f"In CPU transform x_i shape: {x_i.shape}, x_ns shape: {x_j.shape}")    
             x_s = x_j.sum(dim=0) if x_j.ndim > 1 else x_j
             x_ns = x_i.sum(dim=0) if x_i.ndim > 1 else x_i
@@ -109,14 +119,14 @@ class GPUTransformSampleID(nn.Module):
 
 
         if self.train:
-            X_i = self.logmelspec(x_i)
+            X_i = self.spec_func(x_i)
             assert X_i.device == torch.device('cuda:0'), f"X_i device: {X_i.device}"
-            X_j = self.logmelspec(x_j)
+            X_j = self.spec_func(x_j)
 
 
         else:
             # Test-time transformation: x_i is waveform and x_j is None
-            X_i = self.logmelspec(x_i.squeeze(0)).transpose(1, 0)
+            X_i = self.spec_func(x_i.squeeze(0)).transpose(1, 0)
             try:
                 X_i = X_i.unfold(0, size=self.n_frames, step=int(self.n_frames * (1 - self.overlap)))
             except RuntimeError:
