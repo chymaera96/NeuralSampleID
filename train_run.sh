@@ -13,3 +13,6 @@
 module load python/3.10.7
 source ../grafp_venv/bin/activate
 python train.py --ckp=tc_30
+
+
+python train.py --ckp=tc_18 --encoder=resnet-ibn --config=config/resnet_ibn.yaml --resume=checkpoints/model_tc_18.current.pth

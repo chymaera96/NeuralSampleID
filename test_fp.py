@@ -22,6 +22,7 @@ query_len_from_seconds, seconds_from_query_len, \
 load_augmentation_index
 from modules.data import Sample100Dataset
 from encoder.graph_encoder import GraphEncoder
+from encoder.resnet_ibn import ResNetIBN
 from simclr.simclr import SimCLR   
 from modules.transformations import GPUTransformSampleID
 from eval import get_index, load_memmap_data, eval_faiss
@@ -204,18 +205,20 @@ def main():
 
 
     print("Creating new model...")
-    if args.encoder == 'resnet':
-        # TODO: Add support for resnet encoder (deprecated)
-        raise NotImplementedError
-    elif args.encoder == 'grafp':
+    if args.encoder == 'grafp':
         model = SimCLR(cfg, encoder=GraphEncoder(cfg=cfg, in_channels=cfg['n_filters'], k=args.k))
-        if torch.cuda.device_count() > 1:
-            print("Using", torch.cuda.device_count(), "GPUs!")
-            # model = DataParallel(model).to(device)
-            model = model.to(device)
-            model = torch.nn.DataParallel(model)
-        else:
-            model = model.to(device)
+    elif args.encoder == 'resnet-ibn':
+        model = SimCLR(cfg, encoder=ResNetIBN())
+    else:
+        raise ValueError(f"Invalid encoder: {args.encoder}")
+    
+    if torch.cuda.device_count() > 1:
+        print("Using", torch.cuda.device_count(), "GPUs!")
+        # model = DataParallel(model).to(device)
+        model = model.to(device)
+        model = torch.nn.DataParallel(model)
+    else:
+        model = model.to(device)
 
     print("Creating dataloaders ...")
 
