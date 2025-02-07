@@ -45,7 +45,7 @@ error_threshold: 5
 
 # Augmentation hyperparameters
 n_frames: 216 # depends on the spectrogram parameters
-overlap: 0.875
+overlap: 0.5
 pitch_shift: 3
 gain: 10
 
