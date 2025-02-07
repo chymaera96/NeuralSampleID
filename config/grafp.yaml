@@ -71,7 +71,7 @@ DC_release: [0.05, 1.0]
 
 # Model architecture
 d: 128
-h: 1024
+h: 2048
 u: 32
 dim: 2048
 

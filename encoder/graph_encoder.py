@@ -91,7 +91,7 @@ class FFN(nn.Module):
 class GraphEncoder(nn.Module):
 
     def __init__(self, cfg, k=3,conv='mr',act='relu',norm='batch',bias=True,dropout=0.0,dilation=True,epsilon=0.2,drop_path=0.1,size ='t',
-               emb_dims=1024,in_channels=3):
+               emb_dims=2048,in_channels=3):
         
         super().__init__()
         
@@ -176,7 +176,7 @@ class GraphEncoder(nn.Module):
 
         # Linear projection for common subspace in contrastive learning
 
-        self.proj = nn.Conv2d(self.channels[-1], 1024, 1, bias=True)
+        self.proj = nn.Conv2d(self.channels[-1], self.emb_dims, 1, bias=True)
     
     def model_init(self):
         for m in self.modules():
