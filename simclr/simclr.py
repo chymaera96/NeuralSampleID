@@ -24,8 +24,8 @@ class SimCLR(nn.Module):
         elif self.cfg['arch'] == 'grafp':              
             self.projector = nn.Sequential(nn.Linear(h, d*u),
                                         nn.ELU(),
-                                        nn.Linear(d*u, d)
-                                            # nn.Linear(d*u, dim)
+                                        # nn.Linear(d*u, d)
+                                        nn.Linear(d*u, dim)
                                )
 
     def forward(self, x_i, x_j):
