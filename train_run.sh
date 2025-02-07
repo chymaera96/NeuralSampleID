@@ -13,5 +13,3 @@
 module load python/3.10.7
 source ../grafp_venv/bin/activate
 python train.py --ckp=tc_30
-
-
