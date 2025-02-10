@@ -20,7 +20,7 @@ annot_path: 'data/sample100_query_index.json'
 # Model input parameters
 arch: 'grafp'
 fs: 16000
-dur: 4.0 # for sampleID it should probably be over 5 seconds
+dur: 4.08 # for sampleID it should probably be over 5 seconds
 offset: 0.25
 norm: 0.95
 win_len: 1024
