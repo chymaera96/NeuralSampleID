@@ -127,6 +127,7 @@ class GPUTransformSampleID(nn.Module):
         else:
             # Test-time transformation: x_i is waveform and x_j is None
             X_i = self.spec_func(x_i.squeeze(0))
+            print(f"X_i shape: {X_i.shape}")
             if X_i.ndim == 2:
                 X_i = X_i.transpose(1, 0)
             elif X_i.ndim == 3:
