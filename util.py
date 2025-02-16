@@ -360,7 +360,7 @@ def main():
     # htdemucs_dir = '/data/EECS-Studiosync/datasets/fma_medium/htdemucs'
 
     index = load_nsid_index(cfg='config/grafp.yaml')
-    print(index)
+    print(index[:2])
 
 if __name__ == '__main__':
     main()
