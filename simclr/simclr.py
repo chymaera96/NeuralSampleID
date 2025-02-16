@@ -35,7 +35,8 @@ class SimCLR(nn.Module):
 
         # Assert peak extractor is on cuda
         assert x_i.device == torch.device('cuda:0'), f"x_i device: {x_i.device}"
-        
+        assert next(self.peak_extractor.parameters()).device == torch.device('cuda:0'), f"Peak extractor device: {next(self.peak_extractor.parameters()).device}"
+
         h_i = self.encoder(x_i)
         z_i = self.projector(h_i)
         z_i = F.normalize(z_i, p=2, eps=1e-10)
