@@ -355,10 +355,10 @@ def main():
     # plt.savefig('losses.jpg')
 
     # Create index file for sample_100 dataset
-    fma_dir = '/data/home/acw723/datasets/fma/fma_medium'
-    htdemucs_dir = '/data/EECS-Studiosync/datasets/fma_medium/htdemucs'
+    # fma_dir = '/data/home/acw723/datasets/fma/fma_medium'
+    # htdemucs_dir = '/data/EECS-Studiosync/datasets/fma_medium/htdemucs'
 
-    index = load_nsid_index(htdemucs_dir, fma_dir)
+    index = load_nsid_index(cfg='config/grafp.yaml')
     print(index)
 
 if __name__ == '__main__':
