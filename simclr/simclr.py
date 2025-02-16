@@ -32,6 +32,10 @@ class SimCLR(nn.Module):
         
         if self.cfg['arch'] == 'grafp':
             x_i = self.peak_extractor(x_i)
+
+        # Assert peak extractor is on cuda
+        assert x_i.device == torch.device('cuda:0'), f"x_i device: {x_i.device}"
+        
         h_i = self.encoder(x_i)
         z_i = self.projector(h_i)
         z_i = F.normalize(z_i, p=2, eps=1e-10)
