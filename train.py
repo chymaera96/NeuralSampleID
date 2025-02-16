@@ -216,13 +216,14 @@ def main():
         model = SimCLR(cfg, encoder=GraphEncoder(cfg=cfg, in_channels=cfg['n_filters'], k=args.k))
     elif args.encoder == 'resnet-ibn':
         model = SimCLR(cfg, encoder=ResNetIBN())
-        if torch.cuda.device_count() > 1:
-            print("Using", torch.cuda.device_count(), "GPUs!")
-            # model = DataParallel(model).to(device)
-            model = model.to(device)
-            model = torch.nn.DataParallel(model)
-        else:
-            model = model.to(device)
+        
+    if torch.cuda.device_count() > 1:
+        print("Using", torch.cuda.device_count(), "GPUs!")
+        # model = DataParallel(model).to(device)
+        model = model.to(device)
+        model = torch.nn.DataParallel(model)
+    else:
+        model = model.to(device)
         
     print(count_parameters(model, args.encoder))
 
