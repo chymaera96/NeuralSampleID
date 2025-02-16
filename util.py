@@ -355,24 +355,11 @@ def main():
     # plt.savefig('losses.jpg')
 
     # Create index file for sample_100 dataset
-    fma_dir = '/datasets/fma/fma_small'
-    htdemucs_dir = '/data/scratch/eez083/htdemucs/'
+    fma_dir = '/data/home/acw723/datasets/fma/fma_medium'
+    htdemucs_dir = '/data/EECS-Studiosync/datasets/fma_medium/htdemucs'
 
-    index = []
-
-    for fname in os.listdir(htdemucs_dir):
-        dict = {}
-        dict['mix'] = os.path.join(fma_dir, fname+'.mp3')
-        dict['vocals'] = os.path.join(htdemucs_dir, fname, 'vocals.mp3')
-        dict['drums'] = os.path.join(htdemucs_dir, fname, 'drums.mp3')
-        dict['bass'] = os.path.join(htdemucs_dir, fname, 'bass.mp3')
-        dict['other'] = os.path.join(htdemucs_dir, fname, 'other.mp3')
-        index.append(dict)
-    
-    print(index[:5])
-    print(f'Number of files: {len(index)}')
-
-    json.dump(index, open('nsid.json', 'w'))
+    index = load_nsid_index(htdemucs_dir, fma_dir)
+    print(index)
 
 if __name__ == '__main__':
     main()
