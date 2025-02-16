@@ -75,6 +75,7 @@ def load_nsid_index(cfg, json_path=None, overwrite=False):
     Returns:
         list: List of dictionaries containing paths to the mix and stems.
     """
+    cfg = load_config(cfg)
     htdemucs_dir = cfg['htdemucs_dir']
     fma_dir = cfg['fma_dir']
     data_dir = cfg['data_dir']
