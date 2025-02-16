@@ -61,7 +61,8 @@ def load_index(cfg, data_dir, ext=['wav','mp3'], shuffle_dataset=True, mode="tra
 
     return dataset
 
-def load_nsid_index(cfg, json_path= None, overwrite=False):
+
+def load_nsid_index(cfg, json_path=None, overwrite=False):
     """
     Load or create the nsid index.
 
@@ -90,9 +91,21 @@ def load_nsid_index(cfg, json_path= None, overwrite=False):
     print(f"Creating index from {htdemucs_dir} and {fma_dir}")
     index = []
 
+    # Create a dictionary to map filenames to their full paths in fma_dir
+    fma_files = {}
+    for root, _, files in os.walk(fma_dir):
+        for file in files:
+            if file.endswith('.mp3'):
+                fma_files[file] = os.path.join(root, file)
+
     for fname in os.listdir(htdemucs_dir):
         dict = {}
-        dict['mix'] = os.path.join(fma_dir, fname + '.mp3')
+        mix_file = fname + '.mp3'
+        if mix_file in fma_files:
+            dict['mix'] = fma_files[mix_file]
+        else:
+            print(f"Warning: {mix_file} not found in {fma_dir}")
+            continue
         dict['vocals'] = os.path.join(htdemucs_dir, fname, 'vocals.mp3')
         dict['drums'] = os.path.join(htdemucs_dir, fname, 'drums.mp3')
         dict['bass'] = os.path.join(htdemucs_dir, fname, 'bass.mp3')
