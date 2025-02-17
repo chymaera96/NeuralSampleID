@@ -20,7 +20,7 @@ annot_path: 'data/sample100_query_index.json'
 arch: 'grafp'
 fs: 16000
 dur: 4.08
-offset: 0.25
+offset: 1.0
 norm: 0.95
 win_len: 1024
 hop_len: 512
@@ -48,7 +48,7 @@ error_threshold: 5
 
 # Augmentation hyperparameters
 n_frames: 32 # depends on the spectrogram parameters
-overlap: 0.875
+overlap: 0.5
 pitch_shift: 3
 gain: 10
 
