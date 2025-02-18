@@ -141,7 +141,7 @@ class GraphEncoder(nn.Module):
         stochastic = False
         self.num_blocks = sum(self.blocks)
         self.conv = 'mr'
-        N = cfg['n_mels'] * cfg['n_frames'] // (cfg['patch_bins'] * cfg['patch_frames'] * 4)
+        N = cfg['n_mels'] * cfg['n_frames'] // (cfg['patch_bins'] * cfg['patch_frames'])
 
 
         num_k  = [int(x.item()) for x in torch.linspace(k,k,self.num_blocks)]
