@@ -32,7 +32,7 @@ silence: 1.0e-5
 # Dataset and Model hyperparameters
 train_sz: 8000
 val_sz: 25000
-bsz_train: 32
+bsz_train: 128
 n_filters : 8 # number of filters in the peak extraction layer
 patch_frames: 8
 patch_bins: 4
@@ -47,7 +47,7 @@ beta: 0.0
 error_threshold: 5
 
 # Augmentation hyperparameters
-n_frames: 128 # depends on the spectrogram parameters
+n_frames: 32 # depends on the spectrogram parameters
 overlap: 0.5
 pitch_shift: 3
 gain: 10
