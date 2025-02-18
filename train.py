@@ -101,7 +101,6 @@ def train(cfg, train_loader, model, optimizer, scaler, ir_idx=None, noise_idx=No
 
             with torch.no_grad():
                 x_i, x_j = augment(x_i, x_j)
-
             _, _, z_i, z_j = model(x_i, x_j)
 
             simclr_loss = ntxent_loss(z_i, z_j, cfg)
@@ -197,8 +196,12 @@ def main():
     args = parser.parse_args()
     cfg = load_config(args.config)
     writer = SummaryWriter(f'runs/{args.ckp}')
-    ir_dir = cfg['ir_dir']
-    noise_dir = cfg['noise_dir']
+
+    additive = args.additive
+
+    if not additive:
+        ir_dir = cfg['ir_dir']
+        noise_dir = cfg['noise_dir']
 
     train_dir = override(cfg['train_dir'], args.train_dir)
     valid_dir = override(cfg['val_dir'], args.val_dir)
@@ -297,13 +300,13 @@ def main():
         model = SimCLR(cfg, encoder=GraphEncoder(cfg=cfg, in_channels=cfg['n_filters'], k=args.k))
     elif args.encoder == 'resnet-ibn':
         model = SimCLR(cfg, encoder=ResNetIBN())
-        if torch.cuda.device_count() > 1:
-            print("Using", torch.cuda.device_count(), "GPUs!")
-            # model = DataParallel(model).to(device)
-            model = model.to(device)
-            model = torch.nn.DataParallel(model)
-        else:
-            model = model.to(device)
+    if torch.cuda.device_count() > 1:
+        print("Using", torch.cuda.device_count(), "GPUs!")
+        # model = DataParallel(model).to(device)
+        model = model.to(device)
+        model = torch.nn.DataParallel(model)
+    else:
+        model = model.to(device)
         
     print(count_parameters(model, args.encoder))
 
