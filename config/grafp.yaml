@@ -1,15 +1,24 @@
 # Dataset directories
 data_dir: 'data'
-fma_dir: '/data/home/acw723/datasets/fma/fma_small'
-htdemucs_dir: '/data/scratch/eez083/htdemucs/'
-# train_dir: 'data/fma_small_all.json'
-val_dir: '/data/home/acw723/datasets/fma/fma_medium'
-# val_dir: 'data/fma_medium_all.json'
-ir_dir: '/data/home/acw723/datasets/ir'
-noise_dir: '/data/home/acw723/datasets/musan/noise/'
-# annot_path: '/data/home/acw723/datasets/sample_100/samples.csv'
-annot_path: 'data/sample100_query_index.json'
+# fma_dir: '/data/home/acw723/datasets/fma/fma_small'
+# htdemucs_dir: '/data/scratch/eez083/htdemucs/'
+# # train_dir: 'data/fma_small_all.json'
+# val_dir: '/data/home/acw723/datasets/fma/fma_medium'
+# # val_dir: 'data/fma_medium_all.json'
+# ir_dir: '/data/home/acw723/datasets/ir'
+# noise_dir: '/data/home/acw723/datasets/musan/noise/'
+# # annot_path: '/data/home/acw723/datasets/sample_100/samples.csv'
+# annot_path: 'data/sample100_query_index.json'
 
+
+train_dir: '/data/EECS-Studiosync/datasets/fma_small'
+train_keys_dir: '/data/EECS-Studiosync/datasets/fma_small/fma_small_keys.npz'
+train_beats_dir: '/data/EECS-Studiosync/datasets/fma_small/beats'
+
+
+val_dir: '/data/EECS-Studiosync/datasets/sample_100/audio'
+val_keys_dir: '/data/EECS-Studiosync/datasets/sample_100/sample_100_keys.npz'
+val_beats_dir: '/data/EECS-Studiosync/datasets/sample_100/beats'
 
 # train_dir: 'data/fma_small_all.json'
 # val_dir: 'data/fma_medium_all.json'
@@ -48,6 +57,10 @@ lambda: 0.0
 error_threshold: 5
 
 # stem: 'drums'
+# SampleID train hyperparameters
+mix_prob: 0.95
+mix_gain_range: [0.25, 0.75] #[0.1, 0.7] #[0.05, 0.55]
+min_beats_required: 32
 
 # SampleID train hyperparameters
 mix_prob: 0.95
