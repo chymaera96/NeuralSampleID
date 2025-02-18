@@ -45,6 +45,8 @@ def load_index(cfg, data_dir, ext=['wav','mp3'], shuffle_dataset=True, mode="tra
     
     fpaths = glob.glob(os.path.join(data_dir,'**/*.*'), recursive=True)
     fpaths = [p for p in fpaths if p.split('.')[-1] in ext]
+    print("Discarding htdemucs files")
+    fpaths = [p for p in fpaths if "htdemucs" not in p]
     dataset_size = len(fpaths)
     indices = list(range(dataset_size))
     if shuffle_dataset :
