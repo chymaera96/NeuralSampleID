@@ -16,8 +16,8 @@ torchaudio.set_audio_backend("soundfile")
 from util import *
 from simclr.ntxent import ntxent_loss, SoftCrossEntropy
 from simclr.simclr import SimCLR   
-from modules.transformations import GPUTransformSampleID
-from modules.data import NeuralSampleIDDataset
+from modules.transformations import GPUTransformSampleID, GPUTransformAdditiveSampleid
+from modules.data import NeuralSampleIDDataset, AdditiveSampleIDDataset, additive_collate_fn
 from encoder.graph_encoder import GraphEncoder
 from encoder.resnet_ibn import ResNetIBN
 from eval import eval_faiss
@@ -53,6 +53,9 @@ parser.add_argument('--n_dummy_db', default=None, type=int)
 parser.add_argument('--n_query_db', default=None, type=int)
 parser.add_argument('--k', default=3, type=int)
 
+# additive boolean flag
+parser.add_argument('--additive', default=False, action='store_true')
+
 
 
 def mixco(model, xis, xjs, zis, zjs, cfg):
@@ -84,50 +87,91 @@ def mixco(model, xis, xjs, zis, zjs, cfg):
 
 
 
-def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augment=None):
+def train(cfg, train_loader, model, optimizer, scaler, ir_idx=None, noise_idx=None, augment=None, additive=False):
     model.train()
     loss_epoch = 0
     global nan_counter
 
-    for idx, (x_i, x_j) in enumerate(train_loader):
+    if not additive:
+        for idx, (x_i, x_j) in enumerate(train_loader):
 
-        optimizer.zero_grad()
-        x_i = x_i.to(device)
-        x_j = x_j.to(device)
+            optimizer.zero_grad()
+            x_i = x_i.to(device)
+            x_j = x_j.to(device)
 
-        with torch.no_grad():
-            x_i, x_j = augment(x_i, x_j)
+            with torch.no_grad():
+                x_i, x_j = augment(x_i, x_j)
+            _, _, z_i, z_j = model(x_i, x_j)
 
-        _, _, z_i, z_j = model(x_i, x_j)
-
-        simclr_loss = ntxent_loss(z_i, z_j, cfg)
+            simclr_loss = ntxent_loss(z_i, z_j, cfg)
 
 
-        if torch.isnan(simclr_loss):
-            print(f"NaN detected in loss at step {idx}, skipping batch")
-            nan_counter = save_nan_batch(x_i, x_j, save_dir="nan_batches", counter=nan_counter)
-            continue
+            if torch.isnan(simclr_loss):
+                print(f"NaN detected in loss at step {idx}, skipping batch")
+                nan_counter = save_nan_batch(x_i, x_j, save_dir="nan_batches", counter=nan_counter)
+                continue
 
-        if cfg['beta'] > 0.0:       # Beta set to 0.0 as mixco support is not implemented
-            mixco_loss = mixco(model, x_i, x_j, z_i, z_j, cfg)
-        else:
-            mixco_loss = torch.tensor(0.0)
+            if cfg['beta'] > 0.0:       # Beta set to 0.0 as mixco support is not implemented
+                mixco_loss = mixco(model, x_i, x_j, z_i, z_j, cfg)
+            else:
+                mixco_loss = torch.tensor(0.0)
 
-        loss = simclr_loss
-        assert not torch.isnan(loss), "Loss is NaN"
+            loss = simclr_loss
+            assert not torch.isnan(loss), "Loss is NaN"
 
-        scaler.scale(loss).backward()
+            scaler.scale(loss).backward()
 
-        # Added gradient clipping
-        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+            # Added gradient clipping
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
 
-        scaler.step(optimizer)
-        scaler.update()
+            scaler.step(optimizer)
+            scaler.update()
 
-        if idx % 10 == 0:
-            print(f"Step [{idx}/{len(train_loader)}]\t SimCLR Loss: {simclr_loss.item()} \t MixCo Loss: {mixco_loss.item()}")
+            if idx % 10 == 0:
+                print(f"Step [{idx}/{len(train_loader)}]\t SimCLR Loss: {simclr_loss.item()} \t MixCo Loss: {mixco_loss.item()}")
 
-        loss_epoch += loss.item()
+            loss_epoch += loss.item()
+
+    else:
+        for idx, (x_i, x_j, metadata) in enumerate(train_loader):
+
+            optimizer.zero_grad()
+            x_i = x_i.to(device)
+            x_j = x_j.to(device)
+
+            with torch.no_grad():
+                x_i, x_j, aug_metadata = augment(x_i, x_j, metadata)
+
+            _, _, z_i, z_j = model(x_i, x_j)
+
+            simclr_loss = ntxent_loss(z_i, z_j, cfg)
+
+
+            if torch.isnan(simclr_loss):
+                print(f"NaN detected in loss at step {idx}, skipping batch")
+                nan_counter = save_nan_batch(x_i, x_j, save_dir="nan_batches", counter=nan_counter)
+                continue
+
+            if cfg['beta'] > 0.0:       # Beta set to 0.0 as mixco support is not implemented
+                mixco_loss = mixco(model, x_i, x_j, z_i, z_j, cfg)
+            else:
+                mixco_loss = torch.tensor(0.0)
+
+            loss = simclr_loss
+            assert not torch.isnan(loss), "Loss is NaN"
+
+            scaler.scale(loss).backward()
+
+            # Added gradient clipping
+            torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+
+            scaler.step(optimizer)
+            scaler.update()
+
+            if idx % 10 == 0:
+                print(f"Step [{idx}/{len(train_loader)}]\t SimCLR Loss: {simclr_loss.item()} \t MixCo Loss: {mixco_loss.item()}")
+
+            loss_epoch += loss.item()
 
     return loss_epoch
 
@@ -152,8 +196,15 @@ def main():
     args = parser.parse_args()
     cfg = load_config(args.config)
     writer = SummaryWriter(f'runs/{args.ckp}')
-    ir_dir = cfg['ir_dir']
-    noise_dir = cfg['noise_dir']
+
+    additive = args.additive
+
+    if not additive:
+        ir_dir = cfg['ir_dir']
+        noise_dir = cfg['noise_dir']
+
+    train_dir = override(cfg['train_dir'], args.train_dir)
+    valid_dir = override(cfg['val_dir'], args.val_dir)
     
     # Hyperparameters
     batch_size = cfg['bsz_train']
@@ -163,22 +214,40 @@ def main():
     random_seed = args.seed
     shuffle_dataset = True
 
+    additive = args.additive
+
     print("Intializing augmentation pipeline...")
-    noise_train_idx = load_augmentation_index(noise_dir, splits=0.8)["train"]
-    ir_train_idx = load_augmentation_index(ir_dir, splits=0.8)["train"]
-    noise_val_idx = load_augmentation_index(noise_dir, splits=0.8)["test"]
-    ir_val_idx = load_augmentation_index(ir_dir, splits=0.8)["test"]
-    gpu_augment = GPUTransformSampleID(cfg=cfg, ir_dir=ir_train_idx, noise_dir=noise_train_idx, train=True).to(device)
-    cpu_augment = GPUTransformSampleID(cfg=cfg, ir_dir=ir_train_idx, noise_dir=noise_train_idx, cpu=True)
-    val_augment = GPUTransformSampleID(cfg=cfg, ir_dir=ir_val_idx, noise_dir=noise_val_idx, train=False).to(device)
+    if not additive:
+        noise_train_idx = load_augmentation_index(noise_dir, splits=0.8)["train"]
+        ir_train_idx = load_augmentation_index(ir_dir, splits=0.8)["train"]
+        noise_val_idx = load_augmentation_index(noise_dir, splits=0.8)["test"]
+        ir_val_idx = load_augmentation_index(ir_dir, splits=0.8)["test"]
+
+        gpu_augment = GPUTransformSampleID(cfg=cfg, ir_dir=ir_train_idx, noise_dir=noise_train_idx, train=True).to(device)
+        cpu_augment = GPUTransformSampleID(cfg=cfg, ir_dir=ir_train_idx, noise_dir=noise_train_idx, cpu=True)
+        val_augment = GPUTransformSampleID(cfg=cfg, ir_dir=ir_val_idx, noise_dir=noise_val_idx, train=False).to(device)
+    elif additive:
+        gpu_augment = GPUTransformAdditiveSampleid(cfg=cfg, train=True).to(device)
+        cpu_augment = GPUTransformAdditiveSampleid(cfg=cfg, cpu=True)
+        val_augment = GPUTransformAdditiveSampleid(cfg=cfg, train=False).to(device)
 
     print("Loading dataset...")
-    train_dataset = NeuralSampleIDDataset(cfg=cfg, train=True, transform=cpu_augment)
-    train_loader = torch.utils.data.DataLoader(
-        train_dataset, batch_size=batch_size, shuffle=True,
-        num_workers=8, pin_memory=True, drop_last=True)
+    if not additive:
+        train_dataset = NeuralSampleIDDataset(cfg=cfg, train=True, transform=cpu_augment)
+        train_loader = torch.utils.data.DataLoader(
+            train_dataset, batch_size=batch_size, shuffle=True,
+            num_workers=8, pin_memory=True, drop_last=True)
+    elif additive:
+        train_dataset = AdditiveSampleIDDataset(cfg=cfg, path=train_dir, train=True)
+        train_loader = torch.utils.data.DataLoader(
+            train_dataset, batch_size=batch_size, shuffle=True,
+            num_workers=8, pin_memory=True, drop_last=True, collate_fn=additive_collate_fn)
     
-    valid_dataset = NeuralSampleIDDataset(cfg=cfg, train=False)
+    if not additive:
+        valid_dataset = NeuralSampleIDDataset(cfg=cfg, train=False)
+    elif additive:
+        valid_dataset = AdditiveSampleIDDataset(cfg=cfg, path=valid_dir, train=False)
+
     print("Creating validation dataloaders...")
     dataset_size = len(valid_dataset)
     indices = list(range(dataset_size))
@@ -193,19 +262,34 @@ def main():
     dummy_db_sampler = SubsetRandomSampler(dummy_indices)
     query_db_sampler = SubsetRandomSampler(query_db_indices)
 
-    dummy_loader = torch.utils.data.DataLoader(valid_dataset, batch_size=1, 
-                                            shuffle=False,
-                                            num_workers=1, 
-                                            pin_memory=True, 
-                                            drop_last=False,
-                                            sampler=dummy_db_sampler)
-    
-    query_loader = torch.utils.data.DataLoader(valid_dataset, batch_size=1, 
-                                            shuffle=False,
-                                            num_workers=1, 
-                                            pin_memory=True, 
-                                            drop_last=False,
-                                            sampler=query_db_sampler)
+    if not additive:
+        dummy_loader = torch.utils.data.DataLoader(valid_dataset, batch_size=1, 
+                                                shuffle=False,
+                                                num_workers=1, 
+                                                pin_memory=True, 
+                                                drop_last=False,
+                                                sampler=dummy_db_sampler)
+        query_loader = torch.utils.data.DataLoader(valid_dataset, batch_size=1, 
+                                                shuffle=False,
+                                                num_workers=1, 
+                                                pin_memory=True, 
+                                                drop_last=False,
+                                                sampler=query_db_sampler)
+    elif additive:
+        dummy_loader = torch.utils.data.DataLoader(valid_dataset, batch_size=1, 
+                                                shuffle=False,
+                                                num_workers=1, 
+                                                pin_memory=True, 
+                                                drop_last=False,
+                                                sampler=dummy_db_sampler,
+                                                collate_fn=additive_collate_fn)
+        query_loader = torch.utils.data.DataLoader(valid_dataset, batch_size=1, 
+                                                shuffle=False,
+                                                num_workers=1, 
+                                                pin_memory=True, 
+                                                drop_last=False,
+                                                sampler=query_db_sampler,
+                                                collate_fn=additive_collate_fn)
     
 
     print("Creating new model...")
@@ -216,13 +300,13 @@ def main():
         model = SimCLR(cfg, encoder=GraphEncoder(cfg=cfg, in_channels=cfg['n_filters'], k=args.k))
     elif args.encoder == 'resnet-ibn':
         model = SimCLR(cfg, encoder=ResNetIBN())
-        if torch.cuda.device_count() > 1:
-            print("Using", torch.cuda.device_count(), "GPUs!")
-            # model = DataParallel(model).to(device)
-            model = model.to(device)
-            model = torch.nn.DataParallel(model)
-        else:
-            model = model.to(device)
+    if torch.cuda.device_count() > 1:
+        print("Using", torch.cuda.device_count(), "GPUs!")
+        # model = DataParallel(model).to(device)
+        model = model.to(device)
+        model = torch.nn.DataParallel(model)
+    else:
+        model = model.to(device)
         
     print(count_parameters(model, args.encoder))
 
@@ -236,6 +320,7 @@ def main():
             print("=> loading checkpoint '{}'".format(args.resume))
             model, optimizer, scheduler, start_epoch, loss_log, hit_rate_log = load_ckp(args.resume, model, optimizer, scheduler)
             output_root_dir = create_fp_dir(resume=args.resume)
+            writer = SummaryWriter(f'runs/{args.ckp}', purge_step=start_epoch)
         else:
             print("=> no checkpoint found at '{}'".format(args.resume))
             
@@ -253,7 +338,7 @@ def main():
 
     for epoch in range(start_epoch+1, num_epochs+1):
         print("#######Epoch {}#######".format(epoch))
-        loss_epoch = train(cfg, train_loader, model, optimizer, scaler, ir_train_idx, noise_train_idx, gpu_augment)
+        loss_epoch = train(cfg, train_loader, model, optimizer, scaler, None, None, gpu_augment, additive)
         writer.add_scalar("Loss/train", loss_epoch, epoch)
         loss_log.append(loss_epoch)
         output_root_dir = create_fp_dir(ckp=args.ckp, epoch=epoch)
