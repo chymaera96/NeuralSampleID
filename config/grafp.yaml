@@ -1,6 +1,6 @@
 # Dataset directories
 data_dir: 'data'
-fma_dir: '/data/home/acw723/datasets/fma/fma_medium'
+fma_dir: '/data/EECS-Studiosync/datasets/fma_medium/'
 htdemucs_dir: '/data/EECS-Studiosync/datasets/fma_medium/htdemucs'
 # train_dir: 'data/fma_small_all.json'
 val_dir: '/data/home/acw723/datasets/fma/fma_medium'

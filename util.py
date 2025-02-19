@@ -95,7 +95,7 @@ def load_nsid_index(cfg, json_path=None, overwrite=False):
     fma_files = {}
     for root, _, files in os.walk(fma_dir):
         for file in files:
-            if file.endswith('.mp3'):
+            if file.endswith('.mp3') and 'htdemucs' not in root:
                 fma_files[file] = os.path.join(root, file)
 
     for fname in os.listdir(htdemucs_dir):
