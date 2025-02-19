@@ -67,6 +67,7 @@ def create_table(hit_rates, overlap, dur, test_seq_len=[1,3,5,9,11,19], text="te
     <th>Top-1 Exact</th>
     <th>Top-3 Exact</th>
     <th>Top-10 Exact</th>
+    <th>Top-100 Exact</th>
     </tr>
     '''
     for idx, q_len in enumerate(test_seq_len):
@@ -76,6 +77,7 @@ def create_table(hit_rates, overlap, dur, test_seq_len=[1,3,5,9,11,19], text="te
         <td>{hit_rates[0][idx]}</td>
         <td>{hit_rates[1][idx]}</td>
         <td>{hit_rates[2][idx]}</td>
+        <td>{hit_rates[3][idx]}</td>
         </tr>
         '''
     table += '</table>'
@@ -198,27 +200,25 @@ def main():
     annot_path = cfg['annot_path']
     # args.recompute = False
     # assert args.recompute is False
-    assert args.small_test is False
+    # assert args.small_test is False
     # Hyperparameters
     random_seed = 42
     shuffle_dataset =True
 
 
     print("Creating new model...")
-    if args.encoder == 'grafp':
+    if args.encoder == 'resnet':
+        # TODO: Add support for resnet encoder (deprecated)
+        raise NotImplementedError
+    elif args.encoder == 'grafp':
         model = SimCLR(cfg, encoder=GraphEncoder(cfg=cfg, in_channels=cfg['n_filters'], k=args.k))
-    elif args.encoder == 'resnet-ibn':
-        model = SimCLR(cfg, encoder=ResNetIBN())
-    else:
-        raise ValueError(f"Invalid encoder: {args.encoder}")
-    
-    if torch.cuda.device_count() > 1:
-        print("Using", torch.cuda.device_count(), "GPUs!")
-        # model = DataParallel(model).to(device)
-        model = model.to(device)
-        model = torch.nn.DataParallel(model)
-    else:
-        model = model.to(device)
+        if torch.cuda.device_count() > 1:
+            print("Using", torch.cuda.device_count(), "GPUs!")
+            # model = DataParallel(model).to(device)
+            model = model.to(device)
+            model = torch.nn.DataParallel(model)
+        else:
+            model = model.to(device)
 
     print("Creating dataloaders ...")
 
@@ -328,6 +328,7 @@ def main():
             print(f'Top-1 exact hit rate = {hit_rates[0]}')
             print(f'Top-3 exact hit rate = {hit_rates[1]}')
             print(f'Top-10 exact hit rate = {hit_rates[2]}')
+            print(f'Top-100 exact hit rate = {hit_rates[3]}')
 
 
 

@@ -287,6 +287,7 @@ def eval_faiss(emb_dir,
     top1_exact = np.zeros((n_test, len(test_seq_len))).astype(np.int_)
     top3_exact = np.zeros((n_test, len(test_seq_len))).astype(np.int_)
     top10_exact = np.zeros((n_test, len(test_seq_len))).astype(np.int_)
+    top100_exact = np.zeros((n_test, len(test_seq_len))).astype(np.int_)
 
     start_time = time.time()
     for ti, test_id in enumerate(test_ids):
@@ -351,6 +352,9 @@ def eval_faiss(emb_dir,
                 # Top-10 hit:
                 if any(q_id in gt[p] for p in pred[:10]):
                     top10_exact[ti, si] += 1
+                # Top-100 hit:
+                if any(q_id in gt[p] for p in pred[:100]):
+                    top100_exact[ti, si] += 1
 
 
     # Summary 
@@ -359,8 +363,9 @@ def eval_faiss(emb_dir,
     top1_rate = 100. * np.nanmean(np.where(valid_mask, top1_exact, np.nan), axis=0)
     top3_rate = 100. * np.nanmean(np.where(valid_mask, top3_exact, np.nan), axis=0)
     top10_rate = 100. * np.nanmean(np.where(valid_mask, top10_exact, np.nan), axis=0)
+    top100_rate = 100. * np.nanmean(np.where(valid_mask, top100_exact, np.nan), axis=0)
 
-    hit_rates = np.stack([top1_rate, top3_rate, top10_rate], axis=0)
+    hit_rates = np.stack([top1_rate, top3_rate, top10_rate, top100_rate], axis=0)
     # del fake_recon_index, query, db
     del query, db
 
@@ -369,7 +374,7 @@ def eval_faiss(emb_dir,
 
     np.save(f'{emb_dir}/raw_score.npy',
             np.concatenate(
-                (top1_exact, top3_exact, top10_exact), axis=1))
+                (top1_exact, top3_exact, top10_exact, top100_exact), axis=1))
     np.save(f'{emb_dir}/test_ids.npy', test_ids)
     print(f'Saved test_ids, hit-rates and raw score to {emb_dir}.')
 
