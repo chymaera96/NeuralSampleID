@@ -383,7 +383,7 @@ class GPUTransformAdditiveSampleid(nn.Module):
                     # if main_tempo_data and other_tempo_data:
                     # Calculate tempo ratio for time stretching
                     tempo_ratio = self.get_tempo_ratio(
-                        other_tempo_data["tempo"], main_tempo_data["tempo"]
+                        main_tempo_data["tempo"], other_tempo_data["tempo"]
                     )
                     # If tempo_ratio is a tensor, convert to float
                     if isinstance(tempo_ratio, torch.Tensor):
@@ -394,8 +394,8 @@ class GPUTransformAdditiveSampleid(nn.Module):
                         abs(1 - tempo_ratio) > 0.02
                     ):  # Only stretch if difference is significant
                         # Convert to audio segment and stretch
-                        other_audio = time_stretch(
-                            input_audio=other_audio,
+                        audio = time_stretch(
+                            input_audio=audio,
                             samplerate=self.sample_rate,
                             stretch_factor=tempo_ratio,
                             pitch_shift_in_semitones=semitones,
@@ -404,8 +404,8 @@ class GPUTransformAdditiveSampleid(nn.Module):
                             transient_detector="compound",
                         )[0]
                         # Stretch beats times
-                        other_beats["times"] = [
-                            t * tempo_ratio for t in other_beats["times"]
+                        main_beats["times"] = [
+                            t * tempo_ratio for t in main_beats["times"]
                         ]
 
                     # Find alignment points (downbeats or first beats)
@@ -463,8 +463,8 @@ class GPUTransformAdditiveSampleid(nn.Module):
                     # Transpose other audio to match main audio's key
                     if semitones != 0:
                         pitch_shifter = Pedalboard([PitchShift(semitones=semitones)])
-                        other_audio = pitch_shifter.process(
-                            other_audio, self.sample_rate
+                        audio = pitch_shifter.process(
+                            audio, self.sample_rate
                         )
                     # Verify lengths match before mixing
                     assert len(audio) == len(

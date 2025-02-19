@@ -214,8 +214,6 @@ def main():
     random_seed = args.seed
     shuffle_dataset = True
 
-    additive = args.additive
-
     print("Intializing augmentation pipeline...")
     if not additive:
         noise_train_idx = load_augmentation_index(noise_dir, splits=0.8)["train"]
@@ -232,6 +230,7 @@ def main():
         val_augment = GPUTransformAdditiveSampleid(cfg=cfg, train=False).to(device)
 
     print("Loading dataset...")
+    print(f"Additive dataset? {additive}")
     if not additive:
         train_dataset = NeuralSampleIDDataset(cfg=cfg, train=True, transform=cpu_augment)
         train_loader = torch.utils.data.DataLoader(
