@@ -358,7 +358,8 @@ def main():
     # fma_dir = '/data/home/acw723/datasets/fma/fma_medium'
     # htdemucs_dir = '/data/EECS-Studiosync/datasets/fma_medium/htdemucs'
 
-    index = load_nsid_index(cfg='config/grafp.yaml')
+    cfg = load_config('config/grafp.yaml')
+    index = load_nsid_index(cfg=cfg)
     print(index[:2])
 
 if __name__ == '__main__':
