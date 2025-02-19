@@ -91,7 +91,7 @@ class FFN(nn.Module):
 class GraphEncoder(nn.Module):
 
     def __init__(self, cfg, k=3,conv='mr',act='relu',norm='batch',bias=True,dropout=0.0,dilation=True,epsilon=0.2,drop_path=0.1,size ='t',
-               emb_dims=1024,in_channels=3):
+               emb_dims=2048,in_channels=3):
         
         super().__init__()
         
@@ -141,7 +141,7 @@ class GraphEncoder(nn.Module):
         stochastic = False
         self.num_blocks = sum(self.blocks)
         self.conv = 'mr'
-        N = cfg['n_mels'] * cfg['n_frames'] // (cfg['patch_bins'] * cfg['patch_frames'])
+        N = cfg['n_mels'] * cfg['n_frames'] // (cfg['patch_bins'] * cfg['patch_frames'] * 4)
 
 
         num_k  = [int(x.item()) for x in torch.linspace(k,k,self.num_blocks)]
