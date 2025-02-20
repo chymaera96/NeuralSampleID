@@ -18,7 +18,8 @@ from simclr.ntxent import ntxent_loss, SoftCrossEntropy
 from simclr.simclr import SimCLR   
 from modules.transformations import GPUTransformSampleID
 from modules.data import NeuralSampleIDDataset
-from encoder.graph_encoder import GraphEncoder
+# from encoder.graph_encoder import GraphEncoder
+from encoder.pyg.graph_encoder import GraphEncoder
 from encoder.resnet_ibn import ResNetIBN
 from eval import eval_faiss
 # from test_fp import create_fp_db, create_dummy_db
