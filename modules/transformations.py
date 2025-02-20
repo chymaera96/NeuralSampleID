@@ -292,7 +292,7 @@ class GPUTransformAdditiveSampleid(nn.Module):
 
         for i in range(batch_size):
             # Convert to numpy for pedalboard processing IS THIS NEEDED? I HOPE NOT
-            audio = batch_audio[i].cpu().numpy()  # .cpu().numpy()
+            audio = batch_audio[i].cpu().numpy()
 
             # Create random effect chain for this sample
             active_effects = []
@@ -319,10 +319,7 @@ class GPUTransformAdditiveSampleid(nn.Module):
 
                 # Transpose other audio to match main audio's key
                 semitones = self.get_transpose_semitones(other_key, main_key)
-                # Im transposing at the same time as time stretching
-                # if semitones != 0:
-                #     pitch_shifter = Pedalboard([PitchShift(semitones=semitones)])
-                #     other_audio = pitch_shifter.process(other_audio, self.sample_rate)
+                # (Im transposing at the same time as time stretching)
 
                 # Get beats information and segment start times
                 main_beats = metadata[i].get("beats")
@@ -335,13 +332,6 @@ class GPUTransformAdditiveSampleid(nn.Module):
                 # Convert sample indices to seconds
                 main_start_sec = main_start / self.sample_rate
                 other_start_sec = other_start / self.sample_rate
-
-                # print("Main start", main_start)
-                # print("Other start", other_start)
-                # print("Main start sec", main_start_sec)
-                # print("Other start sec", other_start_sec)
-                # print("Main beats", main_beats)
-                # print("Other beats", other_beats)
 
                 # Cut beats to next beat after start until next after start+duration
                 first_beat_i = np.searchsorted(main_beats["times"], main_start_sec)
@@ -369,9 +359,6 @@ class GPUTransformAdditiveSampleid(nn.Module):
                     "numbers": other_beats["numbers"][first_beat_i:last_beat_i],
                 }
 
-                # print("Main beats", main_beats)
-                # print("Other beats", other_beats)
-
                 tempo_ratio = 1.0
                 # If we have more than 2 beats, calculate tempo and time stretch
                 if len(main_beats["times"]) > 2 and len(other_beats["times"]) > 2:
@@ -383,7 +370,7 @@ class GPUTransformAdditiveSampleid(nn.Module):
                     # if main_tempo_data and other_tempo_data:
                     # Calculate tempo ratio for time stretching
                     tempo_ratio = self.get_tempo_ratio(
-                        other_tempo_data["tempo"], main_tempo_data["tempo"]
+                        main_tempo_data["tempo"], other_tempo_data["tempo"]
                     )
                     # If tempo_ratio is a tensor, convert to float
                     if isinstance(tempo_ratio, torch.Tensor):
@@ -394,8 +381,8 @@ class GPUTransformAdditiveSampleid(nn.Module):
                         abs(1 - tempo_ratio) > 0.02
                     ):  # Only stretch if difference is significant
                         # Convert to audio segment and stretch
-                        other_audio = time_stretch(
-                            input_audio=other_audio,
+                        audio = time_stretch(
+                            input_audio=audio,
                             samplerate=self.sample_rate,
                             stretch_factor=tempo_ratio,
                             pitch_shift_in_semitones=semitones,
@@ -404,8 +391,8 @@ class GPUTransformAdditiveSampleid(nn.Module):
                             transient_detector="compound",
                         )[0]
                         # Stretch beats times
-                        other_beats["times"] = [
-                            t * tempo_ratio for t in other_beats["times"]
+                        main_beats["times"] = [
+                            t * tempo_ratio for t in main_beats["times"]
                         ]
 
                     # Find alignment points (downbeats or first beats)
@@ -463,8 +450,8 @@ class GPUTransformAdditiveSampleid(nn.Module):
                     # Transpose other audio to match main audio's key
                     if semitones != 0:
                         pitch_shifter = Pedalboard([PitchShift(semitones=semitones)])
-                        other_audio = pitch_shifter.process(
-                            other_audio, self.sample_rate
+                        audio = pitch_shifter.process(
+                            audio, self.sample_rate
                         )
                     # Verify lengths match before mixing
                     assert len(audio) == len(
@@ -475,15 +462,12 @@ class GPUTransformAdditiveSampleid(nn.Module):
                 audio = audio / np.abs(audio).max() + 1e-8
                 other_audio = other_audio / np.abs(other_audio).max() + 1e-8
 
-                # Random gain between 0.05 and 0.5
+                # Random gain between min=0.05 and max=0.5
                 gain = (
                     torch.rand(1).item()
                     * (self.mix_gain_range[1] - self.mix_gain_range[0])
                     + self.mix_gain_range[0]
                 )
-                # print("Audio shape", audio.shape)
-                # print("Other audio shape", other_audio.shape)
-                # print("Gain", gain)
 
                 audio = (1 - gain) * audio + gain * other_audio
 
