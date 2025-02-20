@@ -81,7 +81,7 @@ def create_table(hit_rates, overlap, dur, test_seq_len=[1,3,5,9,11,19], text="te
     table += '</table>'
     return table
 
-def create_query_db(dataloader, augment, model, output_root_dir, fname='query_db', verbose=True):
+def create_query_db(dataloader, augment, model, output_root_dir, fname='query_db', verbose=False):
     fp = []
     lookup_table = []  # Initialize lookup table
     print("=> Creating query fingerprints...")
@@ -115,7 +115,7 @@ def create_query_db(dataloader, augment, model, output_root_dir, fname='query_db
     # Save lookup table
     json.dump(lookup_table, open(f'{output_root_dir}/{fname}_lookup.json', 'w'))
 
-def create_ref_db(dataloader, augment, model, output_root_dir, fname='ref_db', verbose=True, max_size=128):
+def create_ref_db(dataloader, augment, model, output_root_dir, fname='ref_db', verbose=False, max_size=128):
     fp = []
     lookup_table = []  # Initialize lookup table
     print("=> Creating reference fingerprints...")
@@ -135,7 +135,7 @@ def create_ref_db(dataloader, augment, model, output_root_dir, fname='ref_db', v
         # Append song number to lookup table for each segment in the batch
         lookup_table.extend([nm] * x_i.shape[0])
 
-        if verbose and idx % 10 == 0:
+        if verbose and idx % 20 == 0:
             print(f"Step [{idx}/{len(dataloader)}]\t shape: {fp_size}")
 
     fp = np.concatenate(fp)
@@ -154,7 +154,7 @@ def create_ref_db(dataloader, augment, model, output_root_dir, fname='ref_db', v
     json.dump(lookup_table, open(f'{output_root_dir}/{fname}_lookup.json', 'w'))
 
 
-def create_dummy_db(dataloader, augment, model, output_root_dir, fname='dummy_db', verbose=True, max_size=128):
+def create_dummy_db(dataloader, augment, model, output_root_dir, fname='dummy_db', verbose=False, max_size=128):
     fp = []
     print("=> Creating dummy fingerprints...")
     for idx, (nm,audio) in enumerate(dataloader):
