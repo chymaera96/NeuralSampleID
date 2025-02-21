@@ -362,8 +362,8 @@ def main():
     # index = load_nsid_index(cfg=cfg)
     # print(index[:2])
     from encoder.pyg.graph_encoder import GraphEncoder
-    model = GraphEncoder()
-    dummy_tensor = torch.rand(16,3,256)
+    model = GraphEncoder().to('cuda')
+    dummy_tensor = torch.rand(16,3,256).to('cuda')
     out = model(dummy_tensor)
     print(out.shape)
 
