@@ -103,22 +103,21 @@ class MRConvLayer(nn.Module):
         self.dilation = dilation
         self.relative_pos = relative_pos
         self.learnable_rel_pos = learnable_rel_pos
-        self.conv = MRConv(in_channels, out_channels)
+        self.conv = MRConv(in_channels, out_channels)  # Custom MRConv
 
         if self.relative_pos and self.learnable_rel_pos:
             self.rel_pos_embed = nn.Embedding(num_embeddings=(2 * k - 1) ** 2, embedding_dim=in_channels)
 
     def forward(self, x):
-        B, C, N = x.shape  # Batch size, Features, Number of Nodes
+        B, C, N = x.shape  # Batch size, Features, Nodes
 
-        # Reshape for PyG (B, C, N) -> (B * N, C)
-        x = x.permute(0, 2, 1).reshape(-1, C)  # Shape: [B * N, C]
+        # Reshape for PyG: (B, C, N) -> (B * N, C)
+        x = x.permute(0, 2, 1).reshape(B * N, C)
 
-        # Create batch indices for PyG to handle batched graphs
+        # Generate batch indices to handle batch-wise graph construction
         batch = torch.arange(B, device=x.device).repeat_interleave(N)  # Shape: [B * N]
 
         # Compute KNN graph (batch-aware)
-        assert x.dim() == 2
         edge_index = knn_graph(x, self.k * self.dilation, batch=batch, loop=False)
 
         if self.relative_pos:
@@ -142,7 +141,8 @@ class MRConvLayer(nn.Module):
         """Compute 2D relative positions based on spatial grid size."""
         indices = torch.arange(grid_size, device='cpu')
         rel_indices = indices.view(-1, 1) - indices.view(1, -1)
-        rel_indices += (grid_size - 1)  # Shift indices to be
+        rel_indices += (grid_size - 1)  # Shift indices to be non-negative
+        return rel_indices.view(-1)
 
     
 class Block(nn.Module):
