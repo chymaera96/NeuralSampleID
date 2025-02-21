@@ -1,9 +1,11 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch_geometric.nn import MRConv
 from torch_geometric.utils import knn_graph
 from timm.models.layers import DropPath
+from torch_geometric.nn.conv import MessagePassing
+from torch_geometric.utils import add_self_loops
+from torch_scatter import scatter_max
 import numpy as np
 
 def act_layer(act):
@@ -72,6 +74,27 @@ class FFN(nn.Module):
         x = self.fc2(x)
         x = self.drop_path(x) + shortcut
         return x
+
+class MRConv(MessagePassing):
+    def __init__(self, in_channels, out_channels):
+        super().__init__(aggr=None)  # No default aggregation 
+        self.lin = nn.Linear(in_channels, out_channels, bias=False) 
+    def forward(self, x, edge_index):
+        edge_index, _ = add_self_loops(edge_index, num_nodes=x.size(0))
+        return self.propagate(edge_index, x=x)
+
+    def message(self, x_i, x_j):
+        """ Compute relative feature (Max-Relative Graph Convolution) """
+        return x_j - x_i  # Memory-efficient difference computation
+
+    def aggregate(self, inputs, index, dim_size):
+        """ Max aggregation using optimized scatter_max """
+        return scatter_max(inputs, index, dim=0, dim_size=dim_size)[0]  # Extract only max values
+
+    def update(self, aggr_out):
+        """ Apply feature transformation """
+        return self.lin(aggr_out)  # Pass through linear transformation
+    
 
 class MRConvLayer(nn.Module):
     def __init__(self, in_channels, out_channels, k, dilation=1, relative_pos=True, learnable_rel_pos=True):
