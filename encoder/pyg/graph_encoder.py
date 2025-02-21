@@ -63,7 +63,7 @@ class GraphEncoder(nn.Module):
     def forward(self, x):
         
         x = x.unsqueeze(-1)
-        x = self.stem(x)
+        x = self.stem(x).squeeze(-1)
         print(f"Shape after stem: {x.shape}")
         
         for block in self.backbone:
