@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from gcn_lib import Block
+from encoder.pyg.gcn_lib import Block
 
 class Downsample(nn.Module):
     """ Convolution-based downsample
