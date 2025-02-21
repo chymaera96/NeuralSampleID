@@ -20,7 +20,7 @@ class Downsample(nn.Module):
 
 
 class GraphEncoder(nn.Module):
-    def __init__(self, cfg, k=3, dilation=2, size="t", emb_dims=1024, in_channels=3, drop_path=0.1, pre_norm=False):
+    def __init__(self, k=3, dilation=2, size="t", emb_dims=1024, in_channels=3, drop_path=0.1, pre_norm=False):
         super().__init__()
         self.k = k
         self.dilation = dilation
@@ -75,6 +75,6 @@ class GraphEncoder(nn.Module):
 
 if __name__ == '__main__':
 
-    encoder = GraphEncoder()
+    model = GraphEncoder()
     dummy_tensor = torch.rand(16,64,256)
-    out = encoder(dummy_tensor)
+    out = model(dummy_tensor)
