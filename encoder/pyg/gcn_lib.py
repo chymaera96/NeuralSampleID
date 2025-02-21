@@ -118,6 +118,7 @@ class MRConvLayer(nn.Module):
         batch = torch.arange(B, device=x.device).repeat_interleave(N)  # Shape: [B * N]
 
         # Compute KNN graph (batch-aware)
+        print("x shape before knn_graph:", x.shape)
         edge_index = knn_graph(x, self.k * self.dilation, batch=batch, loop=False)
 
         if self.relative_pos:
