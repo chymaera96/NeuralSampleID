@@ -20,7 +20,7 @@ class Downsample(nn.Module):
 
 
 class GraphEncoder(nn.Module):
-    def __init__(self, k=3, dilation=2, size="t", emb_dims=1024, in_channels=3, drop_path=0.1, pre_norm=False):
+    def __init__(self, cfg=None, k=3, dilation=2, size="t", emb_dims=1024, in_channels=3, drop_path=0.1, pre_norm=False):
         super().__init__()
         self.k = k
         self.dilation = dilation

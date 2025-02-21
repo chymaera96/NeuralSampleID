@@ -358,9 +358,14 @@ def main():
     # fma_dir = '/data/home/acw723/datasets/fma/fma_medium'
     # htdemucs_dir = '/data/EECS-Studiosync/datasets/fma_medium/htdemucs'
 
-    cfg = load_config('config/grafp.yaml')
-    index = load_nsid_index(cfg=cfg)
-    print(index[:2])
+    # cfg = load_config('config/grafp.yaml')
+    # index = load_nsid_index(cfg=cfg)
+    # print(index[:2])
+    from encoder.pyg.graph_encoder import GraphEncoder
+    model = GraphEncoder()
+    dummy_tensor = torch.rand(16,64,256)
+    out = model(dummy_tensor)
+    print(out.shape)
 
 if __name__ == '__main__':
     main()
