@@ -1,7 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-from torch_geometric.utils import knn_graph
+from torch_geometric.nn.pool import knn_graph
 from timm.models.layers import DropPath
 from torch_geometric.nn.conv import MessagePassing
 from torch_geometric.utils import add_self_loops
