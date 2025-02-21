@@ -56,7 +56,9 @@ class GraphEncoder(nn.Module):
         self.proj = nn.Conv2d(self.channels[-1], emb_dims, 1, bias=True)
     
     def forward(self, x):
-        x = self.stem(x)
+        
+        x = x.unsqueeze(-1)
+        x = self.stem()
         
         for block in self.backbone:
             x = block(x)
