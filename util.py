@@ -363,7 +363,7 @@ def main():
     # print(index[:2])
     from encoder.pyg.graph_encoder import GraphEncoder
     model = GraphEncoder()
-    dummy_tensor = torch.rand(16,64,256)
+    dummy_tensor = torch.rand(16,3,256)
     out = model(dummy_tensor)
     print(out.shape)
 
