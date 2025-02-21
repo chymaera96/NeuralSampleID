@@ -71,5 +71,5 @@ class GraphEncoder(nn.Module):
 if __name__ == '__main__':
 
     encoder = GraphEncoder()
-    dummy_tensor = torch.rand(8,3,512)
+    dummy_tensor = torch.rand(16,64,256)
     out = encoder(dummy_tensor)
