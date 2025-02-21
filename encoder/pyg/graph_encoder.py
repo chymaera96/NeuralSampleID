@@ -58,7 +58,7 @@ class GraphEncoder(nn.Module):
     def forward(self, x):
         
         x = x.unsqueeze(-1)
-        x = self.stem()
+        x = self.stem(x)
         
         for block in self.backbone:
             x = block(x)
