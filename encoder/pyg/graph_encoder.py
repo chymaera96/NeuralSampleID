@@ -59,6 +59,7 @@ class GraphEncoder(nn.Module):
         
         x = x.unsqueeze(-1)
         x = self.stem(x)
+        print(f"Shape after stem: {x.shape}")
         
         for block in self.backbone:
             x = block(x)
@@ -66,3 +67,9 @@ class GraphEncoder(nn.Module):
         x = self.proj(x)
         x = torch.mean(x, dim=2).squeeze(-1)
         return x
+
+if __name__ == '__main__':
+
+    encoder = GraphEncoder()
+    dummy_tensor = torch.rand(8,3,512)
+    out = encoder(dummy_tensor)
