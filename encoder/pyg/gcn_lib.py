@@ -94,7 +94,7 @@ class MRConv(MessagePassing):
     def update(self, aggr_out):
         """ Apply feature transformation """
         return self.lin(aggr_out)  # Pass through linear transformation
-    
+
 
 class MRConvLayer(nn.Module):
     def __init__(self, in_channels, out_channels, k, dilation=1, relative_pos=True, learnable_rel_pos=True):
@@ -104,29 +104,45 @@ class MRConvLayer(nn.Module):
         self.relative_pos = relative_pos
         self.learnable_rel_pos = learnable_rel_pos
         self.conv = MRConv(in_channels, out_channels)
-        
+
         if self.relative_pos and self.learnable_rel_pos:
             self.rel_pos_embed = nn.Embedding(num_embeddings=(2 * k - 1) ** 2, embedding_dim=in_channels)
 
     def forward(self, x):
-        edge_index = dilated_knn_graph(x, self.k, dilation=self.dilation)
-        
+        B, C, N = x.shape  # Batch size, Features, Number of Nodes
+
+        # Reshape for PyG (B, C, N) -> (B * N, C)
+        x = x.permute(0, 2, 1).reshape(-1, C)  # Shape: [B * N, C]
+
+        # Create batch indices for PyG to handle batched graphs
+        batch = torch.arange(B, device=x.device).repeat_interleave(N)  # Shape: [B * N]
+
+        # Compute KNN graph (batch-aware)
+        edge_index = knn_graph(x, self.k * self.dilation, batch=batch, loop=False)
+
         if self.relative_pos:
             if self.learnable_rel_pos:
-                rel_pos = self.compute_relative_positions(x.shape[1])
+                rel_pos = self.compute_relative_positions(int(N**0.5))  # Use spatial dim
                 edge_features = self.rel_pos_embed(rel_pos.to(x.device))
                 x = x + edge_features
             else:
-                rel_pos = torch.from_numpy(get_2d_relative_pos_embed(x.shape[1], int(x.shape[1] ** 0.5))).to(x.device)
+                rel_pos = torch.from_numpy(get_2d_relative_pos_embed(C, int(N**0.5))).to(x.device)
                 x = x + rel_pos
-        
-        return self.conv(x, edge_index)
+
+        # Apply MRConv
+        x = self.conv(x, edge_index)
+
+        # Reshape back to (B, C, N)
+        x = x.view(B, N, -1).permute(0, 2, 1)  # Shape: [B, C, N]
+
+        return x
 
     def compute_relative_positions(self, grid_size):
-        indices = torch.arange(grid_size)
+        """Compute 2D relative positions based on spatial grid size."""
+        indices = torch.arange(grid_size, device='cpu')
         rel_indices = indices.view(-1, 1) - indices.view(1, -1)
-        rel_indices += (grid_size - 1)
-        return rel_indices.view(-1)
+        rel_indices += (grid_size - 1)  # Shift indices to be
+
     
 class Block(nn.Module):
     def __init__(self, dim, k, dilation, drop_path=0., pre_norm=False):
