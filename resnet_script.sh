@@ -1,7 +1,7 @@
 # Run train or test_fp depending on the argument passed to the script
 
 if [ "$1" == "train" ]; then
-    python train.py --ckp=tc_23 --encoder=resnet-ibn --config=config/resnet_ibn.yaml
+    python train.py --ckp=tc_24 --encoder=resnet-ibn --config=config/resnet_ibn.yaml
 elif [ "$1" == "test" ]; then
     python test_fp.py --query_lens=5,7,10,15,20 \
                   --text=tc22_full_ivfpq \
