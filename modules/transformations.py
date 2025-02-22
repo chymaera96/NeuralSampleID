@@ -232,10 +232,15 @@ class GPUTransformAdditiveSampleid(nn.Module):
             to_key = (to_key - 7) % 12
 
         # Calculate the smallest semitone difference needed
-        difference = (to_key - from_key) % 12
-        if difference > 6:
-            difference -= 12
-        return difference
+        # Calculate direct difference first
+        direct_diff = to_key - from_key
+        
+        # Normalize to find shortest path
+        if direct_diff > 6:
+            direct_diff -= 12
+        elif direct_diff < -6:
+            direct_diff += 12
+        return direct_diff
 
     def analyze_tempo(self, beats_data):
         """Calculate tempo and time between beats"""
