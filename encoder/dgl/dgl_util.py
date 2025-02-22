@@ -83,21 +83,34 @@ class GrapherDGL(nn.Module):
 
 
 class DenseDilatedKnnGraphDGL(nn.Module):
-    """DGL-based KNN Graph Construction"""
+    """ Constructs a batch-wise KNN Graph using segmented_knn_graph. """
 
     def __init__(self, k=9):
         super(DenseDilatedKnnGraphDGL, self).__init__()
         self.k = k
 
     def forward(self, x):
-        """ x: (batch, channels, num_points) """
-        batch_size, channels, num_nodes = x.shape
-        x = x.permute(0, 2, 1)  # Convert to (batch, num_nodes, channels)
+        """
+        Args:
+            x: (B, N, C) - Batch of feature matrices
+        Returns:
+            Batched DGL Graph
+        """
+        B, N, C = x.shape  # Confirm shape
 
-        g_list = []
-        for i in range(batch_size):
-            g = dgl.knn_graph(x[i], self.k)
-            g = g.to('cuda')  # Move to CUDA
-            g_list.append(g)
+        # Flatten features into (B*N, C)
+        x_flat = x.reshape(-1, C)  # Shape: (B*N, C)
 
-        return dgl.batch(g_list)
+        # Generate segment IDs 
+        segs = [N] * B
+
+        print(f"Using k = {self.k}")  # Check if k is correctly set
+
+        # Create graph using segmented_knn_graph
+        g = dgl.segmented_knn_graph(x_flat, k=self.k, segs=segs, algorithm="bruteforce-sharemem")  # Move back to CUDA
+
+        print(f"Graph number of nodes after batch correction: {g.num_nodes()}")  # Should be 4096
+        return g
+
+
+
