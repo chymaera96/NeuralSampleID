@@ -338,34 +338,45 @@ def save_nan_batch(x_i, x_j, save_dir="nan_batches", counter=0):
     # Increment the counter for the next batch
     return counter + 1
 
+def create_subsets(input_file, sample_ids, name):
+    # Load the original JSON data
+    with open(input_file, 'r') as f:
+        data = json.load(f)
 
+    subsets = []
+
+    # Filter the data based on sample_id
+    for entry in data:
+        if entry['sample_id'] in sample_ids:
+            subsets.append(entry)
+
+    # Save the filtered data to a new JSON file
+    output_file = f"data/{name}.json"
+    with open(output_file, 'w') as f:
+        json.dump(subsets, f, indent=4)
+
+    return subsets
 
 def main():
-    # simclr_losses, mixco_losses = extract_losses('hpc_out/nsid_tc_1.o3925245')
 
-    # plt.figure()
-    # plt.plot(simclr_losses, label='SimCLR Loss')
-    # plt.plot(mixco_losses, label='MixCo Loss')
-    # plt.legend()
+    # from encoder.dgl.graph_encoder import GraphEncoderDGL
+    # model = GraphEncoderDGL().to('cuda')
+    # dummy_tensor = torch.rand(16,3,256).to('cuda')
+    # out = model(dummy_tensor)
+    # print(out.shape)
 
-    # plt.title('Losses per step')
-    # plt.xlabel('Step')
-    # plt.ylabel('Loss')
+    import pandas as pd
 
-    # plt.savefig('losses.jpg')
+    df = pd.read_csv('data/samples_new.csv')
+    s_ids = []
+    # If query_type column value is 'beat', extract sample_id column value
+    for i, row in df.iterrows():
+        if row['interpolation'] == 'no' or row['interpolation'] == 'probably not':
+            s_ids.append(row['sample_id'])
+    
+    data = create_subsets('data/sample100_query_index.json', s_ids, 'no_interpolation')
+    print(len(data))
 
-    # Create index file for sample_100 dataset
-    # fma_dir = '/data/home/acw723/datasets/fma/fma_medium'
-    # htdemucs_dir = '/data/EECS-Studiosync/datasets/fma_medium/htdemucs'
-
-    # cfg = load_config('config/grafp.yaml')
-    # index = load_nsid_index(cfg=cfg)
-    # print(index[:2])
-    from encoder.dgl.graph_encoder import GraphEncoderDGL
-    model = GraphEncoderDGL().to('cuda')
-    dummy_tensor = torch.rand(16,3,256).to('cuda')
-    out = model(dummy_tensor)
-    print(out.shape)
 
 if __name__ == '__main__':
     main()

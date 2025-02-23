@@ -1,0 +1,5098 @@
+[
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 0.914285714,
+        "end_time": 4.680272109000001
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 4.69478458,
+        "end_time": 7.45941043
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 7.481179138,
+        "end_time": 11.595464852
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 11.61723356,
+        "end_time": 15.397732426000001
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 15.404988662,
+        "end_time": 18.031746032
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 18.039002268,
+        "end_time": 22.341950114
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 27.776870748,
+        "end_time": 31.470294784
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 31.484807256,
+        "end_time": 34.118820861
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 34.118820862,
+        "end_time": 38.414512472
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 38.436281179,
+        "end_time": 42.260317459999996
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 42.26031746,
+        "end_time": 44.937868480000006
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 44.952380952,
+        "end_time": 49.182766439999995
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 49.197278912,
+        "end_time": 53.021315193
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 53.0430839,
+        "end_time": 55.684353741
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 55.698866213,
+        "end_time": 59.951020408000005
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 59.972789116,
+        "end_time": 63.753287982
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 63.767800454,
+        "end_time": 66.459863946
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 66.467120181,
+        "end_time": 70.704761904
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 70.719274376,
+        "end_time": 74.492517006
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 74.499773243,
+        "end_time": 78.42539682600001
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 78.439909297,
+        "end_time": 81.385941043
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 81.400453515,
+        "end_time": 85.318820862
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 85.333333333,
+        "end_time": 87.93106575899999
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 87.93106576,
+        "end_time": 92.248526077
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 92.263038549,
+        "end_time": 96.014512472
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 96.029024943,
+        "end_time": 98.67029478399999
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 98.692063492,
+        "end_time": 102.929705215
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 102.944217687,
+        "end_time": 106.760997732
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 106.775510204,
+        "end_time": 109.409523809
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 109.416780045,
+        "end_time": 113.705215419
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 113.726984127,
+        "end_time": 117.42040816299999
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 117.434920635,
+        "end_time": 120.025396825
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 120.039909297,
+        "end_time": 124.328344671
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 124.937868481,
+        "end_time": 128.195918368
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 128.210430839,
+        "end_time": 130.924263039
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 130.931519274,
+        "end_time": 135.169160997
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 135.183673469,
+        "end_time": 139.029478458
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 139.04399093,
+        "end_time": 141.699773243
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 141.714285714,
+        "end_time": 145.959183673
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 145.980952381,
+        "end_time": 149.754195011
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 149.775963719,
+        "end_time": 152.42448979600002
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 152.446258503,
+        "end_time": 156.73469387699998
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 156.756462585,
+        "end_time": 160.413605442
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 160.420861678,
+        "end_time": 163.221768707
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 163.243537415,
+        "end_time": 167.299773243
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 167.314285714,
+        "end_time": 171.247165533
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 171.261678005,
+        "end_time": 173.946485261
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 173.960997732,
+        "end_time": 175.586394557
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 178.234920635,
+        "end_time": 181.957369615
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 181.971882086,
+        "end_time": 184.700226757
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 184.714739229,
+        "end_time": 186.898866213
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 188.97414966,
+        "end_time": 192.718367347
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 192.732879819,
+        "end_time": 195.468480726
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 195.490249433,
+        "end_time": 199.648072562
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 199.66984127,
+        "end_time": 203.47210884400002
+    },
+    {
+        "sample_id": "S001",
+        "query_file": "T001",
+        "ref_file": "T002",
+        "start_time": 203.486621315,
+        "end_time": 206.106122449
+    },
+    {
+        "sample_id": "S002",
+        "query_file": "T004",
+        "ref_file": "T003",
+        "start_time": 3.274013605,
+        "end_time": 20.665759637
+    },
+    {
+        "sample_id": "S002",
+        "query_file": "T004",
+        "ref_file": "T003",
+        "start_time": 75.116553288,
+        "end_time": 81.08408163300001
+    },
+    {
+        "sample_id": "S002",
+        "query_file": "T004",
+        "ref_file": "T003",
+        "start_time": 81.084081633,
+        "end_time": 99.427845805
+    },
+    {
+        "sample_id": "S002",
+        "query_file": "T004",
+        "ref_file": "T003",
+        "start_time": 160.287346939,
+        "end_time": 178.25959183700002
+    },
+    {
+        "sample_id": "S002",
+        "query_file": "T004",
+        "ref_file": "T003",
+        "start_time": 232.965804989,
+        "end_time": 238.51537414999999
+    },
+    {
+        "sample_id": "S002",
+        "query_file": "T004",
+        "ref_file": "T003",
+        "start_time": 238.51537415,
+        "end_time": 254.235283447
+    },
+    {
+        "sample_id": "S003",
+        "query_file": "T004",
+        "ref_file": "T003",
+        "start_time": 34.394557823,
+        "end_time": 55.785941043
+    },
+    {
+        "sample_id": "S005",
+        "query_file": "T008",
+        "ref_file": "T007",
+        "start_time": 0.0,
+        "end_time": 9.93814059
+    },
+    {
+        "sample_id": "S005",
+        "query_file": "T008",
+        "ref_file": "T007",
+        "start_time": 9.984580499,
+        "end_time": 19.922721089
+    },
+    {
+        "sample_id": "S005",
+        "query_file": "T008",
+        "ref_file": "T007",
+        "start_time": 19.969160998,
+        "end_time": 30.000181406
+    },
+    {
+        "sample_id": "S005",
+        "query_file": "T008",
+        "ref_file": "T007",
+        "start_time": 30.046621315,
+        "end_time": 40.170521542
+    },
+    {
+        "sample_id": "S005",
+        "query_file": "T008",
+        "ref_file": "T007",
+        "start_time": 40.216961451,
+        "end_time": 50.201541950000006
+    },
+    {
+        "sample_id": "S005",
+        "query_file": "T008",
+        "ref_file": "T007",
+        "start_time": 50.294421769,
+        "end_time": 60.325442177
+    },
+    {
+        "sample_id": "S005",
+        "query_file": "T008",
+        "ref_file": "T007",
+        "start_time": 60.418321995,
+        "end_time": 70.310022675
+    },
+    {
+        "sample_id": "S005",
+        "query_file": "T008",
+        "ref_file": "T007",
+        "start_time": 71.192380952,
+        "end_time": 77.740408163
+    },
+    {
+        "sample_id": "S005",
+        "query_file": "T008",
+        "ref_file": "T007",
+        "start_time": 80.526802721,
+        "end_time": 90.372063492
+    },
+    {
+        "sample_id": "S005",
+        "query_file": "T008",
+        "ref_file": "T007",
+        "start_time": 90.418503401,
+        "end_time": 100.495963718
+    },
+    {
+        "sample_id": "S007",
+        "query_file": "T012",
+        "ref_file": "T011",
+        "start_time": 0.406349206,
+        "end_time": 5.819501133
+    },
+    {
+        "sample_id": "S007",
+        "query_file": "T012",
+        "ref_file": "T011",
+        "start_time": 0.420861678,
+        "end_time": 3.091156463
+    },
+    {
+        "sample_id": "S007",
+        "query_file": "T012",
+        "ref_file": "T011",
+        "start_time": 5.819501133,
+        "end_time": 19.37414966
+    },
+    {
+        "sample_id": "S007",
+        "query_file": "T012",
+        "ref_file": "T011",
+        "start_time": 22.044444445,
+        "end_time": 38.690249433
+    },
+    {
+        "sample_id": "S007",
+        "query_file": "T012",
+        "ref_file": "T011",
+        "start_time": 43.755102041,
+        "end_time": 60.081632653
+    },
+    {
+        "sample_id": "S007",
+        "query_file": "T012",
+        "ref_file": "T011",
+        "start_time": 65.335147392,
+        "end_time": 74.057142857
+    },
+    {
+        "sample_id": "S007",
+        "query_file": "T012",
+        "ref_file": "T011",
+        "start_time": 76.117913832,
+        "end_time": 84.578684807
+    },
+    {
+        "sample_id": "S007",
+        "query_file": "T012",
+        "ref_file": "T011",
+        "start_time": 87.031292517,
+        "end_time": 106.637641723
+    },
+    {
+        "sample_id": "S007",
+        "query_file": "T012",
+        "ref_file": "T011",
+        "start_time": 108.683900226,
+        "end_time": 117.696145125
+    },
+    {
+        "sample_id": "S007",
+        "query_file": "T012",
+        "ref_file": "T011",
+        "start_time": 119.49569161,
+        "end_time": 125.053968254
+    },
+    {
+        "sample_id": "S007",
+        "query_file": "T012",
+        "ref_file": "T011",
+        "start_time": 130.249433107,
+        "end_time": 138.753741497
+    },
+    {
+        "sample_id": "S007",
+        "query_file": "T012",
+        "ref_file": "T011",
+        "start_time": 141.206349207,
+        "end_time": 146.59047619
+    },
+    {
+        "sample_id": "S007",
+        "query_file": "T012",
+        "ref_file": "T011",
+        "start_time": 151.98911564600002,
+        "end_time": 171.682539683
+    },
+    {
+        "sample_id": "S007",
+        "query_file": "T012",
+        "ref_file": "T011",
+        "start_time": 173.641723356,
+        "end_time": 192.943310658
+    },
+    {
+        "sample_id": "S007",
+        "query_file": "T012",
+        "ref_file": "T011",
+        "start_time": 195.308843538,
+        "end_time": 204.379138322
+    },
+    {
+        "sample_id": "S007",
+        "query_file": "T012",
+        "ref_file": "T011",
+        "start_time": 206.077097506,
+        "end_time": 214.915192744
+    },
+    {
+        "sample_id": "S007",
+        "query_file": "T012",
+        "ref_file": "T011",
+        "start_time": 216.946938776,
+        "end_time": 226.10430839
+    },
+    {
+        "sample_id": "S007",
+        "query_file": "T012",
+        "ref_file": "T011",
+        "start_time": 227.787755102,
+        "end_time": 235.900226757
+    },
+    {
+        "sample_id": "S007",
+        "query_file": "T012",
+        "ref_file": "T011",
+        "start_time": 238.64308390000002,
+        "end_time": 258.031746032
+    },
+    {
+        "sample_id": "S007",
+        "query_file": "T012",
+        "ref_file": "T011",
+        "start_time": 260.252154195,
+        "end_time": 280.192290249
+    },
+    {
+        "sample_id": "S007",
+        "query_file": "T012",
+        "ref_file": "T011",
+        "start_time": 281.962811791,
+        "end_time": 290.36553288
+    },
+    {
+        "sample_id": "S007",
+        "query_file": "T012",
+        "ref_file": "T011",
+        "start_time": 292.803628118,
+        "end_time": 301.249886621
+    },
+    {
+        "sample_id": "S008",
+        "query_file": "T013",
+        "ref_file": "T014",
+        "start_time": 5.799183673,
+        "end_time": 15.934693876999999
+    },
+    {
+        "sample_id": "S008",
+        "query_file": "T013",
+        "ref_file": "T014",
+        "start_time": 31.294693878,
+        "end_time": 41.404081633000004
+    },
+    {
+        "sample_id": "S008",
+        "query_file": "T013",
+        "ref_file": "T014",
+        "start_time": 56.711836735,
+        "end_time": 66.768979592
+    },
+    {
+        "sample_id": "S008",
+        "query_file": "T013",
+        "ref_file": "T014",
+        "start_time": 71.89478458,
+        "end_time": 82.05351473900001
+    },
+    {
+        "sample_id": "S008",
+        "query_file": "T013",
+        "ref_file": "T014",
+        "start_time": 97.320634921,
+        "end_time": 107.39229025
+    },
+    {
+        "sample_id": "S008",
+        "query_file": "T013",
+        "ref_file": "T014",
+        "start_time": 122.659410431,
+        "end_time": 132.20861678
+    },
+    {
+        "sample_id": "S008",
+        "query_file": "T013",
+        "ref_file": "T014",
+        "start_time": 145.53106576,
+        "end_time": 155.428571429
+    },
+    {
+        "sample_id": "S008",
+        "query_file": "T013",
+        "ref_file": "T014",
+        "start_time": 163.381405896,
+        "end_time": 173.046712018
+    },
+    {
+        "sample_id": "S008",
+        "query_file": "T013",
+        "ref_file": "T014",
+        "start_time": 188.720181406,
+        "end_time": 198.211337869
+    },
+    {
+        "sample_id": "S008",
+        "query_file": "T013",
+        "ref_file": "T014",
+        "start_time": 214.117006803,
+        "end_time": 223.63718820900002
+    },
+    {
+        "sample_id": "S009",
+        "query_file": "T016",
+        "ref_file": "T015",
+        "start_time": 3.77324263,
+        "end_time": 8.562358276
+    },
+    {
+        "sample_id": "S009",
+        "query_file": "T016",
+        "ref_file": "T015",
+        "start_time": 8.562358276,
+        "end_time": 50.967800454
+    },
+    {
+        "sample_id": "S009",
+        "query_file": "T016",
+        "ref_file": "T015",
+        "start_time": 71.587120182,
+        "end_time": 89.791564626
+    },
+    {
+        "sample_id": "S009",
+        "query_file": "T016",
+        "ref_file": "T015",
+        "start_time": 110.109024943,
+        "end_time": 157.454512472
+    },
+    {
+        "sample_id": "S009",
+        "query_file": "T016",
+        "ref_file": "T015",
+        "start_time": 177.934512472,
+        "end_time": 196.162176871
+    },
+    {
+        "sample_id": "S009",
+        "query_file": "T016",
+        "ref_file": "T015",
+        "start_time": 216.456417234,
+        "end_time": 247.71047619
+    },
+    {
+        "sample_id": "S010",
+        "query_file": "T017",
+        "ref_file": "T018",
+        "start_time": 0.046439909,
+        "end_time": 6.733786848
+    },
+    {
+        "sample_id": "S012",
+        "query_file": "T020",
+        "ref_file": "T021",
+        "start_time": 0.26122449,
+        "end_time": 8.986122449
+    },
+    {
+        "sample_id": "S012",
+        "query_file": "T020",
+        "ref_file": "T021",
+        "start_time": 8.986122449,
+        "end_time": 44.53877551
+    },
+    {
+        "sample_id": "S012",
+        "query_file": "T020",
+        "ref_file": "T021",
+        "start_time": 53.446530612000004,
+        "end_time": 71.262040816
+    },
+    {
+        "sample_id": "S012",
+        "query_file": "T020",
+        "ref_file": "T021",
+        "start_time": 80.666122449,
+        "end_time": 151.196734694
+    },
+    {
+        "sample_id": "S012",
+        "query_file": "T020",
+        "ref_file": "T021",
+        "start_time": 160.60081632700002,
+        "end_time": 195.343673469
+    },
+    {
+        "sample_id": "S013",
+        "query_file": "T022",
+        "ref_file": "T023",
+        "start_time": 10.884353741,
+        "end_time": 13.514013605
+    },
+    {
+        "sample_id": "S013",
+        "query_file": "T022",
+        "ref_file": "T023",
+        "start_time": 10.884353741,
+        "end_time": 16.282993197
+    },
+    {
+        "sample_id": "S013",
+        "query_file": "T022",
+        "ref_file": "T023",
+        "start_time": 16.282993197,
+        "end_time": 80.997006803
+    },
+    {
+        "sample_id": "S013",
+        "query_file": "T022",
+        "ref_file": "T023",
+        "start_time": 86.343401361,
+        "end_time": 107.972789116
+    },
+    {
+        "sample_id": "S013",
+        "query_file": "T022",
+        "ref_file": "T023",
+        "start_time": 116.610612245,
+        "end_time": 134.373877551
+    },
+    {
+        "sample_id": "S013",
+        "query_file": "T022",
+        "ref_file": "T023",
+        "start_time": 135.558095238,
+        "end_time": 259.152108844
+    },
+    {
+        "sample_id": "S014",
+        "query_file": "T024",
+        "ref_file": "T025",
+        "start_time": 21.446530612,
+        "end_time": 26.462040816
+    },
+    {
+        "sample_id": "S014",
+        "query_file": "T024",
+        "ref_file": "T025",
+        "start_time": 26.462040816,
+        "end_time": 71.836734694
+    },
+    {
+        "sample_id": "S014",
+        "query_file": "T024",
+        "ref_file": "T025",
+        "start_time": 74.448979592,
+        "end_time": 124.995918367
+    },
+    {
+        "sample_id": "S014",
+        "query_file": "T024",
+        "ref_file": "T025",
+        "start_time": 127.634285714,
+        "end_time": 154.253061224
+    },
+    {
+        "sample_id": "S014",
+        "query_file": "T024",
+        "ref_file": "T025",
+        "start_time": 159.608163265,
+        "end_time": 217.07755102
+    },
+    {
+        "sample_id": "S014",
+        "query_file": "T024",
+        "ref_file": "T025",
+        "start_time": 223.39918367299998,
+        "end_time": 228.048979592
+    },
+    {
+        "sample_id": "S015",
+        "query_file": "T026",
+        "ref_file": "T027",
+        "start_time": 12.97414966,
+        "end_time": 23.176417234
+    },
+    {
+        "sample_id": "S015",
+        "query_file": "T026",
+        "ref_file": "T027",
+        "start_time": 23.176417234,
+        "end_time": 59.283446712
+    },
+    {
+        "sample_id": "S015",
+        "query_file": "T026",
+        "ref_file": "T027",
+        "start_time": 64.551473923,
+        "end_time": 74.884353741
+    },
+    {
+        "sample_id": "S015",
+        "query_file": "T026",
+        "ref_file": "T027",
+        "start_time": 79.092970521,
+        "end_time": 80.108843537
+    },
+    {
+        "sample_id": "S015",
+        "query_file": "T026",
+        "ref_file": "T027",
+        "start_time": 83.446712018,
+        "end_time": 116.215873016
+    },
+    {
+        "sample_id": "S015",
+        "query_file": "T026",
+        "ref_file": "T027",
+        "start_time": 120.10521542000001,
+        "end_time": 152.874376417
+    },
+    {
+        "sample_id": "S015",
+        "query_file": "T026",
+        "ref_file": "T027",
+        "start_time": 157.590929705,
+        "end_time": 171.160090703
+    },
+    {
+        "sample_id": "S015",
+        "query_file": "T026",
+        "ref_file": "T027",
+        "start_time": 173.090249433,
+        "end_time": 266.681179138
+    },
+    {
+        "sample_id": "S016",
+        "query_file": "T028",
+        "ref_file": "T029",
+        "start_time": 37.337687075,
+        "end_time": 42.538956916
+    },
+    {
+        "sample_id": "S016",
+        "query_file": "T028",
+        "ref_file": "T029",
+        "start_time": 42.538956916,
+        "end_time": 56.090702948
+    },
+    {
+        "sample_id": "S016",
+        "query_file": "T028",
+        "ref_file": "T029",
+        "start_time": 58.427210885,
+        "end_time": 69.282539683
+    },
+    {
+        "sample_id": "S016",
+        "query_file": "T028",
+        "ref_file": "T029",
+        "start_time": 79.470294785,
+        "end_time": 94.098866213
+    },
+    {
+        "sample_id": "S016",
+        "query_file": "T028",
+        "ref_file": "T029",
+        "start_time": 95.43401360499999,
+        "end_time": 108.62585034
+    },
+    {
+        "sample_id": "S016",
+        "query_file": "T028",
+        "ref_file": "T029",
+        "start_time": 121.280725623,
+        "end_time": 140.045351474
+    },
+    {
+        "sample_id": "S016",
+        "query_file": "T028",
+        "ref_file": "T029",
+        "start_time": 142.338321996,
+        "end_time": 153.121088435
+    },
+    {
+        "sample_id": "S016",
+        "query_file": "T028",
+        "ref_file": "T029",
+        "start_time": 163.178231292,
+        "end_time": 179.185487528
+    },
+    {
+        "sample_id": "S016",
+        "query_file": "T028",
+        "ref_file": "T029",
+        "start_time": 194.62675736900002,
+        "end_time": 210.155102041
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 10.292244898,
+        "end_time": 12.434285714
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 15.412244898,
+        "end_time": 17.554285714000002
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 20.532244898,
+        "end_time": 22.726530611999998
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 25.704489796,
+        "end_time": 27.924897959
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 30.876734694,
+        "end_time": 33.097142857
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 36.022857143,
+        "end_time": 38.243265306000005
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 41.195102041,
+        "end_time": 43.389387755
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 46.34122449,
+        "end_time": 48.587755102
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 51.487346939,
+        "end_time": 53.681632653
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 56.633469388,
+        "end_time": 58.906122449
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 61.805714286,
+        "end_time": 64.078367347
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 66.977959184,
+        "end_time": 69.224489796
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 72.150204082,
+        "end_time": 74.344489796
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 77.270204082,
+        "end_time": 79.51673469400001
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 82.44244898,
+        "end_time": 84.636734694
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 87.614693878,
+        "end_time": 89.835102041
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 93.544489796,
+        "end_time": 94.98122448999999
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 97.985306122,
+        "end_time": 100.153469387
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 103.131428571,
+        "end_time": 105.273469387
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 108.27755102,
+        "end_time": 110.44571428500001
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 113.449795918,
+        "end_time": 115.59183673400001
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 118.595918367,
+        "end_time": 120.764081632
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 123.794285714,
+        "end_time": 125.93632653
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 128.966530612,
+        "end_time": 131.08244897900002
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 134.13877551,
+        "end_time": 136.28081632599998
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 139.25877551,
+        "end_time": 141.426938775
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 144.404897959,
+        "end_time": 146.546938775
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 149.603265306,
+        "end_time": 151.719183673
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 155.506938776,
+        "end_time": 156.969795919
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 159.895510204,
+        "end_time": 162.063673469
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 164.989387755,
+        "end_time": 167.209795918
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 170.24,
+        "end_time": 172.35591836700002
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 175.386122449,
+        "end_time": 177.528163265
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 180.532244898,
+        "end_time": 182.648163265
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 185.678367347,
+        "end_time": 187.846530612
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 190.824489796,
+        "end_time": 193.044897959
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 196.153469388,
+        "end_time": 198.164897959
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 201.168979592,
+        "end_time": 203.389387755
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 206.367346939,
+        "end_time": 208.45714285699998
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 211.487346939,
+        "end_time": 213.707755102
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 217.469387755,
+        "end_time": 218.82775510200003
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 221.831836735,
+        "end_time": 223.947755102
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 226.977959184,
+        "end_time": 229.14612244900002
+    },
+    {
+        "sample_id": "S017",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 232.20244898,
+        "end_time": 233.691428572
+    },
+    {
+        "sample_id": "S019",
+        "query_file": "T034",
+        "ref_file": "T035",
+        "start_time": 8.829387755,
+        "end_time": 11.154285714
+    },
+    {
+        "sample_id": "S019",
+        "query_file": "T034",
+        "ref_file": "T035",
+        "start_time": 8.829387755,
+        "end_time": 13.479183673000001
+    },
+    {
+        "sample_id": "S019",
+        "query_file": "T034",
+        "ref_file": "T035",
+        "start_time": 13.479183673000001,
+        "end_time": 25.762539683
+    },
+    {
+        "sample_id": "S019",
+        "query_file": "T034",
+        "ref_file": "T035",
+        "start_time": 64.52825396899999,
+        "end_time": 83.951746032
+    },
+    {
+        "sample_id": "S019",
+        "query_file": "T034",
+        "ref_file": "T035",
+        "start_time": 122.798730159,
+        "end_time": 142.222222222
+    },
+    {
+        "sample_id": "S019",
+        "query_file": "T034",
+        "ref_file": "T035",
+        "start_time": 181.069206349,
+        "end_time": 200.533333333
+    },
+    {
+        "sample_id": "S019",
+        "query_file": "T034",
+        "ref_file": "T035",
+        "start_time": 202.93079365,
+        "end_time": 217.518730159
+    },
+    {
+        "sample_id": "S019",
+        "query_file": "T034",
+        "ref_file": "T035",
+        "start_time": 219.956825397,
+        "end_time": 244.337777778
+    },
+    {
+        "sample_id": "S020",
+        "query_file": "T036",
+        "ref_file": "T033",
+        "start_time": 2.414875283,
+        "end_time": 11.981496598000001
+    },
+    {
+        "sample_id": "S020",
+        "query_file": "T036",
+        "ref_file": "T033",
+        "start_time": 11.981496598000001,
+        "end_time": 316.673741497
+    },
+    {
+        "sample_id": "S021",
+        "query_file": "T037",
+        "ref_file": "T038",
+        "start_time": 0.040634921,
+        "end_time": 1.9911111110000002
+    },
+    {
+        "sample_id": "S021",
+        "query_file": "T037",
+        "ref_file": "T038",
+        "start_time": 1.970793651,
+        "end_time": 17.696507937
+    },
+    {
+        "sample_id": "S021",
+        "query_file": "T037",
+        "ref_file": "T038",
+        "start_time": 44.251428571,
+        "end_time": 61.683809522999994
+    },
+    {
+        "sample_id": "S021",
+        "query_file": "T037",
+        "ref_file": "T038",
+        "start_time": 79.255510204,
+        "end_time": 94.63292517000001
+    },
+    {
+        "sample_id": "S021",
+        "query_file": "T037",
+        "ref_file": "T038",
+        "start_time": 96.792380952,
+        "end_time": 131.866122449
+    },
+    {
+        "sample_id": "S021",
+        "query_file": "T037",
+        "ref_file": "T038",
+        "start_time": 158.267210884,
+        "end_time": 175.85632653000002
+    },
+    {
+        "sample_id": "S021",
+        "query_file": "T037",
+        "ref_file": "T038",
+        "start_time": 193.483174603,
+        "end_time": 208.761904762
+    },
+    {
+        "sample_id": "S021",
+        "query_file": "T037",
+        "ref_file": "T038",
+        "start_time": 210.930068027,
+        "end_time": 245.58585034
+    },
+    {
+        "sample_id": "S022",
+        "query_file": "T037",
+        "ref_file": "T043",
+        "start_time": 26.145668934,
+        "end_time": 28.235464852
+    },
+    {
+        "sample_id": "S022",
+        "query_file": "T037",
+        "ref_file": "T043",
+        "start_time": 28.328344671,
+        "end_time": 30.557460317
+    },
+    {
+        "sample_id": "S022",
+        "query_file": "T037",
+        "ref_file": "T043",
+        "start_time": 30.603900227,
+        "end_time": 32.693696145000004
+    },
+    {
+        "sample_id": "S022",
+        "query_file": "T037",
+        "ref_file": "T043",
+        "start_time": 32.693696145,
+        "end_time": 34.922811790999994
+    },
+    {
+        "sample_id": "S022",
+        "query_file": "T037",
+        "ref_file": "T043",
+        "start_time": 34.922811791,
+        "end_time": 37.151927437
+    },
+    {
+        "sample_id": "S022",
+        "query_file": "T037",
+        "ref_file": "T043",
+        "start_time": 37.151927438,
+        "end_time": 39.148843538
+    },
+    {
+        "sample_id": "S022",
+        "query_file": "T037",
+        "ref_file": "T043",
+        "start_time": 39.148843537,
+        "end_time": 41.377959182999994
+    },
+    {
+        "sample_id": "S022",
+        "query_file": "T037",
+        "ref_file": "T043",
+        "start_time": 61.254240363,
+        "end_time": 63.483356009
+    },
+    {
+        "sample_id": "S022",
+        "query_file": "T037",
+        "ref_file": "T043",
+        "start_time": 63.483356009,
+        "end_time": 65.80535147399999
+    },
+    {
+        "sample_id": "S022",
+        "query_file": "T037",
+        "ref_file": "T043",
+        "start_time": 65.805351474,
+        "end_time": 67.80226757400001
+    },
+    {
+        "sample_id": "S022",
+        "query_file": "T037",
+        "ref_file": "T043",
+        "start_time": 67.802267574,
+        "end_time": 70.03138322
+    },
+    {
+        "sample_id": "S022",
+        "query_file": "T037",
+        "ref_file": "T043",
+        "start_time": 131.47138322,
+        "end_time": 133.839818594
+    },
+    {
+        "sample_id": "S022",
+        "query_file": "T037",
+        "ref_file": "T043",
+        "start_time": 133.886258503,
+        "end_time": 136.022494331
+    },
+    {
+        "sample_id": "S022",
+        "query_file": "T037",
+        "ref_file": "T043",
+        "start_time": 136.022494331,
+        "end_time": 138.158730159
+    },
+    {
+        "sample_id": "S022",
+        "query_file": "T037",
+        "ref_file": "T043",
+        "start_time": 138.158730159,
+        "end_time": 140.29496598699998
+    },
+    {
+        "sample_id": "S022",
+        "query_file": "T037",
+        "ref_file": "T043",
+        "start_time": 140.341405896,
+        "end_time": 142.524081633
+    },
+    {
+        "sample_id": "S022",
+        "query_file": "T037",
+        "ref_file": "T043",
+        "start_time": 142.524081633,
+        "end_time": 144.753197279
+    },
+    {
+        "sample_id": "S022",
+        "query_file": "T037",
+        "ref_file": "T043",
+        "start_time": 144.753197279,
+        "end_time": 146.982312925
+    },
+    {
+        "sample_id": "S022",
+        "query_file": "T037",
+        "ref_file": "T043",
+        "start_time": 146.982312925,
+        "end_time": 149.164988662
+    },
+    {
+        "sample_id": "S022",
+        "query_file": "T037",
+        "ref_file": "T043",
+        "start_time": 175.357097506,
+        "end_time": 177.632653062
+    },
+    {
+        "sample_id": "S022",
+        "query_file": "T037",
+        "ref_file": "T043",
+        "start_time": 177.632653061,
+        "end_time": 179.861768707
+    },
+    {
+        "sample_id": "S022",
+        "query_file": "T037",
+        "ref_file": "T043",
+        "start_time": 179.861768707,
+        "end_time": 182.137324263
+    },
+    {
+        "sample_id": "S022",
+        "query_file": "T037",
+        "ref_file": "T043",
+        "start_time": 182.137324263,
+        "end_time": 184.227120181
+    },
+    {
+        "sample_id": "S022",
+        "query_file": "T037",
+        "ref_file": "T043",
+        "start_time": 245.852879819,
+        "end_time": 247.803356009
+    },
+    {
+        "sample_id": "S022",
+        "query_file": "T037",
+        "ref_file": "T043",
+        "start_time": 247.803356009,
+        "end_time": 250.032471655
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 2.554195011,
+        "end_time": 12.445895691
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 2.554195011,
+        "end_time": 13.746213152
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 13.746213152,
+        "end_time": 23.730793651
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 13.746213152,
+        "end_time": 25.031111111
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 24.984671202,
+        "end_time": 34.876371882
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 25.031111111,
+        "end_time": 36.31600907
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 36.269569161,
+        "end_time": 47.461587302
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 36.31600907,
+        "end_time": 46.114829932
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 47.461587302,
+        "end_time": 57.399727892
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 47.461587302,
+        "end_time": 58.607165533
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 58.607165533,
+        "end_time": 68.591746032
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 58.607165533,
+        "end_time": 69.938503401
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 69.938503401,
+        "end_time": 79.783764172
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 69.938503401,
+        "end_time": 81.26984126900001
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 81.26984127,
+        "end_time": 91.254421769
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 81.26984127,
+        "end_time": 92.368979592
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 92.368979592,
+        "end_time": 102.260680272
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 92.368979592,
+        "end_time": 103.65387755100001
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 103.653877551,
+        "end_time": 113.592018141
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 103.653877551,
+        "end_time": 114.985215419
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 114.98521542,
+        "end_time": 124.8769161
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 114.98521542,
+        "end_time": 126.084353742
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 126.084353741,
+        "end_time": 136.115374149
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 126.084353741,
+        "end_time": 137.322811791
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 137.322811791,
+        "end_time": 147.35383219899998
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 137.322811791,
+        "end_time": 148.700589569
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 148.700589569,
+        "end_time": 158.59229024899997
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 148.700589569,
+        "end_time": 159.93904761899998
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 159.939047619,
+        "end_time": 169.970068027
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 159.939047619,
+        "end_time": 171.13106576
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 171.13106576,
+        "end_time": 181.11564625900002
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 171.177505669,
+        "end_time": 182.3230839
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 182.288253968,
+        "end_time": 193.584761905
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 182.3230839,
+        "end_time": 192.307664399
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 193.56154195,
+        "end_time": 203.59256235799998
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 193.584761905,
+        "end_time": 205.04380952399998
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 204.985759637,
+        "end_time": 214.877460317
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 205.043809524,
+        "end_time": 216.177777778
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 216.03845805,
+        "end_time": 226.069478458
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 216.177777778,
+        "end_time": 227.393015873
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 227.323356009,
+        "end_time": 237.215056689
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 227.393015873,
+        "end_time": 238.526984127
+    },
+    {
+        "sample_id": "S023",
+        "query_file": "T039",
+        "ref_file": "T040",
+        "start_time": 238.46893424,
+        "end_time": 240.001451247
+    },
+    {
+        "sample_id": "S024",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 0.0,
+        "end_time": 4.612063492
+    },
+    {
+        "sample_id": "S024",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 4.614965986,
+        "end_time": 7.331700679999999
+    },
+    {
+        "sample_id": "S024",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 7.349115646,
+        "end_time": 10.013605442
+    },
+    {
+        "sample_id": "S024",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 10.013605442,
+        "end_time": 12.695510204
+    },
+    {
+        "sample_id": "S024",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 15.325170068,
+        "end_time": 23.527619048
+    },
+    {
+        "sample_id": "S024",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 50.155102041,
+        "end_time": 52.558367347
+    },
+    {
+        "sample_id": "S024",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 60.865306122,
+        "end_time": 63.251156462
+    },
+    {
+        "sample_id": "S024",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 90.070204082,
+        "end_time": 97.43673469400001
+    },
+    {
+        "sample_id": "S024",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 99.439455782,
+        "end_time": 108.199183673
+    },
+    {
+        "sample_id": "S024",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 119.397006803,
+        "end_time": 121.92217687099999
+    },
+    {
+        "sample_id": "S024",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 140.591020408,
+        "end_time": 143.203265306
+    },
+    {
+        "sample_id": "S024",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 147.940136054,
+        "end_time": 156.09034013599998
+    },
+    {
+        "sample_id": "S024",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 159.312108844,
+        "end_time": 167.41006802799998
+    },
+    {
+        "sample_id": "S024",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 168.681360544,
+        "end_time": 178.137687075
+    },
+    {
+        "sample_id": "S024",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 180.697687075,
+        "end_time": 188.778231293
+    },
+    {
+        "sample_id": "S024",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 191.268571429,
+        "end_time": 193.84598639499998
+    },
+    {
+        "sample_id": "S024",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 201.868480726,
+        "end_time": 230.31292517
+    },
+    {
+        "sample_id": "S025",
+        "query_file": "T044",
+        "ref_file": "T045",
+        "start_time": 39.857052154,
+        "end_time": 40.954195011
+    },
+    {
+        "sample_id": "S025",
+        "query_file": "T044",
+        "ref_file": "T045",
+        "start_time": 40.96,
+        "end_time": 49.24952381
+    },
+    {
+        "sample_id": "S025",
+        "query_file": "T044",
+        "ref_file": "T045",
+        "start_time": 67.992380952,
+        "end_time": 77.541587301
+    },
+    {
+        "sample_id": "S025",
+        "query_file": "T044",
+        "ref_file": "T045",
+        "start_time": 96.193015873,
+        "end_time": 106.32126984099999
+    },
+    {
+        "sample_id": "S025",
+        "query_file": "T044",
+        "ref_file": "T045",
+        "start_time": 126.792562358,
+        "end_time": 138.611519274
+    },
+    {
+        "sample_id": "S025",
+        "query_file": "T044",
+        "ref_file": "T045",
+        "start_time": 157.274557823,
+        "end_time": 166.81795918400002
+    },
+    {
+        "sample_id": "S025",
+        "query_file": "T044",
+        "ref_file": "T045",
+        "start_time": 194.873469388,
+        "end_time": 200.933877551
+    },
+    {
+        "sample_id": "S025",
+        "query_file": "T044",
+        "ref_file": "T045",
+        "start_time": 215.701768707,
+        "end_time": 219.14993197200002
+    },
+    {
+        "sample_id": "S025",
+        "query_file": "T044",
+        "ref_file": "T045",
+        "start_time": 223.207619048,
+        "end_time": 228.62367347
+    },
+    {
+        "sample_id": "S025",
+        "query_file": "T044",
+        "ref_file": "T045",
+        "start_time": 234.927891156,
+        "end_time": 237.38340136
+    },
+    {
+        "sample_id": "S025",
+        "query_file": "T044",
+        "ref_file": "T045",
+        "start_time": 246.700408163,
+        "end_time": 256.139319728
+    },
+    {
+        "sample_id": "S025",
+        "query_file": "T044",
+        "ref_file": "T045",
+        "start_time": 272.631292517,
+        "end_time": 275.574421769
+    },
+    {
+        "sample_id": "S027",
+        "query_file": "T048",
+        "ref_file": "T049",
+        "start_time": 9.163174603,
+        "end_time": 13.633015873
+    },
+    {
+        "sample_id": "S027",
+        "query_file": "T048",
+        "ref_file": "T049",
+        "start_time": 13.633015873,
+        "end_time": 36.185396825
+    },
+    {
+        "sample_id": "S027",
+        "query_file": "T048",
+        "ref_file": "T049",
+        "start_time": 45.003174603,
+        "end_time": 72.005079365
+    },
+    {
+        "sample_id": "S027",
+        "query_file": "T048",
+        "ref_file": "T049",
+        "start_time": 80.863492063,
+        "end_time": 107.926349206
+    },
+    {
+        "sample_id": "S035",
+        "query_file": "T057",
+        "ref_file": "T056",
+        "start_time": 6.13877551,
+        "end_time": 11.467755102
+    },
+    {
+        "sample_id": "S035",
+        "query_file": "T057",
+        "ref_file": "T056",
+        "start_time": 11.467755102,
+        "end_time": 69.537959184
+    },
+    {
+        "sample_id": "S035",
+        "query_file": "T057",
+        "ref_file": "T056",
+        "start_time": 71.366530613,
+        "end_time": 134.608979592
+    },
+    {
+        "sample_id": "S035",
+        "query_file": "T057",
+        "ref_file": "T056",
+        "start_time": 136.620408163,
+        "end_time": 190.928979592
+    },
+    {
+        "sample_id": "S035",
+        "query_file": "T057",
+        "ref_file": "T056",
+        "start_time": 201.717551021,
+        "end_time": 256.069659864
+    },
+    {
+        "sample_id": "S036",
+        "query_file": "T059",
+        "ref_file": "T058",
+        "start_time": 9.89170068,
+        "end_time": 14.907210884
+    },
+    {
+        "sample_id": "S036",
+        "query_file": "T059",
+        "ref_file": "T058",
+        "start_time": 14.907210884,
+        "end_time": 70.170702948
+    },
+    {
+        "sample_id": "S036",
+        "query_file": "T059",
+        "ref_file": "T058",
+        "start_time": 80.155283447,
+        "end_time": 129.102947846
+    },
+    {
+        "sample_id": "S036",
+        "query_file": "T059",
+        "ref_file": "T058",
+        "start_time": 135.093696145,
+        "end_time": 155.991655329
+    },
+    {
+        "sample_id": "S037",
+        "query_file": "T061",
+        "ref_file": "T060",
+        "start_time": 63.715555556,
+        "end_time": 72.81777777799999
+    },
+    {
+        "sample_id": "S037",
+        "query_file": "T061",
+        "ref_file": "T060",
+        "start_time": 75.418412698,
+        "end_time": 83.080997732
+    },
+    {
+        "sample_id": "S037",
+        "query_file": "T061",
+        "ref_file": "T060",
+        "start_time": 128.081269841,
+        "end_time": 137.137052154
+    },
+    {
+        "sample_id": "S037",
+        "query_file": "T061",
+        "ref_file": "T060",
+        "start_time": 139.923446712,
+        "end_time": 146.98231292499997
+    },
+    {
+        "sample_id": "S037",
+        "query_file": "T061",
+        "ref_file": "T060",
+        "start_time": 187.385034014,
+        "end_time": 196.44081632700002
+    },
+    {
+        "sample_id": "S037",
+        "query_file": "T061",
+        "ref_file": "T060",
+        "start_time": 199.273650794,
+        "end_time": 206.378956916
+    },
+    {
+        "sample_id": "S038",
+        "query_file": "T063",
+        "ref_file": "T062",
+        "start_time": 1.532517007,
+        "end_time": 25.460680271999998
+    },
+    {
+        "sample_id": "S038",
+        "query_file": "T063",
+        "ref_file": "T062",
+        "start_time": 25.460680272,
+        "end_time": 49.354013605000006
+    },
+    {
+        "sample_id": "S038",
+        "query_file": "T063",
+        "ref_file": "T062",
+        "start_time": 97.45414966,
+        "end_time": 121.347482993
+    },
+    {
+        "sample_id": "S038",
+        "query_file": "T063",
+        "ref_file": "T062",
+        "start_time": 193.480272109,
+        "end_time": 217.199455782
+    },
+    {
+        "sample_id": "S038",
+        "query_file": "T063",
+        "ref_file": "T062",
+        "start_time": 301.487891156,
+        "end_time": 325.276734693
+    },
+    {
+        "sample_id": "S039",
+        "query_file": "T065",
+        "ref_file": "T064",
+        "start_time": 21.873197279,
+        "end_time": 23.312834467
+    },
+    {
+        "sample_id": "S039",
+        "query_file": "T065",
+        "ref_file": "T064",
+        "start_time": 23.312834467,
+        "end_time": 87.399909297
+    },
+    {
+        "sample_id": "S039",
+        "query_file": "T065",
+        "ref_file": "T064",
+        "start_time": 109.040907029,
+        "end_time": 152.740861678
+    },
+    {
+        "sample_id": "S039",
+        "query_file": "T065",
+        "ref_file": "T064",
+        "start_time": 174.75337868499997,
+        "end_time": 260.992290249
+    },
+    {
+        "sample_id": "S040",
+        "query_file": "T067",
+        "ref_file": "T066",
+        "start_time": 19.086802721,
+        "end_time": 23.312834467000002
+    },
+    {
+        "sample_id": "S040",
+        "query_file": "T067",
+        "ref_file": "T066",
+        "start_time": 24.752471655,
+        "end_time": 40.124081632
+    },
+    {
+        "sample_id": "S040",
+        "query_file": "T067",
+        "ref_file": "T066",
+        "start_time": 86.331791383,
+        "end_time": 107.461950113
+    },
+    {
+        "sample_id": "S040",
+        "query_file": "T067",
+        "ref_file": "T066",
+        "start_time": 136.811972789,
+        "end_time": 138.25160997700002
+    },
+    {
+        "sample_id": "S040",
+        "query_file": "T067",
+        "ref_file": "T066",
+        "start_time": 153.576780045,
+        "end_time": 174.892698412
+    },
+    {
+        "sample_id": "S041",
+        "query_file": "T069",
+        "ref_file": "T068",
+        "start_time": 13.142494331,
+        "end_time": 24.42739229
+    },
+    {
+        "sample_id": "S041",
+        "query_file": "T069",
+        "ref_file": "T068",
+        "start_time": 24.42739229,
+        "end_time": 35.990929705
+    },
+    {
+        "sample_id": "S041",
+        "query_file": "T069",
+        "ref_file": "T068",
+        "start_time": 35.990929705,
+        "end_time": 47.461587301
+    },
+    {
+        "sample_id": "S041",
+        "query_file": "T069",
+        "ref_file": "T068",
+        "start_time": 47.508027211,
+        "end_time": 59.071564626
+    },
+    {
+        "sample_id": "S041",
+        "query_file": "T069",
+        "ref_file": "T068",
+        "start_time": 59.071564626,
+        "end_time": 70.44934240399999
+    },
+    {
+        "sample_id": "S041",
+        "query_file": "T069",
+        "ref_file": "T068",
+        "start_time": 70.495782313,
+        "end_time": 81.82712018100001
+    },
+    {
+        "sample_id": "S041",
+        "query_file": "T069",
+        "ref_file": "T068",
+        "start_time": 81.92,
+        "end_time": 93.437097506
+    },
+    {
+        "sample_id": "S041",
+        "query_file": "T069",
+        "ref_file": "T068",
+        "start_time": 93.483537415,
+        "end_time": 104.954195011
+    },
+    {
+        "sample_id": "S041",
+        "query_file": "T069",
+        "ref_file": "T068",
+        "start_time": 104.954195011,
+        "end_time": 116.471292517
+    },
+    {
+        "sample_id": "S041",
+        "query_file": "T069",
+        "ref_file": "T068",
+        "start_time": 116.471292517,
+        "end_time": 120.743764172
+    },
+    {
+        "sample_id": "S041",
+        "query_file": "T069",
+        "ref_file": "T068",
+        "start_time": 124.18031746,
+        "end_time": 127.849070294
+    },
+    {
+        "sample_id": "S041",
+        "query_file": "T069",
+        "ref_file": "T068",
+        "start_time": 127.849070295,
+        "end_time": 139.36616780100002
+    },
+    {
+        "sample_id": "S041",
+        "query_file": "T069",
+        "ref_file": "T068",
+        "start_time": 139.3661678,
+        "end_time": 150.790385487
+    },
+    {
+        "sample_id": "S041",
+        "query_file": "T069",
+        "ref_file": "T068",
+        "start_time": 150.836825397,
+        "end_time": 162.26104308400002
+    },
+    {
+        "sample_id": "S041",
+        "query_file": "T069",
+        "ref_file": "T068",
+        "start_time": 162.307482993,
+        "end_time": 173.685260771
+    },
+    {
+        "sample_id": "S041",
+        "query_file": "T069",
+        "ref_file": "T068",
+        "start_time": 173.73170068,
+        "end_time": 185.20235827599998
+    },
+    {
+        "sample_id": "S041",
+        "query_file": "T069",
+        "ref_file": "T068",
+        "start_time": 185.295238095,
+        "end_time": 196.719455782
+    },
+    {
+        "sample_id": "S041",
+        "query_file": "T069",
+        "ref_file": "T068",
+        "start_time": 196.765895692,
+        "end_time": 208.23655328799998
+    },
+    {
+        "sample_id": "S041",
+        "query_file": "T069",
+        "ref_file": "T068",
+        "start_time": 208.190113379,
+        "end_time": 219.660770975
+    },
+    {
+        "sample_id": "S041",
+        "query_file": "T069",
+        "ref_file": "T068",
+        "start_time": 219.707210884,
+        "end_time": 231.17786848
+    },
+    {
+        "sample_id": "S041",
+        "query_file": "T069",
+        "ref_file": "T068",
+        "start_time": 231.270748299,
+        "end_time": 242.694965986
+    },
+    {
+        "sample_id": "S041",
+        "query_file": "T069",
+        "ref_file": "T068",
+        "start_time": 242.741405896,
+        "end_time": 254.119183674
+    },
+    {
+        "sample_id": "S041",
+        "query_file": "T069",
+        "ref_file": "T068",
+        "start_time": 254.119183673,
+        "end_time": 262.942766439
+    },
+    {
+        "sample_id": "S042",
+        "query_file": "T071",
+        "ref_file": "T070",
+        "start_time": 0.220589569,
+        "end_time": 7.082086168
+    },
+    {
+        "sample_id": "S042",
+        "query_file": "T071",
+        "ref_file": "T070",
+        "start_time": 7.082086168,
+        "end_time": 26.389478458
+    },
+    {
+        "sample_id": "S042",
+        "query_file": "T071",
+        "ref_file": "T070",
+        "start_time": 27.933605442,
+        "end_time": 215.759818594
+    },
+    {
+        "sample_id": "S042",
+        "query_file": "T071",
+        "ref_file": "T070",
+        "start_time": 219.103492063,
+        "end_time": 250.409795918
+    },
+    {
+        "sample_id": "S043",
+        "query_file": "T073",
+        "ref_file": "T072",
+        "start_time": 5.781768707,
+        "end_time": 8.533333333
+    },
+    {
+        "sample_id": "S043",
+        "query_file": "T073",
+        "ref_file": "T072",
+        "start_time": 5.781768707,
+        "end_time": 11.180408163
+    },
+    {
+        "sample_id": "S044",
+        "query_file": "T075",
+        "ref_file": "T074",
+        "start_time": 7.616145125,
+        "end_time": 12.58521542
+    },
+    {
+        "sample_id": "S044",
+        "query_file": "T075",
+        "ref_file": "T074",
+        "start_time": 12.58521542,
+        "end_time": 25.031111111
+    },
+    {
+        "sample_id": "S044",
+        "query_file": "T075",
+        "ref_file": "T074",
+        "start_time": 27.353106576000002,
+        "end_time": 45.511111111
+    },
+    {
+        "sample_id": "S044",
+        "query_file": "T075",
+        "ref_file": "T074",
+        "start_time": 47.229387755,
+        "end_time": 65.38739229
+    },
+    {
+        "sample_id": "S044",
+        "query_file": "T075",
+        "ref_file": "T074",
+        "start_time": 67.059229025,
+        "end_time": 85.077913832
+    },
+    {
+        "sample_id": "S044",
+        "query_file": "T075",
+        "ref_file": "T074",
+        "start_time": 86.889070295,
+        "end_time": 125.016235828
+    },
+    {
+        "sample_id": "S044",
+        "query_file": "T075",
+        "ref_file": "T074",
+        "start_time": 126.688072563,
+        "end_time": 144.70675737
+    },
+    {
+        "sample_id": "S044",
+        "query_file": "T075",
+        "ref_file": "T074",
+        "start_time": 146.517913833,
+        "end_time": 164.815238095
+    },
+    {
+        "sample_id": "S044",
+        "query_file": "T075",
+        "ref_file": "T074",
+        "start_time": 166.44063492,
+        "end_time": 184.459319728
+    },
+    {
+        "sample_id": "S044",
+        "query_file": "T075",
+        "ref_file": "T074",
+        "start_time": 186.131156463,
+        "end_time": 221.100408163
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 0.365714286,
+        "end_time": 1.80244898
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 1.80244898,
+        "end_time": 4.623673469
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 4.623673469,
+        "end_time": 5.799183673
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 5.799183673,
+        "end_time": 8.751020408
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 8.751020408,
+        "end_time": 11.624489796
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 11.624489796,
+        "end_time": 19.356734694
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 19.356734694,
+        "end_time": 22.517551021
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 22.517551021,
+        "end_time": 60.029387755
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 60.029387755,
+        "end_time": 61.466122449000004
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 61.466122449000004,
+        "end_time": 64.313469388
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 64.313469388,
+        "end_time": 67.108571429
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 67.108571429,
+        "end_time": 97.567346939
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 99.004081633,
+        "end_time": 104.568163265
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 104.568163265,
+        "end_time": 105.900408163
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 105.900408163,
+        "end_time": 106.971428571
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 107.284897959,
+        "end_time": 108.460408163
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 108.460408163,
+        "end_time": 111.516734694
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 111.516734694,
+        "end_time": 126.693877551
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 126.693877551,
+        "end_time": 128.182857143
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 128.182857143,
+        "end_time": 130.847346939
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 130.847346939,
+        "end_time": 133.746938776
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 133.746938776,
+        "end_time": 160.0
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 160.0,
+        "end_time": 161.515102041
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 161.515102041,
+        "end_time": 164.336326531
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 164.336326531,
+        "end_time": 167.053061225
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 167.053061225,
+        "end_time": 193.410612245
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 193.410612245,
+        "end_time": 194.664489796
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 194.664489796,
+        "end_time": 197.668571429
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 197.668571429,
+        "end_time": 200.437551021
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 200.437551021,
+        "end_time": 204.460408163
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 204.460408163,
+        "end_time": 205.81877551000002
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 205.81877551000002,
+        "end_time": 208.718367347
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 208.718367347,
+        "end_time": 211.565714286
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 211.565714286,
+        "end_time": 219.454693878
+    },
+    {
+        "sample_id": "S045",
+        "query_file": "T077",
+        "ref_file": "T076",
+        "start_time": 219.454693878,
+        "end_time": 222.511020409
+    },
+    {
+        "sample_id": "S047",
+        "query_file": "T081",
+        "ref_file": "T080",
+        "start_time": 2.902494331,
+        "end_time": 7.169160998000001
+    },
+    {
+        "sample_id": "S047",
+        "query_file": "T081",
+        "ref_file": "T080",
+        "start_time": 19.446712018,
+        "end_time": 23.394104308
+    },
+    {
+        "sample_id": "S047",
+        "query_file": "T081",
+        "ref_file": "T080",
+        "start_time": 24.584126984,
+        "end_time": 28.821768707
+    },
+    {
+        "sample_id": "S047",
+        "query_file": "T081",
+        "ref_file": "T080",
+        "start_time": 51.490249433,
+        "end_time": 56.018140589000005
+    },
+    {
+        "sample_id": "S047",
+        "query_file": "T081",
+        "ref_file": "T080",
+        "start_time": 56.917913832,
+        "end_time": 61.242630385000005
+    },
+    {
+        "sample_id": "S047",
+        "query_file": "T081",
+        "ref_file": "T080",
+        "start_time": 73.258956916,
+        "end_time": 77.902947846
+    },
+    {
+        "sample_id": "S047",
+        "query_file": "T081",
+        "ref_file": "T080",
+        "start_time": 100.397278912,
+        "end_time": 104.518820862
+    },
+    {
+        "sample_id": "S047",
+        "query_file": "T081",
+        "ref_file": "T080",
+        "start_time": 116.535147392,
+        "end_time": 121.208163265
+    },
+    {
+        "sample_id": "S047",
+        "query_file": "T081",
+        "ref_file": "T080",
+        "start_time": 122.224036281,
+        "end_time": 126.20045351499999
+    },
+    {
+        "sample_id": "S047",
+        "query_file": "T081",
+        "ref_file": "T080",
+        "start_time": 127.448526077,
+        "end_time": 131.628117914
+    },
+    {
+        "sample_id": "S047",
+        "query_file": "T081",
+        "ref_file": "T080",
+        "start_time": 132.760090703,
+        "end_time": 137.02675737
+    },
+    {
+        "sample_id": "S047",
+        "query_file": "T081",
+        "ref_file": "T080",
+        "start_time": 143.615419501,
+        "end_time": 147.853061224
+    },
+    {
+        "sample_id": "S047",
+        "query_file": "T081",
+        "ref_file": "T080",
+        "start_time": 159.811337868,
+        "end_time": 164.832653061
+    },
+    {
+        "sample_id": "S047",
+        "query_file": "T081",
+        "ref_file": "T080",
+        "start_time": 192.34829932,
+        "end_time": 196.70204081699998
+    },
+    {
+        "sample_id": "S047",
+        "query_file": "T081",
+        "ref_file": "T080",
+        "start_time": 197.804988662,
+        "end_time": 202.100680272
+    },
+    {
+        "sample_id": "S047",
+        "query_file": "T081",
+        "ref_file": "T080",
+        "start_time": 208.544217687,
+        "end_time": 213.27528344700002
+    },
+    {
+        "sample_id": "S047",
+        "query_file": "T081",
+        "ref_file": "T080",
+        "start_time": 219.370521542,
+        "end_time": 223.724263039
+    },
+    {
+        "sample_id": "S047",
+        "query_file": "T081",
+        "ref_file": "T080",
+        "start_time": 224.769160998,
+        "end_time": 229.093877551
+    },
+    {
+        "sample_id": "S056",
+        "query_file": "T093",
+        "ref_file": "T094",
+        "start_time": 0.02031746,
+        "end_time": 2.3161904759999996
+    },
+    {
+        "sample_id": "S056",
+        "query_file": "T093",
+        "ref_file": "T094",
+        "start_time": 2.3161904759999996,
+        "end_time": 35.067936508
+    },
+    {
+        "sample_id": "S056",
+        "query_file": "T093",
+        "ref_file": "T094",
+        "start_time": 37.72952381,
+        "end_time": 75.276190476
+    },
+    {
+        "sample_id": "S056",
+        "query_file": "T093",
+        "ref_file": "T094",
+        "start_time": 84.76444444399999,
+        "end_time": 123.184761905
+    },
+    {
+        "sample_id": "S056",
+        "query_file": "T093",
+        "ref_file": "T094",
+        "start_time": 141.22666666700002,
+        "end_time": 160.078367347
+    },
+    {
+        "sample_id": "S056",
+        "query_file": "T093",
+        "ref_file": "T094",
+        "start_time": 178.91265306100001,
+        "end_time": 187.176054422
+    },
+    {
+        "sample_id": "S056",
+        "query_file": "T093",
+        "ref_file": "T094",
+        "start_time": 187.176099773,
+        "end_time": 194.234920635
+    },
+    {
+        "sample_id": "S058",
+        "query_file": "T093",
+        "ref_file": "T095",
+        "start_time": 0.014512472,
+        "end_time": 2.3510204089999998
+    },
+    {
+        "sample_id": "S058",
+        "query_file": "T093",
+        "ref_file": "T095",
+        "start_time": 2.3510204089999998,
+        "end_time": 18.779138322
+    },
+    {
+        "sample_id": "S058",
+        "query_file": "T093",
+        "ref_file": "T095",
+        "start_time": 47.107482993000005,
+        "end_time": 65.886621315
+    },
+    {
+        "sample_id": "S058",
+        "query_file": "T093",
+        "ref_file": "T095",
+        "start_time": 94.185941043,
+        "end_time": 112.878004535
+    },
+    {
+        "sample_id": "S058",
+        "query_file": "T093",
+        "ref_file": "T095",
+        "start_time": 141.23537415,
+        "end_time": 160.072562358
+    },
+    {
+        "sample_id": "S058",
+        "query_file": "T093",
+        "ref_file": "T095",
+        "start_time": 169.476643991,
+        "end_time": 194.321995465
+    },
+    {
+        "sample_id": "S063",
+        "query_file": "T102",
+        "ref_file": "T101",
+        "start_time": 0.325079365,
+        "end_time": 5.619229025
+    },
+    {
+        "sample_id": "S063",
+        "query_file": "T102",
+        "ref_file": "T101",
+        "start_time": 5.607619048,
+        "end_time": 10.84952381
+    },
+    {
+        "sample_id": "S063",
+        "query_file": "T102",
+        "ref_file": "T101",
+        "start_time": 10.86984127,
+        "end_time": 16.071111111
+    },
+    {
+        "sample_id": "S063",
+        "query_file": "T102",
+        "ref_file": "T101",
+        "start_time": 16.091428571,
+        "end_time": 21.495873015
+    },
+    {
+        "sample_id": "S063",
+        "query_file": "T102",
+        "ref_file": "T101",
+        "start_time": 21.495873016,
+        "end_time": 26.636190476000003
+    },
+    {
+        "sample_id": "S063",
+        "query_file": "T102",
+        "ref_file": "T101",
+        "start_time": 26.636190476,
+        "end_time": 31.939047619
+    },
+    {
+        "sample_id": "S063",
+        "query_file": "T102",
+        "ref_file": "T101",
+        "start_time": 31.939047619,
+        "end_time": 37.241904762
+    },
+    {
+        "sample_id": "S063",
+        "query_file": "T102",
+        "ref_file": "T101",
+        "start_time": 37.262222222,
+        "end_time": 42.483809523999994
+    },
+    {
+        "sample_id": "S063",
+        "query_file": "T102",
+        "ref_file": "T101",
+        "start_time": 42.483809524,
+        "end_time": 47.786666667
+    },
+    {
+        "sample_id": "S063",
+        "query_file": "T102",
+        "ref_file": "T101",
+        "start_time": 47.806984127,
+        "end_time": 52.987936508
+    },
+    {
+        "sample_id": "S063",
+        "query_file": "T102",
+        "ref_file": "T101",
+        "start_time": 53.008253968,
+        "end_time": 58.331428571
+    },
+    {
+        "sample_id": "S063",
+        "query_file": "T102",
+        "ref_file": "T101",
+        "start_time": 58.311111111,
+        "end_time": 63.553015873
+    },
+    {
+        "sample_id": "S063",
+        "query_file": "T102",
+        "ref_file": "T101",
+        "start_time": 63.553015873,
+        "end_time": 68.835555556
+    },
+    {
+        "sample_id": "S063",
+        "query_file": "T102",
+        "ref_file": "T101",
+        "start_time": 68.855873016,
+        "end_time": 74.09777777800001
+    },
+    {
+        "sample_id": "S063",
+        "query_file": "T102",
+        "ref_file": "T101",
+        "start_time": 74.118095238,
+        "end_time": 79.38031746
+    },
+    {
+        "sample_id": "S063",
+        "query_file": "T102",
+        "ref_file": "T101",
+        "start_time": 79.38031746,
+        "end_time": 84.642539682
+    },
+    {
+        "sample_id": "S063",
+        "query_file": "T102",
+        "ref_file": "T101",
+        "start_time": 84.662857143,
+        "end_time": 89.904761905
+    },
+    {
+        "sample_id": "S063",
+        "query_file": "T102",
+        "ref_file": "T101",
+        "start_time": 89.904761905,
+        "end_time": 95.166984127
+    },
+    {
+        "sample_id": "S063",
+        "query_file": "T102",
+        "ref_file": "T101",
+        "start_time": 95.166984127,
+        "end_time": 100.46984127
+    },
+    {
+        "sample_id": "S063",
+        "query_file": "T102",
+        "ref_file": "T101",
+        "start_time": 100.49015873,
+        "end_time": 105.73206349200001
+    },
+    {
+        "sample_id": "S063",
+        "query_file": "T102",
+        "ref_file": "T101",
+        "start_time": 105.752380952,
+        "end_time": 111.03492063499999
+    },
+    {
+        "sample_id": "S063",
+        "query_file": "T102",
+        "ref_file": "T101",
+        "start_time": 111.034920635,
+        "end_time": 116.317460318
+    },
+    {
+        "sample_id": "S063",
+        "query_file": "T102",
+        "ref_file": "T101",
+        "start_time": 116.317460317,
+        "end_time": 121.559365079
+    },
+    {
+        "sample_id": "S063",
+        "query_file": "T102",
+        "ref_file": "T101",
+        "start_time": 121.559365079,
+        "end_time": 123.753650793
+    },
+    {
+        "sample_id": "S068",
+        "query_file": "T110",
+        "ref_file": "T111",
+        "start_time": 15.939047619,
+        "end_time": 20.45968254
+    },
+    {
+        "sample_id": "S068",
+        "query_file": "T110",
+        "ref_file": "T111",
+        "start_time": 20.45968254,
+        "end_time": 129.033287982
+    },
+    {
+        "sample_id": "S068",
+        "query_file": "T110",
+        "ref_file": "T111",
+        "start_time": 130.612244898,
+        "end_time": 133.352199546
+    },
+    {
+        "sample_id": "S068",
+        "query_file": "T110",
+        "ref_file": "T111",
+        "start_time": 135.88317460300001,
+        "end_time": 137.833650794
+    },
+    {
+        "sample_id": "S068",
+        "query_file": "T110",
+        "ref_file": "T111",
+        "start_time": 139.877006803,
+        "end_time": 142.384761905
+    },
+    {
+        "sample_id": "S068",
+        "query_file": "T110",
+        "ref_file": "T111",
+        "start_time": 145.101496599,
+        "end_time": 154.203718821
+    },
+    {
+        "sample_id": "S069",
+        "query_file": "T110",
+        "ref_file": "T112",
+        "start_time": 0.208979592,
+        "end_time": 14.814331066000001
+    },
+    {
+        "sample_id": "S072",
+        "query_file": "T115",
+        "ref_file": "T117",
+        "start_time": 60.517006803,
+        "end_time": 65.320634921
+    },
+    {
+        "sample_id": "S072",
+        "query_file": "T115",
+        "ref_file": "T117",
+        "start_time": 103.89478458,
+        "end_time": 108.683900226
+    },
+    {
+        "sample_id": "S072",
+        "query_file": "T115",
+        "ref_file": "T117",
+        "start_time": 142.442811791,
+        "end_time": 147.237732426
+    },
+    {
+        "sample_id": "S072",
+        "query_file": "T115",
+        "ref_file": "T117",
+        "start_time": 195.465578231,
+        "end_time": 200.33015873
+    },
+    {
+        "sample_id": "S072",
+        "query_file": "T115",
+        "ref_file": "T117",
+        "start_time": 200.33015873,
+        "end_time": 205.14829932
+    },
+    {
+        "sample_id": "S072",
+        "query_file": "T115",
+        "ref_file": "T117",
+        "start_time": 214.73814059,
+        "end_time": 219.625941044
+    },
+    {
+        "sample_id": "S072",
+        "query_file": "T115",
+        "ref_file": "T117",
+        "start_time": 219.63755102,
+        "end_time": 224.44408163199998
+    },
+    {
+        "sample_id": "S078",
+        "query_file": "T144",
+        "ref_file": "T145",
+        "start_time": 39.484081633,
+        "end_time": 40.894693878000005
+    },
+    {
+        "sample_id": "S078",
+        "query_file": "T144",
+        "ref_file": "T145",
+        "start_time": 44.434285714,
+        "end_time": 46.524081632
+    },
+    {
+        "sample_id": "S080",
+        "query_file": "T147",
+        "ref_file": "T148",
+        "start_time": 5.433469388,
+        "end_time": 15.934693878000001
+    },
+    {
+        "sample_id": "S080",
+        "query_file": "T147",
+        "ref_file": "T148",
+        "start_time": 15.952108844,
+        "end_time": 26.435918368
+    },
+    {
+        "sample_id": "S080",
+        "query_file": "T147",
+        "ref_file": "T148",
+        "start_time": 26.435918367,
+        "end_time": 36.937142857
+    },
+    {
+        "sample_id": "S080",
+        "query_file": "T147",
+        "ref_file": "T148",
+        "start_time": 36.937142857,
+        "end_time": 47.403537414999995
+    },
+    {
+        "sample_id": "S080",
+        "query_file": "T147",
+        "ref_file": "T148",
+        "start_time": 47.403537415,
+        "end_time": 57.922176871000005
+    },
+    {
+        "sample_id": "S080",
+        "query_file": "T147",
+        "ref_file": "T148",
+        "start_time": 57.922176871,
+        "end_time": 68.423401361
+    },
+    {
+        "sample_id": "S080",
+        "query_file": "T147",
+        "ref_file": "T148",
+        "start_time": 68.423401361,
+        "end_time": 78.872380953
+    },
+    {
+        "sample_id": "S080",
+        "query_file": "T147",
+        "ref_file": "T148",
+        "start_time": 78.872380952,
+        "end_time": 89.373605442
+    },
+    {
+        "sample_id": "S080",
+        "query_file": "T147",
+        "ref_file": "T148",
+        "start_time": 89.391020408,
+        "end_time": 99.874829932
+    },
+    {
+        "sample_id": "S080",
+        "query_file": "T147",
+        "ref_file": "T148",
+        "start_time": 99.874829932,
+        "end_time": 110.34122449
+    },
+    {
+        "sample_id": "S080",
+        "query_file": "T147",
+        "ref_file": "T148",
+        "start_time": 110.358639456,
+        "end_time": 120.859863946
+    },
+    {
+        "sample_id": "S080",
+        "query_file": "T147",
+        "ref_file": "T148",
+        "start_time": 120.859863946,
+        "end_time": 129.44544217700002
+    },
+    {
+        "sample_id": "S080",
+        "query_file": "T147",
+        "ref_file": "T148",
+        "start_time": 131.311746032,
+        "end_time": 141.795555556
+    },
+    {
+        "sample_id": "S080",
+        "query_file": "T147",
+        "ref_file": "T148",
+        "start_time": 141.815873016,
+        "end_time": 152.32000000000002
+    },
+    {
+        "sample_id": "S080",
+        "query_file": "T147",
+        "ref_file": "T148",
+        "start_time": 152.34031746,
+        "end_time": 162.824126984
+    },
+    {
+        "sample_id": "S080",
+        "query_file": "T147",
+        "ref_file": "T148",
+        "start_time": 162.844444444,
+        "end_time": 173.287619047
+    },
+    {
+        "sample_id": "S080",
+        "query_file": "T147",
+        "ref_file": "T148",
+        "start_time": 173.307936508,
+        "end_time": 181.94285714300003
+    },
+    {
+        "sample_id": "S080",
+        "query_file": "T147",
+        "ref_file": "T148",
+        "start_time": 183.812063492,
+        "end_time": 194.27555555499998
+    },
+    {
+        "sample_id": "S080",
+        "query_file": "T147",
+        "ref_file": "T148",
+        "start_time": 194.295873016,
+        "end_time": 204.77968254
+    },
+    {
+        "sample_id": "S080",
+        "query_file": "T147",
+        "ref_file": "T148",
+        "start_time": 204.77968254,
+        "end_time": 215.28380952400002
+    },
+    {
+        "sample_id": "S080",
+        "query_file": "T147",
+        "ref_file": "T148",
+        "start_time": 215.283809524,
+        "end_time": 225.72698412699998
+    },
+    {
+        "sample_id": "S080",
+        "query_file": "T147",
+        "ref_file": "T148",
+        "start_time": 225.767619048,
+        "end_time": 236.231111111
+    },
+    {
+        "sample_id": "S080",
+        "query_file": "T147",
+        "ref_file": "T148",
+        "start_time": 236.210793651,
+        "end_time": 239.563174603
+    },
+    {
+        "sample_id": "S081",
+        "query_file": "T149",
+        "ref_file": "T148",
+        "start_time": 14.280272109,
+        "end_time": 23.231564626
+    },
+    {
+        "sample_id": "S081",
+        "query_file": "T149",
+        "ref_file": "T148",
+        "start_time": 27.81170068,
+        "end_time": 36.902312925000004
+    },
+    {
+        "sample_id": "S081",
+        "query_file": "T149",
+        "ref_file": "T148",
+        "start_time": 41.447619048,
+        "end_time": 50.416326530999996
+    },
+    {
+        "sample_id": "S081",
+        "query_file": "T149",
+        "ref_file": "T148",
+        "start_time": 54.979047619,
+        "end_time": 63.982585033999996
+    },
+    {
+        "sample_id": "S081",
+        "query_file": "T149",
+        "ref_file": "T148",
+        "start_time": 68.59755102,
+        "end_time": 77.722993197
+    },
+    {
+        "sample_id": "S081",
+        "query_file": "T149",
+        "ref_file": "T148",
+        "start_time": 82.111564626,
+        "end_time": 91.115102041
+    },
+    {
+        "sample_id": "S081",
+        "query_file": "T149",
+        "ref_file": "T148",
+        "start_time": 95.764897959,
+        "end_time": 104.716190476
+    },
+    {
+        "sample_id": "S081",
+        "query_file": "T149",
+        "ref_file": "T148",
+        "start_time": 109.313741497,
+        "end_time": 118.334693878
+    },
+    {
+        "sample_id": "S081",
+        "query_file": "T149",
+        "ref_file": "T148",
+        "start_time": 122.88,
+        "end_time": 131.883537415
+    },
+    {
+        "sample_id": "S081",
+        "query_file": "T149",
+        "ref_file": "T148",
+        "start_time": 136.463673469,
+        "end_time": 145.32789115600002
+    },
+    {
+        "sample_id": "S081",
+        "query_file": "T149",
+        "ref_file": "T148",
+        "start_time": 150.151836735,
+        "end_time": 159.120544218
+    },
+    {
+        "sample_id": "S081",
+        "query_file": "T149",
+        "ref_file": "T148",
+        "start_time": 163.683265306,
+        "end_time": 172.59972789100001
+    },
+    {
+        "sample_id": "S081",
+        "query_file": "T149",
+        "ref_file": "T148",
+        "start_time": 177.266938776,
+        "end_time": 186.16598639499998
+    },
+    {
+        "sample_id": "S081",
+        "query_file": "T149",
+        "ref_file": "T148",
+        "start_time": 190.833197279,
+        "end_time": 199.87156462599998
+    },
+    {
+        "sample_id": "S081",
+        "query_file": "T149",
+        "ref_file": "T148",
+        "start_time": 204.434285714,
+        "end_time": 213.350748299
+    },
+    {
+        "sample_id": "S086",
+        "query_file": "T157",
+        "ref_file": "T154",
+        "start_time": 1.451247166,
+        "end_time": 5.892063493
+    },
+    {
+        "sample_id": "S086",
+        "query_file": "T157",
+        "ref_file": "T154",
+        "start_time": 5.863038549,
+        "end_time": 10.332879818999999
+    },
+    {
+        "sample_id": "S086",
+        "query_file": "T157",
+        "ref_file": "T154",
+        "start_time": 10.361904762,
+        "end_time": 14.802721089
+    },
+    {
+        "sample_id": "S086",
+        "query_file": "T157",
+        "ref_file": "T154",
+        "start_time": 14.802721088,
+        "end_time": 19.214512471
+    },
+    {
+        "sample_id": "S086",
+        "query_file": "T157",
+        "ref_file": "T154",
+        "start_time": 19.214512472,
+        "end_time": 23.597278912
+    },
+    {
+        "sample_id": "S086",
+        "query_file": "T157",
+        "ref_file": "T154",
+        "start_time": 23.626303855,
+        "end_time": 28.038095238
+    },
+    {
+        "sample_id": "S086",
+        "query_file": "T157",
+        "ref_file": "T154",
+        "start_time": 28.038095238,
+        "end_time": 32.449886621
+    },
+    {
+        "sample_id": "S086",
+        "query_file": "T157",
+        "ref_file": "T154",
+        "start_time": 32.449886621,
+        "end_time": 36.861678004
+    },
+    {
+        "sample_id": "S086",
+        "query_file": "T157",
+        "ref_file": "T154",
+        "start_time": 36.832653061,
+        "end_time": 41.157369614000004
+    },
+    {
+        "sample_id": "S089",
+        "query_file": "T157",
+        "ref_file": "T160",
+        "start_time": 63.285986395,
+        "end_time": 67.674557824
+    },
+    {
+        "sample_id": "S089",
+        "query_file": "T157",
+        "ref_file": "T160",
+        "start_time": 116.349387755,
+        "end_time": 125.17877551
+    },
+    {
+        "sample_id": "S089",
+        "query_file": "T157",
+        "ref_file": "T160",
+        "start_time": 134.025578231,
+        "end_time": 138.396734694
+    },
+    {
+        "sample_id": "S092",
+        "query_file": "T164",
+        "ref_file": "T162",
+        "start_time": 7.111111111,
+        "end_time": 12.596825397
+    },
+    {
+        "sample_id": "S092",
+        "query_file": "T164",
+        "ref_file": "T162",
+        "start_time": 12.596825397,
+        "end_time": 114.76462585
+    },
+    {
+        "sample_id": "S092",
+        "query_file": "T164",
+        "ref_file": "T162",
+        "start_time": 117.521995465,
+        "end_time": 136.93968254
+    },
+    {
+        "sample_id": "S092",
+        "query_file": "T164",
+        "ref_file": "T162",
+        "start_time": 139.668027211,
+        "end_time": 178.242176871
+    },
+    {
+        "sample_id": "S094",
+        "query_file": "T166",
+        "ref_file": "T167",
+        "start_time": 15.986938776,
+        "end_time": 22.844081633000002
+    },
+    {
+        "sample_id": "S094",
+        "query_file": "T166",
+        "ref_file": "T167",
+        "start_time": 25.142857143,
+        "end_time": 32.026122449
+    },
+    {
+        "sample_id": "S094",
+        "query_file": "T166",
+        "ref_file": "T167",
+        "start_time": 34.29877551,
+        "end_time": 41.182040816
+    },
+    {
+        "sample_id": "S094",
+        "query_file": "T166",
+        "ref_file": "T167",
+        "start_time": 43.490975057,
+        "end_time": 59.443083901
+    },
+    {
+        "sample_id": "S094",
+        "query_file": "T166",
+        "ref_file": "T167",
+        "start_time": 61.736054422,
+        "end_time": 80.050793651
+    },
+    {
+        "sample_id": "S094",
+        "query_file": "T166",
+        "ref_file": "T167",
+        "start_time": 80.050793651,
+        "end_time": 105.244444445
+    },
+    {
+        "sample_id": "S094",
+        "query_file": "T166",
+        "ref_file": "T167",
+        "start_time": 107.537414966,
+        "end_time": 123.501133787
+    },
+    {
+        "sample_id": "S094",
+        "query_file": "T166",
+        "ref_file": "T167",
+        "start_time": 153.222675737,
+        "end_time": 169.244444444
+    },
+    {
+        "sample_id": "S094",
+        "query_file": "T166",
+        "ref_file": "T167",
+        "start_time": 171.247165533,
+        "end_time": 180.680272109
+    },
+    {
+        "sample_id": "S094",
+        "query_file": "T166",
+        "ref_file": "T167",
+        "start_time": 180.709297052,
+        "end_time": 192.319274376
+    },
+    {
+        "sample_id": "S098",
+        "query_file": "T172",
+        "ref_file": "T173",
+        "start_time": 5.38122449,
+        "end_time": 7.601632653
+    },
+    {
+        "sample_id": "S098",
+        "query_file": "T172",
+        "ref_file": "T173",
+        "start_time": 7.601632653,
+        "end_time": 101.282539683
+    },
+    {
+        "sample_id": "S098",
+        "query_file": "T172",
+        "ref_file": "T173",
+        "start_time": 105.752380953,
+        "end_time": 211.054875283
+    },
+    {
+        "sample_id": "S101",
+        "query_file": "T176",
+        "ref_file": "T177",
+        "start_time": 0.0,
+        "end_time": 22.770068027
+    },
+    {
+        "sample_id": "S101",
+        "query_file": "T176",
+        "ref_file": "T177",
+        "start_time": 24.671201814,
+        "end_time": 33.262585034
+    },
+    {
+        "sample_id": "S101",
+        "query_file": "T176",
+        "ref_file": "T177",
+        "start_time": 41.171882086,
+        "end_time": 47.36
+    },
+    {
+        "sample_id": "S101",
+        "query_file": "T176",
+        "ref_file": "T177",
+        "start_time": 73.900408163,
+        "end_time": 98.638367347
+    },
+    {
+        "sample_id": "S101",
+        "query_file": "T176",
+        "ref_file": "T177",
+        "start_time": 123.010612245,
+        "end_time": 131.448163265
+    },
+    {
+        "sample_id": "S103",
+        "query_file": "T179",
+        "ref_file": "T180",
+        "start_time": 8.76553288,
+        "end_time": 12.863854875000001
+    },
+    {
+        "sample_id": "S103",
+        "query_file": "T179",
+        "ref_file": "T180",
+        "start_time": 12.863854875,
+        "end_time": 15.151020407999999
+    },
+    {
+        "sample_id": "S103",
+        "query_file": "T179",
+        "ref_file": "T180",
+        "start_time": 16.892517007,
+        "end_time": 21.060498866
+    },
+    {
+        "sample_id": "S103",
+        "query_file": "T179",
+        "ref_file": "T180",
+        "start_time": 21.072108844,
+        "end_time": 25.216870748999998
+    },
+    {
+        "sample_id": "S103",
+        "query_file": "T179",
+        "ref_file": "T180",
+        "start_time": 49.957732426,
+        "end_time": 54.125714285
+    },
+    {
+        "sample_id": "S103",
+        "query_file": "T179",
+        "ref_file": "T180",
+        "start_time": 54.125714286,
+        "end_time": 58.293696145
+    },
+    {
+        "sample_id": "S103",
+        "query_file": "T179",
+        "ref_file": "T180",
+        "start_time": 82.999727891,
+        "end_time": 87.144489796
+    },
+    {
+        "sample_id": "S103",
+        "query_file": "T179",
+        "ref_file": "T180",
+        "start_time": 87.144489796,
+        "end_time": 91.33569161
+    },
+    {
+        "sample_id": "S103",
+        "query_file": "T179",
+        "ref_file": "T180",
+        "start_time": 124.296417234,
+        "end_time": 128.406349207
+    },
+    {
+        "sample_id": "S103",
+        "query_file": "T179",
+        "ref_file": "T180",
+        "start_time": 128.429569161,
+        "end_time": 132.504671202
+    },
+    {
+        "sample_id": "S103",
+        "query_file": "T179",
+        "ref_file": "T180",
+        "start_time": 132.516281179,
+        "end_time": 136.614603174
+    },
+    {
+        "sample_id": "S103",
+        "query_file": "T179",
+        "ref_file": "T180",
+        "start_time": 136.614603175,
+        "end_time": 140.79419501200002
+    },
+    {
+        "sample_id": "S104",
+        "query_file": "T181",
+        "ref_file": "T182",
+        "start_time": 0.0,
+        "end_time": 2.681904762
+    },
+    {
+        "sample_id": "S104",
+        "query_file": "T181",
+        "ref_file": "T182",
+        "start_time": 2.681904762,
+        "end_time": 74.15292517
+    },
+    {
+        "sample_id": "S106",
+        "query_file": "T184",
+        "ref_file": "T185",
+        "start_time": 135.340408163,
+        "end_time": 153.129795918
+    },
+    {
+        "sample_id": "S109",
+        "query_file": "T187",
+        "ref_file": "T160",
+        "start_time": 9.549206349,
+        "end_time": 13.975510203999999
+    },
+    {
+        "sample_id": "S109",
+        "query_file": "T187",
+        "ref_file": "T160",
+        "start_time": 9.563718821,
+        "end_time": 18.663038549
+    },
+    {
+        "sample_id": "S109",
+        "query_file": "T187",
+        "ref_file": "T160",
+        "start_time": 18.663038549,
+        "end_time": 25.396825397
+    },
+    {
+        "sample_id": "S109",
+        "query_file": "T187",
+        "ref_file": "T160",
+        "start_time": 27.980045352,
+        "end_time": 173.424036281
+    },
+    {
+        "sample_id": "S120",
+        "query_file": "T184",
+        "ref_file": "T199",
+        "start_time": 5.549569161,
+        "end_time": 8.080544218
+    },
+    {
+        "sample_id": "S120",
+        "query_file": "T184",
+        "ref_file": "T199",
+        "start_time": 8.080544218,
+        "end_time": 132.832653061
+    },
+    {
+        "sample_id": "S120",
+        "query_file": "T184",
+        "ref_file": "T199",
+        "start_time": 155.63755102,
+        "end_time": 216.790204082
+    },
+    {
+        "sample_id": "S121",
+        "query_file": "T065",
+        "ref_file": "T064",
+        "start_time": 0.17414966,
+        "end_time": 5.659863946000001
+    },
+    {
+        "sample_id": "S121",
+        "query_file": "T065",
+        "ref_file": "T064",
+        "start_time": 5.659863946,
+        "end_time": 11.116553287999999
+    },
+    {
+        "sample_id": "S121",
+        "query_file": "T065",
+        "ref_file": "T064",
+        "start_time": 11.116553288,
+        "end_time": 16.57324263
+    },
+    {
+        "sample_id": "S121",
+        "query_file": "T065",
+        "ref_file": "T064",
+        "start_time": 16.57324263,
+        "end_time": 22.000907029
+    },
+    {
+        "sample_id": "S121",
+        "query_file": "T065",
+        "ref_file": "T064",
+        "start_time": 87.568253968,
+        "end_time": 92.96689342399999
+    },
+    {
+        "sample_id": "S121",
+        "query_file": "T065",
+        "ref_file": "T064",
+        "start_time": 92.966893424,
+        "end_time": 98.394557823
+    },
+    {
+        "sample_id": "S121",
+        "query_file": "T065",
+        "ref_file": "T064",
+        "start_time": 98.394557823,
+        "end_time": 103.880272109
+    },
+    {
+        "sample_id": "S121",
+        "query_file": "T065",
+        "ref_file": "T064",
+        "start_time": 103.880272109,
+        "end_time": 109.307936508
+    },
+    {
+        "sample_id": "S121",
+        "query_file": "T065",
+        "ref_file": "T064",
+        "start_time": 152.845351474,
+        "end_time": 158.447165533
+    },
+    {
+        "sample_id": "S121",
+        "query_file": "T065",
+        "ref_file": "T064",
+        "start_time": 158.447165533,
+        "end_time": 163.874829932
+    },
+    {
+        "sample_id": "S121",
+        "query_file": "T065",
+        "ref_file": "T064",
+        "start_time": 163.903854875,
+        "end_time": 169.389569161
+    },
+    {
+        "sample_id": "S121",
+        "query_file": "T065",
+        "ref_file": "T064",
+        "start_time": 169.389569161,
+        "end_time": 174.81723356
+    },
+    {
+        "sample_id": "S122",
+        "query_file": "T073",
+        "ref_file": "T072",
+        "start_time": 32.235102041,
+        "end_time": 38.191020408
+    },
+    {
+        "sample_id": "S122",
+        "query_file": "T073",
+        "ref_file": "T072",
+        "start_time": 64.661768707,
+        "end_time": 70.63510203999999
+    },
+    {
+        "sample_id": "S122",
+        "query_file": "T073",
+        "ref_file": "T072",
+        "start_time": 97.053605442,
+        "end_time": 103.04435374100001
+    },
+    {
+        "sample_id": "S122",
+        "query_file": "T073",
+        "ref_file": "T072",
+        "start_time": 129.428027211,
+        "end_time": 135.453605442
+    },
+    {
+        "sample_id": "S122",
+        "query_file": "T073",
+        "ref_file": "T072",
+        "start_time": 151.022585034,
+        "end_time": 156.995918367
+    },
+    {
+        "sample_id": "S125",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 12.654875283,
+        "end_time": 15.296145124
+    },
+    {
+        "sample_id": "S125",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 23.66984127,
+        "end_time": 25.991836735
+    },
+    {
+        "sample_id": "S125",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 33.944671202,
+        "end_time": 36.658503402
+    },
+    {
+        "sample_id": "S125",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 45.090249433,
+        "end_time": 47.775056688999996
+    },
+    {
+        "sample_id": "S125",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 55.365079365,
+        "end_time": 58.078911565
+    },
+    {
+        "sample_id": "S125",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 66.162358277,
+        "end_time": 68.76009070299999
+    },
+    {
+        "sample_id": "S125",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 76.683900227,
+        "end_time": 79.397732427
+    },
+    {
+        "sample_id": "S125",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 87.336054422,
+        "end_time": 90.049886622
+    },
+    {
+        "sample_id": "S125",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 98.046258503,
+        "end_time": 100.716553288
+    },
+    {
+        "sample_id": "S125",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 108.698412698,
+        "end_time": 111.383219954
+    },
+    {
+        "sample_id": "S125",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 129.973696145,
+        "end_time": 132.673015873
+    },
+    {
+        "sample_id": "S125",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 156.676643991,
+        "end_time": 159.375963719
+    },
+    {
+        "sample_id": "S125",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 167.401360544,
+        "end_time": 169.970068027
+    },
+    {
+        "sample_id": "S125",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 177.879365079,
+        "end_time": 180.651247165
+    },
+    {
+        "sample_id": "S125",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 188.531519274,
+        "end_time": 191.30340136
+    },
+    {
+        "sample_id": "S125",
+        "query_file": "T041",
+        "ref_file": "T042",
+        "start_time": 199.212698413,
+        "end_time": 201.970068028
+    },
+    {
+        "sample_id": "S126",
+        "query_file": "T037",
+        "ref_file": "T038",
+        "start_time": 53.106938776,
+        "end_time": 56.825034013999996
+    },
+    {
+        "sample_id": "S126",
+        "query_file": "T037",
+        "ref_file": "T038",
+        "start_time": 57.495510204,
+        "end_time": 61.117823129
+    },
+    {
+        "sample_id": "S126",
+        "query_file": "T037",
+        "ref_file": "T038",
+        "start_time": 114.59047619,
+        "end_time": 118.273741496
+    },
+    {
+        "sample_id": "S126",
+        "query_file": "T037",
+        "ref_file": "T038",
+        "start_time": 118.996462585,
+        "end_time": 122.63619047600001
+    },
+    {
+        "sample_id": "S126",
+        "query_file": "T037",
+        "ref_file": "T038",
+        "start_time": 167.314285714,
+        "end_time": 170.901768707
+    },
+    {
+        "sample_id": "S126",
+        "query_file": "T037",
+        "ref_file": "T038",
+        "start_time": 171.702857143,
+        "end_time": 175.386122449
+    },
+    {
+        "sample_id": "S126",
+        "query_file": "T037",
+        "ref_file": "T038",
+        "start_time": 211.208707483,
+        "end_time": 214.78748299300003
+    },
+    {
+        "sample_id": "S126",
+        "query_file": "T037",
+        "ref_file": "T038",
+        "start_time": 215.571156463,
+        "end_time": 219.263129252
+    },
+    {
+        "sample_id": "S126",
+        "query_file": "T037",
+        "ref_file": "T038",
+        "start_time": 219.98585034,
+        "end_time": 223.608163265
+    },
+    {
+        "sample_id": "S126",
+        "query_file": "T037",
+        "ref_file": "T038",
+        "start_time": 224.374421769,
+        "end_time": 227.988027211
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 13.618503401,
+        "end_time": 15.046530612
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 18.738503401,
+        "end_time": 20.175238094999997
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 23.910748299,
+        "end_time": 25.347482993
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 29.09170068,
+        "end_time": 30.511020408
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 34.255238095,
+        "end_time": 35.691972789000005
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 39.410068027,
+        "end_time": 40.829387755
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 44.599727891,
+        "end_time": 45.984217687
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 49.693605442,
+        "end_time": 51.121632653
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 54.874557823,
+        "end_time": 56.285170068000006
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 60.029387755,
+        "end_time": 61.466122449000004
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 65.19292517,
+        "end_time": 66.62965986399999
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 69.616326531,
+        "end_time": 71.819319728
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 75.511292517,
+        "end_time": 76.939319728
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 80.674829932,
+        "end_time": 82.08544217699999
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 85.84707483,
+        "end_time": 87.248979592
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 91.010612245,
+        "end_time": 92.325442177
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 96.139319728,
+        "end_time": 97.576054422
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 101.328979592,
+        "end_time": 102.74829932
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 106.466394558,
+        "end_time": 107.903129252
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 110.489251701,
+        "end_time": 113.179863946
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 116.819591837,
+        "end_time": 118.230204082
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 121.965714286,
+        "end_time": 123.367619048
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 127.085714286,
+        "end_time": 128.539863946
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 132.257959184,
+        "end_time": 133.85142857199997
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 137.421496599,
+        "end_time": 139.01496598699998
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 142.550204082,
+        "end_time": 144.18721088499998
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 147.765986395,
+        "end_time": 149.342040817
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 151.806258503,
+        "end_time": 154.44462585000002
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 158.04952381,
+        "end_time": 159.51238095300002
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 163.247891156,
+        "end_time": 164.675918367
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 168.385306122,
+        "end_time": 169.813333333
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 173.548843537,
+        "end_time": 174.985578231
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 178.738503401,
+        "end_time": 180.140408163
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 183.875918367,
+        "end_time": 185.303945578
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 189.039455782,
+        "end_time": 190.467482993
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 194.246530612,
+        "end_time": 195.78775510199998
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 199.392653061,
+        "end_time": 200.777142857
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 204.503945578,
+        "end_time": 205.95809523800003
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 209.684897959,
+        "end_time": 211.121632653
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 214.839727891,
+        "end_time": 216.267755102
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 219.98585034,
+        "end_time": 221.431292517
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 225.149387755,
+        "end_time": 226.59482993199998
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 229.241904762,
+        "end_time": 232.10666666699998
+    },
+    {
+        "sample_id": "S127",
+        "query_file": "T030",
+        "ref_file": "T031",
+        "start_time": 235.467755102,
+        "end_time": 237.052517007
+    },
+    {
+        "sample_id": "S128",
+        "query_file": "T028",
+        "ref_file": "T029",
+        "start_time": 27.167346939,
+        "end_time": 35.665850340000006
+    },
+    {
+        "sample_id": "S128",
+        "query_file": "T028",
+        "ref_file": "T029",
+        "start_time": 111.136507937,
+        "end_time": 119.933968254
+    },
+    {
+        "sample_id": "S128",
+        "query_file": "T028",
+        "ref_file": "T029",
+        "start_time": 179.252244898,
+        "end_time": 182.491428571
+    },
+    {
+        "sample_id": "S128",
+        "query_file": "T028",
+        "ref_file": "T029",
+        "start_time": 184.424489796,
+        "end_time": 192.83591836699998
+    },
+    {
+        "sample_id": "S128",
+        "query_file": "T028",
+        "ref_file": "T029",
+        "start_time": 221.100408163,
+        "end_time": 222.380408163
+    },
+    {
+        "sample_id": "S128",
+        "query_file": "T028",
+        "ref_file": "T029",
+        "start_time": 226.194285714,
+        "end_time": 234.78857142799998
+    },
+    {
+        "sample_id": "S129",
+        "query_file": "T022",
+        "ref_file": "T023",
+        "start_time": 85.054693878,
+        "end_time": 108.01632653099999
+    },
+    {
+        "sample_id": "S129",
+        "query_file": "T022",
+        "ref_file": "T023",
+        "start_time": 171.363265306,
+        "end_time": 194.324897959
+    },
+    {
+        "sample_id": "S130",
+        "query_file": "T013",
+        "ref_file": "T014",
+        "start_time": 0.017414966,
+        "end_time": 5.851428571
+    },
+    {
+        "sample_id": "S131",
+        "query_file": "T004",
+        "ref_file": "T003",
+        "start_time": 20.622222222,
+        "end_time": 31.613968254
+    },
+    {
+        "sample_id": "S131",
+        "query_file": "T004",
+        "ref_file": "T003",
+        "start_time": 31.634285714,
+        "end_time": 42.463492063000004
+    },
+    {
+        "sample_id": "S131",
+        "query_file": "T004",
+        "ref_file": "T003",
+        "start_time": 42.463492063,
+        "end_time": 53.333333333
+    },
+    {
+        "sample_id": "S131",
+        "query_file": "T004",
+        "ref_file": "T003",
+        "start_time": 99.474285714,
+        "end_time": 110.425396825
+    },
+    {
+        "sample_id": "S131",
+        "query_file": "T004",
+        "ref_file": "T003",
+        "start_time": 110.445714286,
+        "end_time": 121.29523809599999
+    },
+    {
+        "sample_id": "S131",
+        "query_file": "T004",
+        "ref_file": "T003",
+        "start_time": 121.315555556,
+        "end_time": 132.20571428600002
+    },
+    {
+        "sample_id": "S131",
+        "query_file": "T004",
+        "ref_file": "T003",
+        "start_time": 178.326349206,
+        "end_time": 189.297777777
+    },
+    {
+        "sample_id": "S131",
+        "query_file": "T004",
+        "ref_file": "T003",
+        "start_time": 189.318095238,
+        "end_time": 200.12698412700001
+    },
+    {
+        "sample_id": "S131",
+        "query_file": "T004",
+        "ref_file": "T003",
+        "start_time": 200.126984127,
+        "end_time": 211.03746031699998
+    },
+    {
+        "sample_id": "S135",
+        "query_file": "T184",
+        "ref_file": "T199",
+        "start_time": 58.984489796,
+        "end_time": 61.544489796
+    },
+    {
+        "sample_id": "S135",
+        "query_file": "T184",
+        "ref_file": "T199",
+        "start_time": 104.777142857,
+        "end_time": 107.25877551
+    },
+    {
+        "sample_id": "S135",
+        "query_file": "T184",
+        "ref_file": "T199",
+        "start_time": 206.60244898,
+        "end_time": 209.110204082
+    },
+    {
+        "sample_id": "S136",
+        "query_file": "T184",
+        "ref_file": "T199",
+        "start_time": 0.493424036,
+        "end_time": 5.514739229000001
+    },
+    {
+        "sample_id": "S136",
+        "query_file": "T184",
+        "ref_file": "T199",
+        "start_time": 94.615510204,
+        "end_time": 99.73551020400001
+    },
+    {
+        "sample_id": "S136",
+        "query_file": "T184",
+        "ref_file": "T199",
+        "start_time": 99.735510204,
+        "end_time": 104.80326530599999
+    },
+    {
+        "sample_id": "S136",
+        "query_file": "T184",
+        "ref_file": "T199",
+        "start_time": 104.803265306,
+        "end_time": 109.940680272
+    },
+    {
+        "sample_id": "S136",
+        "query_file": "T184",
+        "ref_file": "T199",
+        "start_time": 109.940680272,
+        "end_time": 114.973605442
+    },
+    {
+        "sample_id": "S136",
+        "query_file": "T184",
+        "ref_file": "T199",
+        "start_time": 196.388571429,
+        "end_time": 201.49115646299998
+    },
+    {
+        "sample_id": "S136",
+        "query_file": "T184",
+        "ref_file": "T199",
+        "start_time": 201.525986395,
+        "end_time": 206.611156463
+    },
+    {
+        "sample_id": "S136",
+        "query_file": "T184",
+        "ref_file": "T199",
+        "start_time": 206.611156463,
+        "end_time": 211.66149659899997
+    },
+    {
+        "sample_id": "S136",
+        "query_file": "T184",
+        "ref_file": "T199",
+        "start_time": 211.678911565,
+        "end_time": 216.764081633
+    },
+    {
+        "sample_id": "S137",
+        "query_file": "T172",
+        "ref_file": "T173",
+        "start_time": 44.640362812,
+        "end_time": 48.965079365
+    },
+    {
+        "sample_id": "S137",
+        "query_file": "T172",
+        "ref_file": "T173",
+        "start_time": 48.965079365,
+        "end_time": 53.362358277
+    },
+    {
+        "sample_id": "S137",
+        "query_file": "T172",
+        "ref_file": "T173",
+        "start_time": 53.362358277,
+        "end_time": 57.730612244999996
+    },
+    {
+        "sample_id": "S137",
+        "query_file": "T172",
+        "ref_file": "T173",
+        "start_time": 57.745124717,
+        "end_time": 62.055328799
+    },
+    {
+        "sample_id": "S137",
+        "query_file": "T172",
+        "ref_file": "T173",
+        "start_time": 88.235827664,
+        "end_time": 92.575056689
+    },
+    {
+        "sample_id": "S137",
+        "query_file": "T172",
+        "ref_file": "T173",
+        "start_time": 92.589569161,
+        "end_time": 96.914285714
+    },
+    {
+        "sample_id": "S137",
+        "query_file": "T172",
+        "ref_file": "T173",
+        "start_time": 136.199546485,
+        "end_time": 140.52426303800002
+    },
+    {
+        "sample_id": "S137",
+        "query_file": "T172",
+        "ref_file": "T173",
+        "start_time": 140.524263039,
+        "end_time": 144.878004536
+    },
+    {
+        "sample_id": "S137",
+        "query_file": "T172",
+        "ref_file": "T173",
+        "start_time": 144.878004535,
+        "end_time": 149.231746032
+    },
+    {
+        "sample_id": "S137",
+        "query_file": "T172",
+        "ref_file": "T173",
+        "start_time": 149.231746032,
+        "end_time": 153.58548752899998
+    },
+    {
+        "sample_id": "S137",
+        "query_file": "T172",
+        "ref_file": "T173",
+        "start_time": 179.80952381,
+        "end_time": 184.177777778
+    },
+    {
+        "sample_id": "S137",
+        "query_file": "T172",
+        "ref_file": "T173",
+        "start_time": 184.177777778,
+        "end_time": 188.546031746
+    },
+    {
+        "sample_id": "S137",
+        "query_file": "T172",
+        "ref_file": "T173",
+        "start_time": 188.546031746,
+        "end_time": 192.88526077100002
+    },
+    {
+        "sample_id": "S137",
+        "query_file": "T172",
+        "ref_file": "T173",
+        "start_time": 192.885260771,
+        "end_time": 197.23900226799998
+    },
+    {
+        "sample_id": "S028",
+        "query_file": "T048",
+        "ref_file": "T050",
+        "start_time": 0.233650794,
+        "end_time": 2.56
+    },
+    {
+        "sample_id": "S028",
+        "query_file": "T048",
+        "ref_file": "T050",
+        "start_time": 2.57015873,
+        "end_time": 4.632380952
+    },
+    {
+        "sample_id": "S028",
+        "query_file": "T048",
+        "ref_file": "T050",
+        "start_time": 4.632380952,
+        "end_time": 6.948571428
+    },
+    {
+        "sample_id": "S028",
+        "query_file": "T048",
+        "ref_file": "T050",
+        "start_time": 6.948571429,
+        "end_time": 9.203809524
+    },
+    {
+        "sample_id": "S028",
+        "query_file": "T048",
+        "ref_file": "T050",
+        "start_time": 36.022857143,
+        "end_time": 38.156190476000006
+    },
+    {
+        "sample_id": "S028",
+        "query_file": "T048",
+        "ref_file": "T050",
+        "start_time": 38.166349206,
+        "end_time": 40.380952381
+    },
+    {
+        "sample_id": "S028",
+        "query_file": "T048",
+        "ref_file": "T050",
+        "start_time": 40.380952381,
+        "end_time": 42.808888889
+    },
+    {
+        "sample_id": "S028",
+        "query_file": "T048",
+        "ref_file": "T050",
+        "start_time": 42.819047619,
+        "end_time": 45.074285714000005
+    },
+    {
+        "sample_id": "S028",
+        "query_file": "T048",
+        "ref_file": "T050",
+        "start_time": 72.005079365,
+        "end_time": 74.128253968
+    },
+    {
+        "sample_id": "S028",
+        "query_file": "T048",
+        "ref_file": "T050",
+        "start_time": 74.148571429,
+        "end_time": 76.434285715
+    },
+    {
+        "sample_id": "S028",
+        "query_file": "T048",
+        "ref_file": "T050",
+        "start_time": 76.434285714,
+        "end_time": 78.679365079
+    },
+    {
+        "sample_id": "S028",
+        "query_file": "T048",
+        "ref_file": "T050",
+        "start_time": 78.68952381,
+        "end_time": 80.893968254
+    },
+    {
+        "sample_id": "S028",
+        "query_file": "T048",
+        "ref_file": "T050",
+        "start_time": 107.834920635,
+        "end_time": 110.04952381
+    },
+    {
+        "sample_id": "S028",
+        "query_file": "T048",
+        "ref_file": "T050",
+        "start_time": 110.04952381,
+        "end_time": 112.30476190499999
+    },
+    {
+        "sample_id": "S028",
+        "query_file": "T048",
+        "ref_file": "T050",
+        "start_time": 112.304761905,
+        "end_time": 114.57015873
+    },
+    {
+        "sample_id": "S028",
+        "query_file": "T048",
+        "ref_file": "T050",
+        "start_time": 114.57015873,
+        "end_time": 116.774603174
+    },
+    {
+        "sample_id": "S028",
+        "query_file": "T048",
+        "ref_file": "T050",
+        "start_time": 143.817142857,
+        "end_time": 145.99111111099998
+    },
+    {
+        "sample_id": "S028",
+        "query_file": "T048",
+        "ref_file": "T050",
+        "start_time": 146.001269841,
+        "end_time": 148.23619047600002
+    },
+    {
+        "sample_id": "S028",
+        "query_file": "T048",
+        "ref_file": "T050",
+        "start_time": 148.256507937,
+        "end_time": 150.430476191
+    },
+    {
+        "sample_id": "S028",
+        "query_file": "T048",
+        "ref_file": "T050",
+        "start_time": 150.440634921,
+        "end_time": 152.706031746
+    }
+]
