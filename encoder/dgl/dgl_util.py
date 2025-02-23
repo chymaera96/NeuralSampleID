@@ -25,9 +25,9 @@ def act_layer(act):
 def norm_layer(norm, nc):
     """Returns a normalization layer."""
     if norm == 'batch':
-        return nn.BatchNorm2d(nc, affine=True)
+        return nn.BatchNorm1d(nc, affine=True)
     elif norm == 'instance':
-        return nn.InstanceNorm2d(nc, affine=False)
+        return nn.InstanceNorm1d(nc, affine=False)
     else:
         raise NotImplementedError(f"Normalization type {norm} is not implemented.")
 
@@ -74,7 +74,10 @@ class GrapherDGL(nn.Module):
         self.dropout = nn.Dropout(dropout)
 
     def forward(self, g, x):
+        print(f"Shape before graph conv: {x.shape}")
         x = self.conv(g, x)
+        print(f"Shape after graph conv: {x.shape}")
+
         if self.norm:
             x = self.norm(x)
         x = self.act(x)

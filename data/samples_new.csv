@@ -1,0 +1,107 @@
+sample_id,target_track_id,query_track_id,t_target,t_query,n_repetitions,estimated_tempo_ratio,target_instruments,query_interfering_instruments,query_type,interpolation,comments
+S001,T002,T001,0,0,19,1.03,drums/bass/guitar,other/vocals,riff,no, starts counted (sample ABCD looped ABCBCBCD)
+S002,T003,T004,0,0,4,0.95,piano/bass/other,vocals/other,riff,no, intro
+S003,T003,T004,34,53,3,1.0,other/drums/bass,vocals/other/bass?,riff,no, refrain with horns
+S004,T005,T006,0,37,60,1.0,drums,vocals/bass/other/drums?,beat,no, 
+S005,T007,T008,53,0,10,1.0,bass/drums/piano/guitar/other,vocals,riff,no, (very clean: same pitch and only layer)
+S006,T010,T009,0,1,37,1.08,drums,vocals/other/guitar,beat,no, probably samples both bars (with two decks?)
+S007,T011,T012,1,0,85,1.17,drums/guitar/vocals,vocals/drums/bass/other,riff,no, pitch shifted (sample a bit gated in the end)
+S008,T014,T013,74,5,10,1.05,other/bass/drums,vocals/drums/other/bass,riff,maybe, pitch shifted - beginning of riff counted (rest 'chopped')
+S009,T015,T016,0,3,37,1.04,bass/guitar,other/vocals/drums,riff,yes, interpolation or other version
+S010,T018,T017,0,0,1,1.0,drums/other,,riff,no, pitch shifted down - once at the start
+S012,T021,T020,0,0,38,0.97,drums/bass/other,vocals/other,riff,maybe, time sampled unclear (0:00 or 2:25?)
+S013,T023,T022,1,10,51,1.15,drums/piano/other,vocals/drums/bass/other?,riff,maybe, piano
+S014,T025,T024,0,21,37,1.05,drums/piano/bass/other,vocals/other/drums?,riff,no, pitch shifted up
+S015,T027,T026,5,12,38,1.02,guitar/drums/bass,vocals/drums/other,riff,no, pitch shifted
+S016,T029,T028,0,37,50,1.03,bass/synth/other,drums/other/vocals/,riff,no, 
+S017,T031,T030,8,10,43,1.12,drums/bass/other,vocals/drums/other,riff,no, first half of loop
+S018,T033,T032,1,18,217,1.0,drums/other,bass/vocals/other/drums,beat,probably not, (samples 2nd measure hence short and no melody)
+S019,T035,T034,40,10,48,1.0,drums/vocals/other/bass,drums/vocals/other,riff,no, (vocals)
+S020,T033,T036,0,2,33,1.0,drums/other/bass,other/vocals/drums,riff,no, 
+S021,T038,T037,0,0,50,1.0,bass/other,vocals/other/drums,riff,no, the guitar bar
+S022,T043,T037,141,26,22,1.04,bass/drums/other,vocals/bass/drums/other,riff,maybe, the outstanding melody is whistled
+S023,T040,T039,0,2,21,0.94,other/drums/vocals,vocals/drums,riff,yes, clear interpolation
+S024,T042,T041,0,4,40,1.26,guitar,drums/vocals/bass/other,riff,no, the guitar bar
+S025,T045,T044,0,39,67,1.0,other/drums,bass/drums/vocals/other,riff,no, very soft and hard to count
+S027,T049,T048,0,9,25,0.9,drums/bass/other,vocals/drums/other,riff,no, pitch shifted down
+S028,T050,T048,0,0,19,1.04,drums/bass/other/vocals,drums,riff,no, half samples not counted (second halves)
+S029,T052,T051,0,10,85,1.0,drums,bass/vocals/other,beat,no, only the measures with single BD counted
+S030,T052,T039,0,13,76,0.95,drums,vocals/other,beat,no, 
+S031,T052,T037,0,4,110,1.22,drums,vocals/other/bass/drums,beat,maybe, BD filtered out or replay
+S032,T052,T053,1,20,147,beat,maybe, HH filtered out or replay
+S033,T045,T054,0,12,92,0.97,drums/other,vocals/drums/other/bass,1-note,no, 
+S035,T056,T057,3,6,44,1.0,drums/other/vocals/bass,vocals/other,riff,no,  
+S036,T058,T059,5,10,26,1.04,drums/other,vocals/other/bass/drums,riff,maybe, Short sample � intro not counted
+S037,T060,T061,63,63,3,1.04,vocals/other,vocals/other/bass/drums,riff,no, vocals only
+S038,T062,T063,35,1,5,1.0,drums/vocals/other,bass/other/drums,riff,no, refrain w/ vocals (long)
+S039,T064,T065,25,22,157,1.3,drums/other/bass,vocals/bass/other,riff,no, the flute verse - pitch shifted up
+S040,T066,T067,7,18,34,1.3,other/vocals/drums/bass,vocals/drums/bass/other,riff,no, both instr/vocal instr parts chopped?
+S041,T068,T069,6,13,23,1.09,drums/vocals/bass?/other?,vocals/drums/bass/other,riff,maybe, nice and long (11 seconds)
+S042,T070,T071,0,0,38,0.95,other/drums/bass,vocals/other,riff,no, 
+S043,T072,T073,0,5,55,0.96,other,drums/vocals/bass,riff,no, piano part
+S044,T074,T075,7,8,79,1.0,vocals/other/drums/bass,vocals/drums/other/bass,riff,no, Short alternates full/half sample - they managed to extract vocals from the target original
+S045,T076,T077,32,0,143,0.87,other/drums/bass,bass/drums/vocals,riff,no, Only 8 note string riff counted
+S046,T078,T079,4,2,151,0.75,other/drums/bass,vocals/drums/bass/other,1-note,no, Less than one second
+S047,T080,T081,3,20,15,1.0,other/bass,drums/vocals/other,riff,no, Only repetitions of string riff counted
+S048,T082,T048,2,0,68,0.84,drums,vocals/other/bass,beat,no, 
+S049,T083,T054,321,12,80,1.0,drums,vocals/other,beat,maybe, 
+S050,T085,T084,1,0,45,1.04,drums,bass/other/vocals,beat,probably, 
+S051,T116,T086,88,20,80,0.87,drums,other/vocals/bass,beat,no, 
+S052,T088,T086,1,179,3,1.0,drums,other/vocals,beat,no, 
+S054,T090,T091,0,3,91,1.07,drums,vocals/other,beat,no, 
+S055,T090,T092,0,0,101,1.08,drums,bass/other/vocals,beat,no, 
+S056,T094,T093,5,0,60,1.05,other/bass,drums/vocals/other,riff,no, pitch shifted up a semitone
+S057,T090,T093,0,0,150,1.08,drums,drums/bass/other/vocals,beat,no, half of the samples used in S054 and S55
+S058,T095,T093,138,0,40,1.21,other/bass/drums,other/bass/drums/vocals,riff,no, it seems that bass and drums are removed from query or at least covered
+S060,T098,T097,0,8,204,1.08,drums,vocals/other/bass,beat,no, pretty short but ok
+S061,T098,T099,0,11,150,1.0,drums,bass/vocals/other,beat,no, Pretty short only full cycles counted
+S062,T098,T100,0,5,100,0.97,drums,bass/vocals/other,beat,no, pretty short but ok
+S063,T101,T102,1,0,24,1.02,drums/bass/other,vocals,riff,no, pitch shifted up
+S064,T104,T103,1,15,96,1.07,drums,bass/vocals/other,beat,no, 
+S067,T108,T109,6,54,114,1.0,drums/other,vocals/other,beat,no, 
+S068,T111,T110,0,15,55,1.02,drums/vocals/other,bass/vocals/other,riff,no, pitch shifted up
+S069,T112,T110,14,0,1,1.02,drums/bass/vocals,vocals,riff,no, quite clean actually
+S071,T116,T115,88,7,82,0.85,drums/bass,vocals,beat,no, pretty distorted final drums - might have overlapping
+S072,T117,T115,1,60,7,0.93,drums/other,vocals,riff,no, 
+S073,T119,T118,5,0,139,0.78,drums,bass/other/vocals,beat,no, 
+S074,T085,T121,1,0,74,1.05,drums,vocals/other/bass,beat,no, Perhaps chopped with compression or gated reverb: different timbre; yet accurate pattern. this was originally marked as interpolation I'm pretty sure it isnt
+S078,T145,T144,12,39,2,1.12,drums/other,drums,riff,no, 
+S079,T145,T146,1,0,22,1.04,drums,vocals/other,beat,no, 
+S080,T148,T147,18,5,24,0.81,bass/drums/other,drums/vocals,riff,no, the original drums have been erased or covered
+S081,T148,T149,18,13,15,0.93,bass/drums/other,vocals/other,riff,no, end of loop doubled (not counted). pitch shifted down.
+S082,T151,T150,6,114,7,1.0,bass/drums,drums/vocals,riff,no, extremely short
+S083,T145,T152,3,56,28,1.08,drums,vocals/other,beat,no, hi-hat has been covered or removed from drums
+S084,T154,T153,18,0,54,riff,no, LF only
+S086,T154,T157,1,1,9,1.0,bass/other,vocals,riff,no, intro
+S089,T160,T157,0,64,8,0.97,other/drums,bass/vocals,riff,no, pitch shifted down
+S091,T162,T163,0,17,3,1.0,drums,bass/vocals/other,beat,probably, HF only and soft. Very hard to detect.
+S092,T162,T164,8,7,53,0.97,drums/other,vocals/other,riff,no, 
+S094,T167,T166,6,15,43,1.0,bass/drums/other,drums/vocals/other,riff,no, Bass + synth
+S098,T173,T172,108,5,71,1.0,other/drums,drums/bass/other/vocals,riff,no, 
+S101,T177,T176,0,0,27,1.0,bass/drums,vocals/drums/other,riff,no, 
+S103,T180,T179,1,1,12,1.0,drums/other,vocals/other/bass/drums,riff,no, for some reason source separation algorithms detect the trumpets as vocals 
+S104,T182,T181,0,0,99,1.19,bass/drums/other,vocals,riff,no, 
+S106,T185,T184,0,135,8,0.91,other,drums/vocals/other,riff,no, 
+S107,T083,T184,321,137,7,0.95,drums/bass/other,vocals/other,beat,no, tiny piece of bass and guitar at the start of beat 
+S109,T160,T187,0,9,77,0.93,drums/other,drums/vocals/other,riff,no, might be 39
+S112,T088,T187,1,0,21,1.0,drums,vocals/other,beat,no, 
+S113,T083,T189,321,137,4,0.98,drums/vocals/other,vocals,beat,no, might be 2
+S114,T083,T190,321,0,102,1.06,drums/vocals/other,other/vocals,beat,no, 
+S115,T083,T191,321,11,112,1.02,drums/vocals/other,bass/vocals/other,beat,no, 
+S116,T193,T192,106,5,75,1.0,drums,bass/vocals/other,beat,no, Beginnings counted
+S120,T199,T184,5,2,71,1.0,bass/drums/other,vocals,riff,no, 
+S121,T064,T065,2,0,12,1.37,bass/drums/other,vocals,riff,no, the intro/refrain riff
+S122,T072,T073,4,32,5,0.96,other/drums/bass,other/vocals,riff,no, brass part
+S123,T062,T063,59,49,44,riff,yes, verse (very soft)
+S124,T052,T051,1,13,80,1.0,drums,bass/vocals/other,beat,no, only the measures with double BD counted
+S125,T042,T041,7,12,16,1.26,bass/other,bass/vocals/drums,riff,no, the guitar + strings bar
+S126,T038,T037,4,52,10,1.0,bass/other,bass/drums,riff,no, the guitar + brass bar
+S127,T031,T030,46,13,43,1.0,other,vocals/drums,riff,no, end of loop
+S128,T029,T028,5,27,4,1.0,bass/drums/vocals/other,drums/vocals,riff,no, 10 sec refrain
+S129,T023,T022,11,84,2,1.26,bass/drums/other,bass/drums/vocals,riff,maybe, saxophone
+S130,T014,T013,68,0,1,1.05,drums/bass/other,vocals,riff,no, intro not interpolated
+S131,T003,T004,23,20,9,1.0,bass/drums,vocals,riff,no, repeated beat (of which 3 included in S2)
+S134,T167,T166,2,25,14,1.0,bass/drums/other,vocals/drums,riff,no, Just bass - the other sample is covered in S094
+S135,T199,T184,14,58,3,0.97,bass/other/drums,vocals/other,riff,no, brass riff
+S136,T199,T184,66,0,2,1.0,other/drums,vocals/drums/other/bass,riff,no, brass crescendo
+S137,T173,T172,1,44,14,1.0,bass/drums/other,vocals,riff,no, 

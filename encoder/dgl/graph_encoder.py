@@ -5,42 +5,67 @@ from dgl.nn import GraphConv, EdgeConv, SAGEConv, GINConv
 from dgl_util import GrapherDGL, DenseDilatedKnnGraphDGL, act_layer, norm_layer
 
 
-
 class Downsample(nn.Module):
-    def __init__(self, in_dim, out_dim):
+    def __init__(self, in_dim, out_dim, reduction_ratio=2):
+        """
+        Args:
+            in_dim: Input feature dimension (C)
+            out_dim: Output feature dimension (C')
+            reduction_ratio: Factor by which nodes (N) are reduced (default: 2)
+        """
         super().__init__()
+
         self.conv = nn.Sequential(
-            nn.Conv2d(in_dim, out_dim, 3, stride=2, padding=1),
-            nn.BatchNorm2d(out_dim),
+            nn.Conv1d(in_dim, out_dim, kernel_size=3, stride=reduction_ratio, padding=1),  # ✅ Strided Conv1d
+            nn.BatchNorm1d(out_dim),
+            nn.ReLU()
         )
 
     def forward(self, x):
-        return self.conv(x)
+        """
+        Args:
+            x: (B, C, N) - Batch of graph node features
+        Returns:
+            x: (B, C', N') - Downsampled features with fewer nodes (N' = N // reduction_ratio)
+        """
+        x = self.conv(x)  # ✅ Automatically reduces N due to stride
+        return x
 
 class FFN(nn.Module):
     def __init__(self, in_features, hidden_features=None, out_features=None, act='relu', drop_path=0.0):
         super().__init__()
-        out_features = out_features or in_features
-        hidden_features = hidden_features or in_features
+        out_features = out_features if out_features is not None else in_features
+        hidden_features = hidden_features if hidden_features is not None else in_features
+
         self.drop_path = nn.Dropout(drop_path) if drop_path > 0. else nn.Identity()
-        self.act = act_layer(act)
-        self.fc1 = nn.Conv2d(in_features, hidden_features, 1, bias=False)
-        self.bn1 = nn.BatchNorm2d(hidden_features)
-        self.fc2 = nn.Conv2d(hidden_features, out_features, 1, bias=False)
-        self.bn2 = nn.BatchNorm2d(out_features)
+        self.act = nn.ReLU() if act == 'relu' else nn.GELU()
+
+        # Keep BatchNorm1d to ensure per-node normalization (no graph mixing)
+        self.fc1 = nn.Linear(in_features, hidden_features)
+        self.bn1 = nn.BatchNorm1d(hidden_features)  # Each node normalized independently
+
+        self.fc2 = nn.Linear(hidden_features, out_features)
+        self.bn2 = nn.BatchNorm1d(out_features)
 
     def forward(self, x):
+        """
+        x: (N, C) where N is total nodes across all graphs in the batch
+        """
         shortcut = x
+
         x = self.fc1(x)
-        x = self.bn1(x)
+        x = self.bn1(x)  # Ensures independent normalization for each node
         x = self.act(x)
+
         x = self.fc2(x)
         x = self.bn2(x)
-        x = self.drop_path(x) + shortcut
+
+        x = self.drop_path(x) + shortcut  # Residual connection
         return x
 
+
 class GraphEncoderDGL(nn.Module):
-    def __init__(self, cfg=None, k=3, conv='edge', act='relu', norm='batch', bias=True, dropout=0.0, dilation=True,
+    def __init__(self, cfg=None, k=3, conv='sage', act='relu', norm='batch', bias=True, dropout=0.0, dilation=True,
                  epsilon=0.2, drop_path=0.1, size='t', emb_dims=1024, in_channels=3):
         super().__init__()
         
@@ -70,11 +95,11 @@ class GraphEncoderDGL(nn.Module):
         
         for i in range(len(self.blocks)):
             if i > 0:
-                self.backbone.append(Downsample(self.channels[i-1], self.channels[i]))
+                self.backbone.append(Downsample(self.channels[i-1], self.channels[i]))  # ✅ Outputs `C'`
             for j in range(self.blocks[i]):
                 self.backbone.append(
                     nn.Sequential(
-                        GrapherDGL(self.channels[i], conv=conv, act=act, norm=norm),
+                        GrapherDGL(self.channels[i], conv=conv, act=act, norm=norm),  # ✅ Ensure GrapherDGL uses `C'`
                         FFN(self.channels[i], self.channels[i] * 4, act=act, drop_path=dpr[idx])
                     )
                 )
@@ -83,14 +108,36 @@ class GraphEncoderDGL(nn.Module):
         self.proj = nn.Conv2d(self.channels[-1], self.emb_dims, 1, bias=True)
 
     def forward(self, x):
-        x = x.unsqueeze(-1)
-        B, C, N, _ = x.shape
-        x = self.stem(x)
-        g = self.graph_builder(x)
-        
-        for layer in self.backbone:
-            x = layer(g, x)
-        
-        x = self.proj(x)
-        x = torch.mean(x, dim=2).squeeze(-1).squeeze(-1)
+        """
+        Args:
+            x: Input tensor of shape (B, C, N)
+            
+        Returns:
+            Output embedding of shape (B, emb_dim)
+        """
+        B, C, N = x.shape 
+
+        for block in self.backbone:
+            if isinstance(block, Downsample):
+                x = block(x) 
+            else:
+                graph_conv, ffn = block
+                
+                g = self.graph_builder(x.permute(0, 2, 1))  # Recompute graph dynamically
+
+                # Use updated feature size and node count
+                B, C, N = x.shape
+
+                # Convert to (N', C') before GNN
+                x = x.permute(0, 2, 1).contiguous().reshape(-1, C)  
+                x = graph_conv(g, x)
+                x = ffn(x)
+                x = x.reshape(B, N, -1).permute(0, 2, 1)  # Convert back to (B, C', N')
+
+        x = self.proj(x.unsqueeze(-1)) 
+        x = x.mean(dim=2).squeeze(-1)  
+
         return x
+
+
+
