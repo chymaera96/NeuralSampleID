@@ -26,6 +26,7 @@ from encoder.resnet_ibn import ResNetIBN
 from simclr.simclr import SimCLR   
 from modules.transformations import GPUTransformSampleID
 from eval import get_index, load_memmap_data, eval_faiss
+from eval_map import eval_faiss_with_map
 
 
 # Directories
@@ -321,6 +322,12 @@ def main():
                                 create_table(hit_rates, 
                                             cfg['overlap'], cfg['dur'], text=text), 
                                 label)
+                
+            map = eval_faiss_with_map(emb_dir=fp_dir, 
+                                    index_type=index_type,
+                                    test_seq_len=test_seq_len,
+                                    index_type=index_type,
+                                    nogpu=True)
 
 
             print("-------Test hit-rates-------")
@@ -329,6 +336,8 @@ def main():
             print(f'Top-3 exact hit rate = {hit_rates[1]}')
             print(f'Top-10 exact hit rate = {hit_rates[2]}')
 
+            print("-------Test MAP-------")
+            print(f'Mean Average Precision = {map}')
 
 
 if __name__ == '__main__':
