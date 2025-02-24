@@ -329,11 +329,11 @@ def main():
                                     nogpu=True)
 
 
-            print("-------Test hit-rates-------")
+            # print("-------Test hit-rates-------")
             # Create table
-            print(f'Top-1 exact hit rate = {hit_rates[0]}')
-            print(f'Top-3 exact hit rate = {hit_rates[1]}')
-            print(f'Top-10 exact hit rate = {hit_rates[2]}')
+            # print(f'Top-1 exact hit rate = {hit_rates[0]}')
+            # print(f'Top-3 exact hit rate = {hit_rates[1]}')
+            # print(f'Top-10 exact hit rate = {hit_rates[2]}')
 
             print("-------Test MAP-------")
             print(f'Mean Average Precision (MAP@{k_map}): {map_score:.4f}')

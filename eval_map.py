@@ -21,18 +21,16 @@ def calculate_map(ground_truth, predictions, k=10):
     average_precisions = []
 
     for q_id, retrieved_list in predictions.items():
-        if q_id not in ground_truth:
-            continue  # Skip if no ground truth exists
-
-        relevant_items = ground_truth[q_id]
         num_relevant = 0
         precision_values = []
 
         for i, retrieved_id in enumerate(retrieved_list[:k]):
-            if retrieved_id in relevant_items:
+            # Instead of checking if retrieved_id is in ground_truth[q_id], we check if
+            # q_id is listed under ground_truth[retrieved_id]
+            if q_id in ground_truth.get(retrieved_id, []):
                 num_relevant += 1
                 precision_values.append(num_relevant / (i + 1))  # Precision@i
-        
+
         ap = np.mean(precision_values) if precision_values else 0
         average_precisions.append(ap)
 
