@@ -300,28 +300,28 @@ def main():
             label = epoch if type(epoch) == int else 0
 
 
-            if args.query_lens is not None:
-                hit_rates = eval_faiss(emb_dir=fp_dir,
-                                    test_seq_len=test_seq_len, 
-                                    index_type=index_type,
-                                    nogpu=True) 
+            # if args.query_lens is not None:
+            #     hit_rates = eval_faiss(emb_dir=fp_dir,
+            #                         test_seq_len=test_seq_len, 
+            #                         index_type=index_type,
+            #                         nogpu=True) 
 
 
-                writer.add_text("table", 
-                                create_table(hit_rates, 
-                                            cfg['overlap'], cfg['dur'],
-                                            test_seq_len, text=text), 
-                                label)
+            #     writer.add_text("table", 
+            #                     create_table(hit_rates, 
+            #                                 cfg['overlap'], cfg['dur'],
+            #                                 test_seq_len, text=text), 
+            #                     label)
   
-            else:
-                hit_rates = eval_faiss(emb_dir=fp_dir, 
-                                    index_type=index_type,
-                                    nogpu=True)
+            # else:
+            #     hit_rates = eval_faiss(emb_dir=fp_dir, 
+            #                         index_type=index_type,
+            #                         nogpu=True)
                 
-                writer.add_text("table", 
-                                create_table(hit_rates, 
-                                            cfg['overlap'], cfg['dur'], text=text), 
-                                label)
+            #     writer.add_text("table", 
+            #                     create_table(hit_rates, 
+            #                                 cfg['overlap'], cfg['dur'], text=text), 
+            #                     label)
                 
             map_score, k_map = eval_faiss_with_map(emb_dir=fp_dir, 
                                     index_type=index_type,
