@@ -55,6 +55,12 @@ def eval_faiss_with_map(emb_dir,
     Extended evaluation function to compute Mean Average Precision (MAP).
     """
 
+    if type(test_seq_len) == str:
+        test_seq_len = np.asarray(
+            list(map(int, test_seq_len.split())))  # '1 3 5' --> [1, 3, 5]
+    elif type(test_seq_len) == list:
+        test_seq_len = np.asarray(test_seq_len)
+
     query, query_shape = load_memmap_data(emb_dir, 'query_db')
     db, db_shape = load_memmap_data(emb_dir, 'ref_db')
     dummy_db, dummy_db_shape = load_memmap_data(emb_dummy_dir or emb_dir, 'dummy_db')
@@ -77,8 +83,7 @@ def eval_faiss_with_map(emb_dir,
 
     for ti, test_id in enumerate(test_ids):
         max_len = int(max_test_seq_len[ti])
-        max_query_len = np.array(list(map(int, test_seq_len.split())))
-        max_query_len = max_query_len[max_query_len <= max_len]
+        max_query_len = test_seq_len[test_seq_len <= max_len]
 
         for sl in max_query_len:
             q = query[test_id:(test_id + sl), :]
