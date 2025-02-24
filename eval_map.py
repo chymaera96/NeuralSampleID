@@ -6,42 +6,48 @@ import faiss
 from eval import load_memmap_data, get_index, extract_test_ids
 
 
-def calculate_map(ground_truth, predictions, ref_lookup, k=10):
+def calculate_map(ground_truth, predictions, test_seq_len, k=10):
     """
-    Computes the Mean Average Precision (MAP) at k.
-    
+    Computes the Mean Average Precision (MAP) separately for each query length.
+
     Parameters:
     - ground_truth: Dictionary mapping query IDs to sets of correct matches.
-    - predictions: List of lists where each sublist contains retrieved IDs for a query.
+    - predictions: Dictionary where each query ID maps to its list of retrieved tracks.
+    - test_seq_len: List or array of query segment lengths.
     - k: Number of top results to consider.
-    
+
     Returns:
-    - MAP score
+    - Dictionary mapping query lengths to MAP scores.
+    - Overall weighted MAP.
     """
-    average_precisions = []
+    map_per_length = defaultdict(list)
     
     for q_id, retrieved_list in predictions.items():
         if q_id not in ground_truth:
-            continue  # Skip if the query ID has no ground truth
-        
+            continue  # Skip if no ground truth exists
+
         relevant_items = ground_truth[q_id]
         num_relevant = 0
         precision_values = []
-        
+
         for i, retrieved_id in enumerate(retrieved_list[:k]):
-            retrieved_song = ref_lookup.get(retrieved_id, None)  # Convert index to song name
-            if retrieved_song and retrieved_song in relevant_items:
+            if retrieved_id in relevant_items:
                 num_relevant += 1
                 precision_values.append(num_relevant / (i + 1))  # Precision@i
-        
-        if precision_values:
-            ap = np.mean(precision_values)
-        else:
-            ap = 0
-        
-        average_precisions.append(ap)
-    
-    return np.mean(average_precisions) if average_precisions else 0
+
+        ap = np.mean(precision_values) if precision_values else 0
+        query_length = len(retrieved_list)  # Approximate segment length
+        map_per_length[query_length].append(ap)
+
+    # Compute MAP for each length
+    map_per_length = {length: np.mean(scores) for length, scores in map_per_length.items()}
+
+    # Compute weighted MAP
+    total_queries = sum(len(scores) for scores in map_per_length.values())
+    weighted_map = sum(np.mean(scores) * len(scores) / total_queries for length, scores in map_per_length.items())
+
+    return map_per_length, weighted_map
+
 
 
 def eval_faiss_with_map(emb_dir,
@@ -110,5 +116,9 @@ def eval_faiss_with_map(emb_dir,
             predictions[q_id] = sorted(hist, key=hist.get, reverse=True)
             
     print(predictions)
-    map_score = calculate_map(ground_truth, predictions, ref_lookup, k=k_map)
-    return map_score, k_map
+    map_per_length, weighted_map = calculate_map(ground_truth, predictions, test_seq_len, k=k_map)
+
+    print(f"MAP per query length: {map_per_length}")
+    print(f"Weighted MAP: {weighted_map:.4f}")
+
+    return weighted_map, k_map
