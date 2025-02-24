@@ -61,19 +61,22 @@ def eval_faiss_with_map(emb_dir,
 
     query, query_shape = load_memmap_data(emb_dir, 'query_db')
     db, db_shape = load_memmap_data(emb_dir, 'ref_db')
-    dummy_db, dummy_db_shape = load_memmap_data(emb_dummy_dir or emb_dir, 'dummy_db')
+    if emb_dummy_dir is None:
+        emb_dummy_dir = emb_dir
+    dummy_db, dummy_db_shape = load_memmap_data(emb_dummy_dir, 'dummy_db')
 
     index = get_index(index_type, dummy_db, dummy_db.shape, (not nogpu),
                       max_train, n_centroids=n_centroids)
-    
+
     index.add(dummy_db)
     index.add(db)
+    del dummy_db
 
     fake_recon_index, index_shape = load_memmap_data(
         emb_dummy_dir, 'dummy_db', append_extra_length=db_shape[0],
         display=False)
     fake_recon_index[dummy_db_shape[0]:dummy_db_shape[0] + db_shape[0], :] = db[:, :]
-    fake_recon_index.flush()    
+    fake_recon_index.flush()
 
     # Load lookup tables
     query_lookup = json.load(open(f'{emb_dir}/query_db_lookup.json', 'r'))
