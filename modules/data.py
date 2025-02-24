@@ -201,10 +201,14 @@ class Sample100Dataset(Dataset):
 
             if e == -1:
                 x = audio_resampled[int(s*self.sample_rate):]
-            elif (e - s) < self.dur / 2:          # To-do: Make this a hyperparameter!
-                self.ignore_idx.add(idx)
-                next_idx = self._get_safe_index(idx)
-                return self[next_idx]
+            # elif (e - s) < self.dur / 2:          # To-do: Make this a hyperparameter!
+            #     self.ignore_idx.add(idx)
+            #     next_idx = self._get_safe_index(idx)
+            #     return self[next_idx]
+            elif (e - s) < self.dur:
+                start = int(s*self.sample_rate)
+                min_dur = int(self.dur*self.sample_rate)
+                x = audio_resampled[start: start + min_dur]
             else:
                 x = audio_resampled[int(s*self.sample_rate):int(e*self.sample_rate)]
     
