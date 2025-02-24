@@ -82,6 +82,8 @@ def eval_faiss_with_map(emb_dir,
     for test_id in test_ids:
         q_id = query_lookup[test_id].split("_")[0]
         q = query[test_id:, :]
+        if q.shape[0] <= 4:
+            continue
 
         _, I = index.search(q, k_probe)
         candidates = I.flatten()
