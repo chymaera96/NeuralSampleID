@@ -88,7 +88,7 @@ def eval_faiss_with_map(emb_dir,
     
     for ti, test_id in enumerate(test_ids):
         max_len = int(max_test_seq_len[ti])
-        max_query_len = max_query_len[max_query_len <= max_len]
+        max_query_len = test_seq_len[test_seq_len <= max_len]
         
         for sl in max_query_len:
             q = query[test_id:(test_id + sl), :]
