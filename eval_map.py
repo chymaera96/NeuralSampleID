@@ -79,7 +79,7 @@ def eval_faiss_with_map(emb_dir,
     test_ids, max_test_seq_len = extract_test_ids(query_lookup)
     predictions = {}
 
-    for test_id in test_ids:
+    for ix, test_id in enumerate(test_ids):
         q_id = query_lookup[test_id].split("_")[0]
         q = query[test_id:, :]
         if q.shape[0] <= 4:
@@ -97,6 +97,9 @@ def eval_faiss_with_map(emb_dir,
             if match == q_id:
                 continue
             hist[match] += 1
+        
+        if ix % 50 == 0:
+            print(f"Processed {ix} / {len(test_ids)} queries...")
 
         sorted_predictions = sorted(hist, key=hist.get, reverse=True)
         predictions[q_id] = sorted_predictions
