@@ -326,7 +326,6 @@ def main():
             map = eval_faiss_with_map(emb_dir=fp_dir, 
                                     index_type=index_type,
                                     test_seq_len=test_seq_len,
-                                    index_type=index_type,
                                     nogpu=True)
 
 
