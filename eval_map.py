@@ -6,7 +6,7 @@ import faiss
 from eval import load_memmap_data, get_index, extract_test_ids
 
 
-def calculate_map(ground_truth, predictions, k=10):
+def calculate_map(ground_truth, predictions, ref_lookup, k=10):
     """
     Computes the Mean Average Precision (MAP) at k.
     
@@ -29,7 +29,8 @@ def calculate_map(ground_truth, predictions, k=10):
         precision_values = []
         
         for i, retrieved_id in enumerate(retrieved_list[:k]):
-            if retrieved_id in relevant_items:
+            retrieved_song = ref_lookup.get(retrieved_id, None)  # Convert index to song name
+            if retrieved_song and retrieved_song in relevant_items:
                 num_relevant += 1
                 precision_values.append(num_relevant / (i + 1))  # Precision@i
         
@@ -108,6 +109,5 @@ def eval_faiss_with_map(emb_dir,
             
             predictions[q_id] = sorted(hist, key=hist.get, reverse=True)
     
-    map_score = calculate_map(ground_truth, predictions, k=k_map)
-    print(f'Mean Average Precision (MAP@{k_map}): {map_score:.4f}')
-    return map_score
+    map_score = calculate_map(ground_truth, predictions, ref_lookup, k=k_map)
+    return map_score, k_map
