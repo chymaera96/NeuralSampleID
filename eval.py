@@ -293,8 +293,6 @@ def eval_faiss(emb_dir,
 
         # Limit test_seq_len to max_test_seq_len
         max_len = int(max_test_seq_len[ti])
-        # assert type(max_len) == int, f'{max_len} is not int. See {max_test_seq_len}'
-        # assert type(test_seq_len) == np.ndarray, f'{type(test_seq_len)} is not np.ndarray'
         max_query_len = test_seq_len[test_seq_len <= max_len]
 
         for si, sl in enumerate(max_query_len):
@@ -312,11 +310,8 @@ def eval_faiss(emb_dir,
             # for offset in range(len(I)):
             #     I[offset, :] -= offset
 
-            # unique candidates
-            # candidates = np.unique(I[np.where(I >= 0)])   # ignore id < 0
             candidates = I[np.where(I >= 0)].flatten()
-            
-
+    
             """ Song-level match score """
             for ci, cid in enumerate(candidates):
                 if cid < dummy_db_shape[0]:
@@ -336,7 +331,6 @@ def eval_faiss(emb_dir,
                 score = np.mean(np.sum(q_match * candidate_seq, axis=1))
                 hist[match] += score
                 # hist[match] += 1
-                # To-do: use cosine distance for better matching score
 
             """ Evaluate """
             # print(f"histogram for {q_id}; sl = {sl}: {dict(hist)}")

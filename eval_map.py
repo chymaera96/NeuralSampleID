@@ -79,32 +79,29 @@ def eval_faiss_with_map(emb_dir,
     test_ids, max_test_seq_len = extract_test_ids(query_lookup)
     predictions = {}
 
-    for ti, test_id in enumerate(test_ids):
-        max_len = int(max_test_seq_len[ti])
-        max_query_len = test_seq_len[test_seq_len <= max_len]
+    for test_id in test_ids:
+        q_id = query_lookup[test_id].split("_")[0]
+        q = query[test_id:, :]
 
-        for sl in max_query_len:
-            q = query[test_id:(test_id + sl), :]
-            q_id = query_lookup[test_id].split("_")[0]
-            _, I = index.search(q, k_probe)
-            candidates = I[np.where(I >= 0)].flatten()
+        _, I = index.search(q, k_probe)
+        candidates = I.flatten()
 
-            hist = defaultdict(int)
+        hist = defaultdict(int)
 
-            for cid in candidates:
-                if cid < dummy_db_shape[0]:
-                    continue
-                match = ref_lookup[cid - dummy_db_shape[0]]
-                if match == q_id:
-                    continue
-                hist[match] += 1
+        for cid in candidates:
+            if cid < dummy_db_shape[0]:
+                continue
+            match = ref_lookup[cid - dummy_db_shape[0]]
+            if match == q_id:
+                continue
+            hist[match] += 1
 
-            sorted_predictions = sorted(hist, key=hist.get, reverse=True)
-            predictions[q_id] = sorted_predictions
+        sorted_predictions = sorted(hist, key=hist.get, reverse=True)
+        predictions[q_id] = sorted_predictions
 
     # Compute MAP
     map_score = calculate_map(ground_truth, predictions, k=k_map)
 
     print(f'MAP@{k_map}: {map_score:.4f}')
 
-    return map_score, k_map
+    return map_score
