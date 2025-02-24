@@ -6,21 +6,22 @@ import faiss
 from eval import load_memmap_data, get_index, extract_test_ids
 
 
-def calculate_map(ground_truth, predictions, test_seq_len, k=10):
+def calculate_map(ground_truth, predictions, k=10):
     """
-    Computes the Mean Average Precision (MAP) separately for each query length.
+    Computes the Mean Average Precision (MAP) at k.
+
+    Parameters:
+    - ground_truth: Dictionary mapping query IDs to correct matches.
+    - predictions: Dictionary where each query ID maps to its list of retrieved tracks.
+    - k: Number of top results to consider.
+
     Returns:
-    - Dictionary mapping query lengths to MAP scores.
-    - Overall weighted MAP.
+    - MAP score.
     """
-    map_per_length = defaultdict(list)
-    
-    print(f"Total queries in predictions: {len(predictions)}")
-    print(f"Total queries in ground_truth: {len(ground_truth)}")
-    
+    average_precisions = []
+
     for q_id, retrieved_list in predictions.items():
         if q_id not in ground_truth:
-            print(f"Skipping {q_id} - not found in ground truth")
             continue  # Skip if no ground truth exists
 
         relevant_items = ground_truth[q_id]
@@ -32,26 +33,10 @@ def calculate_map(ground_truth, predictions, test_seq_len, k=10):
                 num_relevant += 1
                 precision_values.append(num_relevant / (i + 1))  # Precision@i
         
-        if not precision_values:
-            print(f"No relevant items found for query {q_id} in top-{k} retrieved list")
-
         ap = np.mean(precision_values) if precision_values else 0
-        query_length = len(retrieved_list)  # Approximate segment length
+        average_precisions.append(ap)
 
-        print(f"Query {q_id} | Length {query_length} | AP: {ap}")
-        map_per_length[query_length].append(ap)
-
-    if not map_per_length:
-        print("ERROR: No valid MAP calculations were made!")
-
-    # Compute MAP for each length
-    map_per_length = {length: np.mean(scores) for length, scores in map_per_length.items()}
-
-    # Compute weighted MAP
-    total_queries = sum(len(scores) for scores in map_per_length.values())
-    weighted_map = sum(np.mean(scores) * len(scores) / total_queries for length, scores in map_per_length.items()) if total_queries > 0 else 0
-
-    return map_per_length, weighted_map
+    return np.mean(average_precisions) if average_precisions else 0
 
 
 
