@@ -48,7 +48,7 @@ def eval_faiss_with_map(emb_dir,
                          test_seq_len='1 3 5 9 11 19',
                          k_probe=20,
                          n_centroids=64,
-                         k_map=20):
+                         k_map=10):
     """
     Extended evaluation function to compute Mean Average Precision (MAP).
     """
@@ -69,6 +69,12 @@ def eval_faiss_with_map(emb_dir,
     index.add(dummy_db)
     index.add(db)
 
+    fake_recon_index, index_shape = load_memmap_data(
+        emb_dummy_dir, 'dummy_db', append_extra_length=db_shape[0],
+        display=False)
+    fake_recon_index[dummy_db_shape[0]:dummy_db_shape[0] + db_shape[0], :] = db[:, :]
+    fake_recon_index.flush()    
+
     # Load lookup tables
     query_lookup = json.load(open(f'{emb_dir}/query_db_lookup.json', 'r'))
     ref_lookup = json.load(open(f'{emb_dir}/ref_db_lookup.json', 'r'))
@@ -86,7 +92,8 @@ def eval_faiss_with_map(emb_dir,
             continue
 
         _, I = index.search(q, k_probe)
-        candidates = I.flatten()
+        candidates = I[np.where(I >= 0)].flatten()
+
 
         hist = defaultdict(int)
 
@@ -96,7 +103,13 @@ def eval_faiss_with_map(emb_dir,
             match = ref_lookup[cid - dummy_db_shape[0]]
             if match == q_id:
                 continue
-            hist[match] += 1
+            candidate_seq = fake_recon_index[cid:(cid + q.shape[0]), :]
+            if candidate_seq.shape[0] < q.shape[0]:
+                q_match = q[:candidate_seq.shape[0], :]
+            else:
+                q_match = q
+            score = np.mean(np.sum(q_match * candidate_seq, axis=1))
+            hist[match] += score
         
         if ix % 50 == 0:
             print(f"Processed {ix} / {len(test_ids)} queries...")
