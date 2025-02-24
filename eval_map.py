@@ -102,6 +102,4 @@ def eval_faiss_with_map(emb_dir,
     # Compute MAP
     map_score = calculate_map(ground_truth, predictions, k=k_map)
 
-    print(f'MAP@{k_map}: {map_score:.4f}')
-
-    return map_score
+    return map_score, k_map

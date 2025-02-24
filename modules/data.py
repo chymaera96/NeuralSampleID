@@ -263,9 +263,10 @@ class Sample100Dataset(Dataset):
             if self.cfg['arch'] == 'resnet-ibn':
                 x = F.pad(x, (0, clip_frames - x.shape[0]))
             else:
-                repeat_times = (clip_frames // x.shape[0]) + 1
-                x = torch.tile(x, (repeat_times,))  # Repeat x along its only dimension
-                x = x[:clip_frames] 
+                # repeat_times = (clip_frames // x.shape[0]) + 1
+                # x = torch.tile(x, (repeat_times,))  # Repeat x along its only dimension
+                # x = x[:clip_frames] 
+                x = F.pad(x, (0, clip_frames - x.shape[0]))
 
         if self.transform is not None:
             x, _ = self.transform(x, None)
