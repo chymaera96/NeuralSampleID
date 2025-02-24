@@ -108,6 +108,7 @@ def eval_faiss_with_map(emb_dir,
                 hist[match] += 1
             
             predictions[q_id] = sorted(hist, key=hist.get, reverse=True)
-    
+            
+    print(predictions)
     map_score = calculate_map(ground_truth, predictions, ref_lookup, k=k_map)
     return map_score, k_map
