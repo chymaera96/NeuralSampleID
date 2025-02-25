@@ -153,6 +153,7 @@ class Sample100Dataset(Dataset):
             self.annotations = json.load(fp)
         
         self.ref_names = list(set([rel['ref_file'] for rel in self.annotations]))
+        self.query_names = list(set([rel['query_file'] for rel in self.annotations]))
 
         self.error_counts = {}
         self.ignore_idx = set()
@@ -211,6 +212,23 @@ class Sample100Dataset(Dataset):
                 x = audio_resampled[start: start + min_dur]
             else:
                 x = audio_resampled[int(s*self.sample_rate):int(e*self.sample_rate)]
+
+        elif self.mode == "query_full":
+                
+                fname = self.query_names[idx]
+                query_path = os.path.join(self.path, fname+'.mp3')
+                try:
+                    audio, sr = torchaudio.load(query_path)
+                except Exception as e:
+                    self.error_counts[idx] = self.error_counts.get(idx, 0) + 1
+                    if self.error_counts[idx] > self.error_threshold:
+                        self.ignore_idx.add(idx)
+                    raise e
+    
+                audio_mono = audio.mean(dim=0)
+                resampler = torchaudio.transforms.Resample(sr, self.sample_rate)
+                audio_resampled = resampler(audio_mono)    
+                x = audio_resampled
     
 
         elif self.mode == "ref":
@@ -284,5 +302,7 @@ class Sample100Dataset(Dataset):
             return len(self.filenames['dummy'])
         elif self.mode == "ref":
             return len(self.ref_names)
+        elif self.mode == "query_full":
+            return len(self.query_names)
         else:
             return len(self.annotations)

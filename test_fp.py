@@ -53,6 +53,8 @@ parser.add_argument('--small_test', action='store_true', default=False)
 parser.add_argument('--text', default='test', type=str)
 # parser.add_argument('--test_snr', default=None, type=int)
 parser.add_argument('--recompute', action='store_true', default=False)
+parser.add_argument('--map', action='store_true', default=False)
+# parser.add_argument('--hit_rate', action='store_true', default=True)
 parser.add_argument('--k', default=3, type=int)
 parser.add_argument('--test_ids', default='1000', type=str)
 
@@ -82,7 +84,7 @@ def create_table(hit_rates, overlap, dur, test_seq_len=[1,3,5,9,11,19], text="te
     table += '</table>'
     return table
 
-def create_query_db(dataloader, augment, model, output_root_dir, fname='query_db', verbose=False):
+def create_query_db(dataloader, augment, model, output_root_dir, fname='query_db', verbose=False, max_size=128):
     fp = []
     lookup_table = []  # Initialize lookup table
     print("=> Creating query fingerprints...")
@@ -90,16 +92,23 @@ def create_query_db(dataloader, augment, model, output_root_dir, fname='query_db
         nm = nm[0] # Extract filename from list
         audio = audio.to(device)
         x_i, _ = augment(audio, None)
-        with torch.no_grad():
-            _, _, z_i, _= model(x_i.to(device),x_i.to(device))  
+        x_list = torch.split(x_i, max_size, dim=0)
+        fp_size = 0
+        for x in x_list:
+            with torch.no_grad():
+                _, _, z_i, _= model(x_i.to(device),x_i.to(device))  
 
-        fp.append(z_i.detach().cpu().numpy())
+            fp.append(z_i.detach().cpu().numpy())
+            fp_size += z_i.shape[0]
 
         # Append song number to lookup table for each segment in the batch
-        lookup_table.extend([nm + "_" + str(idx)] * x_i.shape[0])
+        if fname == 'query_db':
+            lookup_table.extend([nm + "_" + str(idx)] * x_i.shape[0])
+        else:
+            lookup_table.extend([nm] * x_i.shape[0])
 
-        if verbose and idx % 50 == 0:
-            print(f"Step [{idx}/{len(dataloader)}]\t shape: {z_i.shape}")
+        if verbose and idx % 20 == 0:
+            print(f"Step [{idx}/{len(dataloader)}]\t shape: [{fp_size,z_i.shape[1]}]")
 
     fp = np.concatenate(fp)
     arr_shape = (len(fp), z_i.shape[-1])
@@ -234,6 +243,7 @@ def main():
                                         train=False).to(device)
 
     query_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="query")
+    query_full_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="query_full")
     ref_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="ref")
     dummy_path = 'data/sample_100.json'     # Required for dummy db
     dummy_dataset = Sample100Dataset(cfg, path=dummy_path, annot_path=annot_path, mode="dummy")
@@ -244,6 +254,10 @@ def main():
                                 pin_memory=True, drop_last=False)
 
     query_db_loader = DataLoader(query_dataset, batch_size=1, 
+                                shuffle=False, num_workers=4, 
+                                pin_memory=True, drop_last=False)
+    
+    query_full_db_loader = DataLoader(query_full_dataset, batch_size=1, 
                                 shuffle=False, num_workers=4, 
                                 pin_memory=True, drop_last=False)
 
@@ -295,6 +309,10 @@ def main():
             create_query_db(query_db_loader, augment=test_augment,
                             model=model, output_root_dir=fp_dir, verbose=True)
             
+            if args.map:
+                create_query_db(query_full_db_loader, augment=test_augment,
+                                model=model, output_root_dir=fp_dir, fname='query_full_db', verbose=True)
+            
             
             text = f'{args.text}_{str(epoch)}'
             label = epoch if type(epoch) == int else 0
@@ -328,17 +346,18 @@ def main():
             print(f'Top-1 exact hit rate = {hit_rates[0]}')
             print(f'Top-3 exact hit rate = {hit_rates[1]}')
             print(f'Top-10 exact hit rate = {hit_rates[2]}')
-                
-            map_score, k_map = eval_faiss_with_map(emb_dir=fp_dir, 
-                                    index_type=index_type,
-                                    test_seq_len=test_seq_len,
-                                    nogpu=True)
+            
+            if args.map:
+                map_score, k_map = eval_faiss_with_map(emb_dir=fp_dir, 
+                                        index_type=index_type,
+                                        test_seq_len=test_seq_len,
+                                        nogpu=True)
 
 
 
 
-            print("-------Test MAP-------")
-            print(f'Mean Average Precision (MAP@{k_map}): {map_score:.4f}')
+                print("-------Test MAP-------")
+                print(f'Mean Average Precision (MAP@{k_map}): {map_score:.4f}')
 
 
 if __name__ == '__main__':

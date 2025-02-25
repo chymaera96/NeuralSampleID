@@ -25,8 +25,6 @@ def calculate_map(ground_truth, predictions, k=10):
         precision_values = []
 
         for i, retrieved_id in enumerate(retrieved_list[:k]):
-            # Instead of checking if retrieved_id is in ground_truth[q_id], we check if
-            # q_id is listed under ground_truth[retrieved_id]
             if q_id in ground_truth.get(retrieved_id, []):
                 num_relevant += 1
                 precision_values.append(num_relevant / (i + 1))  # Precision@i
@@ -59,7 +57,7 @@ def eval_faiss_with_map(emb_dir,
     elif type(test_seq_len) == list:
         test_seq_len = np.asarray(test_seq_len)
 
-    query, query_shape = load_memmap_data(emb_dir, 'query_db')
+    query, query_shape = load_memmap_data(emb_dir, 'query_full_db')
     db, db_shape = load_memmap_data(emb_dir, 'ref_db')
     if emb_dummy_dir is None:
         emb_dummy_dir = emb_dir
@@ -79,7 +77,7 @@ def eval_faiss_with_map(emb_dir,
     fake_recon_index.flush()
 
     # Load lookup tables
-    query_lookup = json.load(open(f'{emb_dir}/query_db_lookup.json', 'r'))
+    query_lookup = json.load(open(f'{emb_dir}/query_full_db_lookup.json', 'r'))
     ref_lookup = json.load(open(f'{emb_dir}/ref_db_lookup.json', 'r'))
 
     with open('data/gt_dict.json', 'r') as fp:
@@ -114,7 +112,7 @@ def eval_faiss_with_map(emb_dir,
             score = np.mean(np.sum(q_match * candidate_seq, axis=1))
             hist[match] += score
         
-        if ix % 50 == 0:
+        if ix % 20 == 0:
             print(f"Processed {ix} / {len(test_ids)} queries...")
 
         sorted_predictions = sorted(hist, key=hist.get, reverse=True)
@@ -122,5 +120,11 @@ def eval_faiss_with_map(emb_dir,
 
     # Compute MAP
     map_score = calculate_map(ground_truth, predictions, k=k_map)
+
+    del query, db, fake_recon_index
+
+    np.save(f'{emb_dir}/predictions.npy', predictions)
+    np.save(f'{emb_dir}/map_score.npy', map_score)
+    print(f"Saved predictions and MAP score to {emb_dir}")
 
     return map_score, k_map
