@@ -96,7 +96,7 @@ def create_query_db(dataloader, augment, model, output_root_dir, fname='query_db
         fp_size = 0
         for x in x_list:
             with torch.no_grad():
-                _, _, z_i, _= model(x_i.to(device),x_i.to(device))  
+                _, _, z_i, _= model(x.to(device),x.to(device))  
 
             fp.append(z_i.detach().cpu().numpy())
             fp_size += z_i.shape[0]
