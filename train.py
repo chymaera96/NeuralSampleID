@@ -197,6 +197,18 @@ def main():
     cfg = load_config(args.config)
     writer = SummaryWriter(f'runs/{args.ckp}')
 
+    # log the configuration
+    print("Configuration parameters:")
+    for key, value in cfg.items():
+        print(f"  {key}: {value}")
+
+    # Log all config parameters to TensorBoard
+    # Convert nested structures to strings for TensorBoard
+    config_flat = {}
+    for key, value in cfg.items():
+        config_flat[key] = str(value)
+    writer.add_text("Configuration", str(config_flat), 0)
+
     additive = args.additive
 
     if not additive:
@@ -209,6 +221,7 @@ def main():
     # Hyperparameters
     batch_size = cfg['bsz_train']
     learning_rate = cfg['lr']
+    weight_decay = cfg['weight_decay']
     num_epochs = override(cfg['n_epochs'], args.epochs)
     model_name = args.ckp
     random_seed = args.seed
@@ -309,7 +322,7 @@ def main():
         
     print(count_parameters(model, args.encoder))
 
-    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
+    optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate, weight_decay=weight_decay)
     scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max = cfg['T_max'], eta_min = cfg['min_lr'])
     # scaler = GradScaler(enabled=True)
     scaler = DummyScaler()

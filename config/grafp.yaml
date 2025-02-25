@@ -56,6 +56,8 @@ T_max: 400
 lambda: 0.0
 error_threshold: 5
 
+weight_decay: 0 #1.0e-6 # 0 is the same as no weight decay
+
 # stem: 'drums'
 # SampleID train hyperparameters
 mix_prob: 0.95
@@ -66,9 +68,10 @@ min_beats_required: 32
 mix_prob: 0.95
 mix_gain_range: [0.1, 0.7] #[0.05, 0.55]
 min_beats_required: 32 # minimum number of beats required in a sample to be included in the dataset
+tempo_ratio_range: [0.5, 2.0] #[0.75, 1.5]
 
 # Augmentation hyperparameters
-n_frames: 128 #10 #32 # depends on the spectrogram parameters (10 is for Music2latent), old nerualFP was 32, now 128 apparently
+n_frames: 128 #10 #32 # depends on the spectrogram parameters (10 is for Music2latent), old nerualFP was 32, now 128
 overlap: 0.875 #0.5
 tr_snr: [0, 20]
 val_snr: [0, 10]
