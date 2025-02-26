@@ -25,7 +25,7 @@ def calculate_map(ground_truth, predictions, k=10):
         num_relevant = 0
         precision_values = []
 
-        for i, retrieved_id in enumerate(retrieved_list):
+        for i, retrieved_id in enumerate(retrieved_list[:k]):
             if q_id in ground_truth.get(retrieved_id, []):
                 num_relevant += 1
                 precision_values.append(num_relevant / (i + 1))  # Precision@i
@@ -45,8 +45,8 @@ def eval_faiss_with_map(emb_dir,
                          max_train=1e7,
                          test_ids='icassp',
                          test_seq_len='1 3 5 9 11 19',
-                         k_probe=40,
-                         n_centroids=64,
+                         k_probe=20,
+                         n_centroids=32,
                          k_map=20):
     """
     Extended evaluation function to compute Mean Average Precision (MAP).
