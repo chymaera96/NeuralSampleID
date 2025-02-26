@@ -3,6 +3,8 @@ import numpy as np
 from collections import defaultdict
 import faiss
 from sklearn.metrics.pairwise import cosine_similarity
+from scipy.spatial.distance import cdist
+
 
 from eval import load_memmap_data, get_index, extract_test_ids
 
@@ -34,6 +36,38 @@ def calculate_map(ground_truth, predictions, k=10):
         average_precisions.append(ap)
 
     return np.mean(average_precisions) if average_precisions else 0
+
+
+
+def sliding_window_similarity(q_match, candidate_seq, metric='cosine'):
+    """
+    Computes the best alignment score by sliding the query over the candidate sequence.
+
+    Parameters:
+    - q_match: Query sequence of shape (q_len, fp_dim)
+    - candidate_seq: Candidate sequence of shape (cand_len, fp_dim)
+    - metric: Distance metric ('cosine', 'euclidean', etc.)
+
+    Returns:
+    - max_score: Best similarity score across all alignments
+    """
+    q_len, fp_dim = q_match.shape
+    cand_len, _ = candidate_seq.shape
+
+
+    max_score = -np.inf  # Initialize best similarity score
+
+    # Slide query over candidate sequence
+    for start in range(cand_len - q_len + 1):
+        aligned_seq = candidate_seq[start:start + q_len, :]  # Extract aligned segment
+
+        # Compute similarity (convert cdist to similarity: 1 - distance)
+        sim = 1 - np.mean(cdist(q_match, aligned_seq, metric=metric))
+
+        max_score = max(max_score, sim)  # Keep best alignment score
+
+    return max_score
+
 
 
 
@@ -112,7 +146,7 @@ def eval_faiss_with_map(emb_dir,
                 q_match = q[:candidate_seq.shape[0], :]
             else:
                 q_match = q
-            score = np.mean(np.sum(q_match * candidate_seq, axis=1))
+            score = sliding_window_similarity(q_match, candidate_seq, metric='cosine')
             hist[match] += score
         
         if ix % 20 == 0:
