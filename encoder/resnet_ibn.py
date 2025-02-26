@@ -105,10 +105,10 @@ class ResNetIBN(nn.Module):
         self.relu = nn.ReLU(inplace=True)
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
 
-        self.layer1 = self._make_layer(ResidualIBN, 64, 256, 3, stride=1)
-        self.layer2 = self._make_layer(ResidualIBN, 256, 512, 4, stride=1)
-        self.layer3 = self._make_layer(ResidualIBN, 512, 1024, 6, stride=2)
-        self.layer4 = self._make_layer(ResidualBlock, 1024, 2048, 3, stride=2)
+        self.layer1 = self._make_layer(ResidualIBN, 64, 256, 2, stride=1)
+        self.layer2 = self._make_layer(ResidualIBN, 256, 512, 2, stride=1)
+        self.layer3 = self._make_layer(ResidualIBN, 512, 1024, 2, stride=2)
+        self.layer4 = self._make_layer(ResidualBlock, 1024, 2048, 2, stride=2)
 
         self.global_pool = GeMPooling()
 
@@ -140,4 +140,3 @@ class ResNetIBN(nn.Module):
         x = self.global_pool(x).view(x.size(0), -1)
         # print(f"Global Pool: {x.shape}")
         return x
-
