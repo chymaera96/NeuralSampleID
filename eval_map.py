@@ -90,7 +90,7 @@ def eval_faiss_with_map(emb_dir,
 
         q_id = query_lookup[test_id].split("_")[0]
         max_len = max_test_seq_len[ix]
-        q = query[test_id:, test_id + max_len, :]
+        q = query[test_id: test_id + max_len, :]
         if q.shape[0] <= 10:
             continue
 
