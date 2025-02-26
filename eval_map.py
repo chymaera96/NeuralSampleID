@@ -45,7 +45,7 @@ def eval_faiss_with_map(emb_dir,
                          max_train=1e7,
                          test_ids='icassp',
                          test_seq_len='1 3 5 9 11 19',
-                         k_probe=50,
+                         k_probe=40,
                          n_centroids=64,
                          k_map=10):
     """
