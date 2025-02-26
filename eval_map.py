@@ -62,7 +62,7 @@ def sliding_window_similarity(q_match, candidate_seq, metric='cosine'):
         aligned_seq = candidate_seq[start:start + q_len, :]  # Extract aligned segment
 
         # Compute similarity (convert cdist to similarity: 1 - distance)
-        sim = 1 - np.mean(cdist(q_match, aligned_seq, metric=metric))
+        sim = 1 - np.mean(cosine_similarity(q_match, aligned_seq))
 
         max_score = max(max_score, sim)  # Keep best alignment score
 
