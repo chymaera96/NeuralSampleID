@@ -146,7 +146,8 @@ def eval_faiss_with_map(emb_dir,
                 q_match = q[:candidate_seq.shape[0], :]
             else:
                 q_match = q
-            score = sliding_window_similarity(q_match, candidate_seq, metric='cosine')
+            # score = sliding_window_similarity(q_match, candidate_seq, metric='cosine')
+            score = np.max(cosine_similarity(q_match, candidate_seq))
             hist[match] += score
         
         if ix % 20 == 0:
