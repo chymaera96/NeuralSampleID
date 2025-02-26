@@ -2,6 +2,7 @@ import json
 import numpy as np
 from collections import defaultdict
 import faiss
+from sklearn.metrics import cosine_similarity
 
 from eval import load_memmap_data, get_index, extract_test_ids
 
@@ -44,7 +45,7 @@ def eval_faiss_with_map(emb_dir,
                          max_train=1e7,
                          test_ids='icassp',
                          test_seq_len='1 3 5 9 11 19',
-                         k_probe=5,
+                         k_probe=50,
                          n_centroids=64,
                          k_map=10):
     """
