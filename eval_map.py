@@ -47,7 +47,7 @@ def eval_faiss_with_map(emb_dir,
                          test_seq_len='1 3 5 9 11 19',
                          k_probe=40,
                          n_centroids=64,
-                         k_map=10):
+                         k_map=20):
     """
     Extended evaluation function to compute Mean Average Precision (MAP).
     """
