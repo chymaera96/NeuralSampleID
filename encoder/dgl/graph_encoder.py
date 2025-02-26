@@ -16,7 +16,7 @@ class Downsample(nn.Module):
         super().__init__()
 
         self.conv = nn.Sequential(
-            nn.Conv1d(in_dim, out_dim, kernel_size=3, stride=reduction_ratio, padding=1),  # ✅ Strided Conv1d
+            nn.Conv1d(in_dim, out_dim, kernel_size=3, stride=reduction_ratio, padding=1),
             nn.BatchNorm1d(out_dim),
             nn.ReLU()
         )
@@ -28,8 +28,9 @@ class Downsample(nn.Module):
         Returns:
             x: (B, C', N') - Downsampled features with fewer nodes (N' = N // reduction_ratio)
         """
-        x = self.conv(x)  # ✅ Automatically reduces N due to stride
+        x = self.conv(x)
         return x
+
 
 class FFN(nn.Module):
     def __init__(self, in_features, hidden_features=None, out_features=None, act='relu', drop_path=0.0):
@@ -42,7 +43,7 @@ class FFN(nn.Module):
 
         # Keep BatchNorm1d to ensure per-node normalization (no graph mixing)
         self.fc1 = nn.Linear(in_features, hidden_features)
-        self.bn1 = nn.BatchNorm1d(hidden_features)  # Each node normalized independently
+        self.bn1 = nn.BatchNorm1d(hidden_features)
 
         self.fc2 = nn.Linear(hidden_features, out_features)
         self.bn2 = nn.BatchNorm1d(out_features)
@@ -54,21 +55,21 @@ class FFN(nn.Module):
         shortcut = x
 
         x = self.fc1(x)
-        x = self.bn1(x)  # Ensures independent normalization for each node
+        x = self.bn1(x)
         x = self.act(x)
 
         x = self.fc2(x)
         x = self.bn2(x)
 
-        x = self.drop_path(x) + shortcut  # Residual connection
+        x = self.drop_path(x) + shortcut
         return x
 
 
 class GraphEncoderDGL(nn.Module):
     def __init__(self, cfg=None, k=3, conv='sage', act='relu', norm='batch', bias=True, dropout=0.0, dilation=True,
-                 epsilon=0.2, drop_path=0.1, size='t', emb_dims=1024, in_channels=3):
+                 epsilon=0.2, drop_path=0.1, size='t', emb_dims=1024, in_channels=3, include_self=False):
         super().__init__()
-        
+
         if size == 't':
             self.blocks = [2, 2, 6, 2]
             self.channels = [64, 128, 256, 512]
@@ -81,63 +82,82 @@ class GraphEncoderDGL(nn.Module):
         else:
             self.blocks = [2, 2, 18, 2]
             self.channels = [128, 256, 512, 1024]
-        
+
         self.k = k
         self.emb_dims = emb_dims
-        self.graph_builder = DenseDilatedKnnGraphDGL(k)
-        self.stem = nn.Sequential(nn.Conv2d(in_channels,self.channels[0], kernel_size=1, bias=False),
-                                   nn.BatchNorm2d(self.channels[0]),
-                                   nn.LeakyReLU(negative_slope=0.2))
-        
+
+        # Initialize graph builder with configurable self-loops
+        self.graph_builder = DenseDilatedKnnGraphDGL(k, include_self=include_self)
+
+        self.stem = nn.Sequential(
+            nn.Conv2d(in_channels, self.channels[0], kernel_size=1, bias=False),
+            nn.BatchNorm2d(self.channels[0]),
+            nn.LeakyReLU(negative_slope=0.2)
+        )
+
+        # Drop path rate increases with depth
         dpr = [x.item() for x in torch.linspace(0, drop_path, sum(self.blocks))]
         self.backbone = nn.ModuleList([])
         idx = 0
-        
+
         for i in range(len(self.blocks)):
             if i > 0:
-                self.backbone.append(Downsample(self.channels[i-1], self.channels[i]))  # ✅ Outputs `C'`
+                self.backbone.append(Downsample(self.channels[i-1], self.channels[i]))
             for j in range(self.blocks[i]):
                 self.backbone.append(
                     nn.Sequential(
-                        GrapherDGL(self.channels[i], conv=conv, act=act, norm=norm),  # ✅ Ensure GrapherDGL uses `C'`
+                        GrapherDGL(self.channels[i], conv=conv, act=act, norm=norm, drop_path=dpr[idx]),
                         FFN(self.channels[i], self.channels[i] * 4, act=act, drop_path=dpr[idx])
                     )
                 )
                 idx += 1
-        
+
         self.proj = nn.Conv2d(self.channels[-1], self.emb_dims, 1, bias=True)
 
     def forward(self, x):
         """
         Args:
             x: Input tensor of shape (B, C, N)
-            
+
         Returns:
             Output embedding of shape (B, emb_dim)
         """
-        B, C, N = x.shape 
+        B, C, N = x.shape
+        x = x.contiguous()
 
-        for block in self.backbone:
+        for layer_idx, block in enumerate(self.backbone):
             if isinstance(block, Downsample):
-                x = block(x) 
+                x = block(x)
             else:
-                graph_conv, ffn = block
-                
-                g = self.graph_builder(x.permute(0, 2, 1))  # Recompute graph dynamically
+                # Process through graph convolution block
+                x = self._apply_graph_block(x, block, layer_idx)
 
-                # Use updated feature size and node count
-                B, C, N = x.shape
-
-                # Convert to (N', C') before GNN
-                x = x.permute(0, 2, 1).contiguous().reshape(-1, C)  
-                x = graph_conv(g, x)
-                x = ffn(x)
-                x = x.reshape(B, N, -1).permute(0, 2, 1)  # Convert back to (B, C', N')
-
-        x = self.proj(x.unsqueeze(-1)) 
-        x = x.mean(dim=2).squeeze(-1)  
+        # Final projection and pooling
+        x = self.proj(x.unsqueeze(-1))
+        x = x.mean(dim=2).squeeze(-1)
 
         return x
 
+    def _apply_graph_block(self, x, block, layer_idx):
+        """Helper method to apply a graph convolution block"""
+        graph_conv, ffn = block
 
+        # Get current dimensions
+        B, C, N = x.shape
 
+        # Build graph with current features
+        g = self.graph_builder(x.permute(0, 2, 1), layer_idx)
+
+        # Reshape for graph convolution
+        x_nodes = x.permute(0, 2, 1).reshape(-1, C)
+
+        # Apply graph convolution
+        x_nodes = graph_conv(g, x_nodes)
+
+        # Apply feed-forward network
+        x_nodes = ffn(x_nodes)
+
+        # Reshape back to original format
+        x = x_nodes.reshape(B, N, -1).permute(0, 2, 1)
+
+        return x

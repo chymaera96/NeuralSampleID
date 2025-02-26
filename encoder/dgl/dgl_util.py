@@ -4,7 +4,6 @@ import torch.nn as nn
 import torch.nn.functional as F
 from dgl.nn import GraphConv, EdgeConv, SAGEConv, GINConv
 
-
 ##############################
 #    Basic layers
 ##############################
@@ -32,6 +31,35 @@ def norm_layer(norm, nc):
         raise NotImplementedError(f"Normalization type {norm} is not implemented.")
 
 
+class DropPath(nn.Module):
+    """ Stochastic Depth (DropPath) implementation for regularization """
+
+    def __init__(self, drop_prob=0.0):
+        """
+        Args:
+            drop_prob (float): Probability of dropping paths (0.0 means no drop).
+        """
+        super(DropPath, self).__init__()
+        self.drop_prob = drop_prob
+
+    def forward(self, x):
+        """
+        Args:
+            x (Tensor): Input tensor of shape (batch_size, ...)
+        Returns:
+            Tensor: Output tensor with randomly dropped paths during training
+        """
+        if self.drop_prob == 0.0 or not self.training:
+            return x  # No dropout in inference mode or when drop_prob=0
+
+        keep_prob = 1 - self.drop_prob
+        shape = (x.shape[0],) + (1,) * (x.ndim - 1)  # Shape: (batch_size, 1, 1, ...)
+        random_tensor = keep_prob + torch.rand(shape, dtype=x.dtype, device=x.device)
+        random_tensor.floor_()  # Convert to 0 or 1
+
+        return x.div(keep_prob) * random_tensor  # Scale output to preserve expected value
+
+
 class MLP(nn.Sequential):
     """Multi-Layer Perceptron"""
     def __init__(self, channels, act='relu', norm=None, bias=True):
@@ -48,8 +76,7 @@ class GrapherDGL(nn.Module):
     """
     DGL-based Grapher module using optimized graph convolutions.
     """
-
-    def __init__(self, in_channels, conv='edge', act='relu', norm=None, bias=True, dropout=0.0):
+    def __init__(self, in_channels, conv='edge', act='relu', norm=None, bias=True, dropout=0.0, drop_path=0.0):
         super(GrapherDGL, self).__init__()
 
         self.norm = norm_layer(norm, in_channels) if norm else None
@@ -72,11 +99,11 @@ class GrapherDGL(nn.Module):
             raise NotImplementedError(f"Conv type {conv} is not supported.")
 
         self.dropout = nn.Dropout(dropout)
+        self.drop_path = DropPath(drop_path) if drop_path > 0. else nn.Identity()
 
     def forward(self, g, x):
-        print(f"Shape before graph conv: {x.shape}")
         x = self.conv(g, x)
-        print(f"Shape after graph conv: {x.shape}")
+        x = self.drop_path(x)
 
         if self.norm:
             x = self.norm(x)
@@ -86,34 +113,53 @@ class GrapherDGL(nn.Module):
 
 
 class DenseDilatedKnnGraphDGL(nn.Module):
-    """ Constructs a batch-wise KNN Graph using segmented_knn_graph. """
-
-    def __init__(self, k=9):
+    """ 
+    Constructs a batch-wise KNN Graph with true dilation for Vision GNN (ViG).
+    """
+    def __init__(self, k=9, max_dilation=3, dist_metric='euclidean', include_self=False):
         super(DenseDilatedKnnGraphDGL, self).__init__()
         self.k = k
+        self.max_dilation = max_dilation
+        self.dist_metric = dist_metric
+        self.include_self = include_self
 
-    def forward(self, x):
+    def forward(self, x, layer_idx):
         """
         Args:
             x: (B, N, C) - Batch of feature matrices
+            layer_idx: (int) - Current layer index (used to compute dilation)
         Returns:
-            Batched DGL Graph
+            Batched DGL Graph with dilated kNN connections
         """
-        B, N, C = x.shape  # Confirm shape
+        B, N, C = x.shape
 
-        # Flatten features into (B*N, C)
-        x_flat = x.reshape(-1, C)  # Shape: (B*N, C)
+        # Compute dilation factor based on network depth
+        dilation = min(layer_idx // 4 + 1, self.max_dilation)
+        k_dilated = self.k * dilation
 
-        # Generate segment IDs 
+        # Flatten features for DGL's kNN algorithm
+        x_flat = x.reshape(-1, C)
+        
+        # Create segment IDs for batched graph construction
         segs = [N] * B
 
-        print(f"Using k = {self.k}")  # Check if k is correctly set
+        # Create full kNN graph with k*dilation neighbors
+        g_full = dgl.segmented_knn_graph(
+            x_flat, 
+            k=k_dilated, 
+            segs=segs, 
+            algorithm="bruteforce-sharemem", 
+        )
 
-        # Create graph using segmented_knn_graph
-        g = dgl.segmented_knn_graph(x_flat, k=self.k, segs=segs, algorithm="bruteforce-sharemem")  # Move back to CUDA
+        # Extract dilated edges - take every dilation-th edge
+        src, dst = g_full.edges()
+        src_dilated, dst_dilated = src[::dilation], dst[::dilation]
 
-        print(f"Graph number of nodes after batch correction: {g.num_nodes()}")  # Should be 4096
-        return g
-
-
-
+        # Create new graph with dilated edges
+        g_dilated = dgl.graph((src_dilated, dst_dilated), num_nodes=B * N).to(x.device)
+        
+        # Add self-loops if specified
+        if self.include_self:
+            g_dilated = dgl.add_self_loop(g_dilated)
+            
+        return g_dilated
