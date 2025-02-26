@@ -104,10 +104,12 @@ def create_query_db(dataloader, augment, model, output_root_dir, fname='query_db
         # Append song number to lookup table for each segment in the batch
         if fname == 'query_db':
             lookup_table.extend([nm + "_" + str(idx)] * x_i.shape[0])
+            log_mod = 100
         else:
             lookup_table.extend([nm] * x_i.shape[0])
+            log_mod = 20
 
-        if verbose and idx % 20 == 0:
+        if verbose and idx % log_mod == 0:
             print(f"Step [{idx}/{len(dataloader)}]\t shape: [{fp_size,z_i.shape[1]}]")
 
     fp = np.concatenate(fp)
