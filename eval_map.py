@@ -25,7 +25,7 @@ def calculate_map(ground_truth, predictions, k=10):
         num_relevant = 0
         precision_values = []
 
-        for i, retrieved_id in enumerate(retrieved_list[:k]):
+        for i, retrieved_id in enumerate(retrieved_list):
             if q_id in ground_truth.get(retrieved_id, []):
                 num_relevant += 1
                 precision_values.append(num_relevant / (i + 1))  # Precision@i
