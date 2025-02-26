@@ -112,7 +112,7 @@ def eval_faiss_with_map(emb_dir,
             else:
                 q_match = q
             score = np.mean(np.sum(q_match * candidate_seq, axis=1))
-            hist[match] += score
+            hist[match] += 1
         
         if ix % 20 == 0:
             print(f"Processed {ix} / {len(test_ids)} queries...")
