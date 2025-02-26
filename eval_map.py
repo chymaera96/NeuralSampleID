@@ -44,7 +44,7 @@ def eval_faiss_with_map(emb_dir,
                          max_train=1e7,
                          test_ids='icassp',
                          test_seq_len='1 3 5 9 11 19',
-                         k_probe=20,
+                         k_probe=5,
                          n_centroids=64,
                          k_map=10):
     """
@@ -112,7 +112,7 @@ def eval_faiss_with_map(emb_dir,
             else:
                 q_match = q
             score = np.mean(np.sum(q_match * candidate_seq, axis=1))
-            hist[match] += 1
+            hist[match] += score
         
         if ix % 20 == 0:
             print(f"Processed {ix} / {len(test_ids)} queries...")
