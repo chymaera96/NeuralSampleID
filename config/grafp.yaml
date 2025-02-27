@@ -33,7 +33,7 @@ silence: 1.0e-5
 # Dataset and Model hyperparameters
 train_sz: 8000
 val_sz: 25000
-bsz_train: 128
+bsz_train: 256
 n_filters : 8 # number of filters in the peak extraction layer
 patch_frames: 8
 patch_bins: 4
