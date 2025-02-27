@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import dgl
 from dgl.nn import GraphConv, EdgeConv, SAGEConv, GINConv
-from dgl_util import GrapherDGL, DenseDilatedKnnGraphDGL, act_layer, norm_layer
+from encoder.dgl.dgl_util import GrapherDGL, DenseDilatedKnnGraphDGL, act_layer, norm_layer
 
 
 class Downsample(nn.Module):
