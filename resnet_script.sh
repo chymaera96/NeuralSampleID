@@ -7,7 +7,8 @@ elif [ "$1" == "test" ]; then
                   --text=tc23_full_ivfpq \
                   --test_dir=../datasets/sample_100/audio \
                   --encoder=resnet-ibn \
-                  --config=config/resnet_ibn.yaml
+                  --config=config/resnet_ibn.yaml \
+                  --map
 else
     echo "Invalid argument"
 fi
