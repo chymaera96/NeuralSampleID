@@ -32,7 +32,10 @@ def norm_layer(norm, nc):
 
 
 class DropPath(nn.Module):
-    """ Stochastic Depth (DropPath) implementation for regularization """
+    """ 
+    Stochastic Depth (DropPath) implementation for regularization. Re-implemented
+    from timm.models.layers to avoid dependency issues.
+    """
 
     def __init__(self, drop_prob=0.0):
         """
@@ -82,7 +85,6 @@ class GrapherDGL(nn.Module):
         self.norm = norm_layer(norm, in_channels) if norm else None
         self.act = act_layer(act)
 
-        # Choose DGL's optimized graph convolution
         if conv == 'edge':
             self.conv = EdgeConv(nn.Linear(in_channels * 2, in_channels))
         elif conv == 'sage':
@@ -116,12 +118,21 @@ class DenseDilatedKnnGraphDGL(nn.Module):
     """ 
     Constructs a batch-wise KNN Graph with true dilation for Vision GNN (ViG).
     """
-    def __init__(self, k=9, max_dilation=3, dist_metric='euclidean', include_self=False):
+    def __init__(self, k=9, max_dilation=3, dist_metric='euclidean', include_self=False, epsilon=0.2):
+        """
+        Args:
+            k (int): Base number of neighbors in kNN graph.
+            max_dilation (int): Maximum dilation factor.
+            dist_metric (str): Distance metric ('euclidean', 'cosine', etc.).
+            include_self (bool): Whether to add self-loops.
+            epsilon (float): Probability of randomly dropping edges (stochastic dropout).
+        """
         super(DenseDilatedKnnGraphDGL, self).__init__()
         self.k = k
         self.max_dilation = max_dilation
         self.dist_metric = dist_metric
         self.include_self = include_self
+        self.epsilon = epsilon  
 
     def forward(self, x, layer_idx):
         """
@@ -129,37 +140,39 @@ class DenseDilatedKnnGraphDGL(nn.Module):
             x: (B, N, C) - Batch of feature matrices
             layer_idx: (int) - Current layer index (used to compute dilation)
         Returns:
-            Batched DGL Graph with dilated kNN connections
+            Batched DGL Graph with dilated kNN connections and stochastic dropout
         """
         B, N, C = x.shape
 
-        # Compute dilation factor based on network depth
+        # dilation factor
         dilation = min(layer_idx // 4 + 1, self.max_dilation)
         k_dilated = self.k * dilation
-
-        # Flatten features for DGL's kNN algorithm
         x_flat = x.reshape(-1, C)
         
-        # Create segment IDs for batched graph construction
+        # IDs for batched graph construction
         segs = [N] * B
 
-        # Create full kNN graph with k*dilation neighbors
+        # kNN graph with k*dilation neighbors
         g_full = dgl.segmented_knn_graph(
             x_flat, 
             k=k_dilated, 
             segs=segs, 
-            algorithm="bruteforce-sharemem", 
+            algorithm="bruteforce-sharemem"
         )
 
         # Extract dilated edges - take every dilation-th edge
         src, dst = g_full.edges()
         src_dilated, dst_dilated = src[::dilation], dst[::dilation]
-
-        # Create new graph with dilated edges
         g_dilated = dgl.graph((src_dilated, dst_dilated), num_nodes=B * N).to(x.device)
-        
+
+
+        if self.training and self.epsilon > 0:
+            edge_mask = torch.rand(len(src_dilated), device=x.device) > self.epsilon  # Keep (1 - epsilon) fraction
+            src_dilated, dst_dilated = src_dilated[edge_mask], dst_dilated[edge_mask]
+            g_dilated = dgl.graph((src_dilated, dst_dilated), num_nodes=B * N).to(x.device)
+
         # Add self-loops if specified
         if self.include_self:
             g_dilated = dgl.add_self_loop(g_dilated)
-            
+
         return g_dilated

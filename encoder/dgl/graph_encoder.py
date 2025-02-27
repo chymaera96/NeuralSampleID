@@ -87,7 +87,7 @@ class GraphEncoderDGL(nn.Module):
         self.emb_dims = emb_dims
 
         # Initialize graph builder with configurable self-loops
-        self.graph_builder = DenseDilatedKnnGraphDGL(k, include_self=include_self)
+        self.graph_builder = DenseDilatedKnnGraphDGL(k, include_self=include_self, epsilon=epsilon)
 
         self.stem = nn.Sequential(
             nn.Conv2d(in_channels, self.channels[0], kernel_size=1, bias=False),
@@ -122,6 +122,8 @@ class GraphEncoderDGL(nn.Module):
         Returns:
             Output embedding of shape (B, emb_dim)
         """
+
+        x = self.stem(x.unsqueeze(-1)).squeeze(-1)
         B, C, N = x.shape
         x = x.contiguous()
 
@@ -129,10 +131,8 @@ class GraphEncoderDGL(nn.Module):
             if isinstance(block, Downsample):
                 x = block(x)
             else:
-                # Process through graph convolution block
                 x = self._apply_graph_block(x, block, layer_idx)
 
-        # Final projection and pooling
         x = self.proj(x.unsqueeze(-1))
         x = x.mean(dim=2).squeeze(-1)
 
@@ -140,24 +140,15 @@ class GraphEncoderDGL(nn.Module):
 
     def _apply_graph_block(self, x, block, layer_idx):
         """Helper method to apply a graph convolution block"""
+
         graph_conv, ffn = block
-
-        # Get current dimensions
         B, C, N = x.shape
-
-        # Build graph with current features
         g = self.graph_builder(x.permute(0, 2, 1), layer_idx)
-
-        # Reshape for graph convolution
         x_nodes = x.permute(0, 2, 1).reshape(-1, C)
-
-        # Apply graph convolution
         x_nodes = graph_conv(g, x_nodes)
-
-        # Apply feed-forward network
         x_nodes = ffn(x_nodes)
 
-        # Reshape back to original format
+        # Reshape to original format
         x = x_nodes.reshape(B, N, -1).permute(0, 2, 1)
 
         return x
