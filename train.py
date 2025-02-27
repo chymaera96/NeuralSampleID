@@ -18,8 +18,8 @@ from simclr.ntxent import ntxent_loss, SoftCrossEntropy
 from simclr.simclr import SimCLR   
 from modules.transformations import GPUTransformSampleID
 from modules.data import NeuralSampleIDDataset
-from encoder.graph_encoder import GraphEncoder
-# from encoder.pyg.graph_encoder import GraphEncoder
+# from encoder.graph_encoder import GraphEncoder
+from encoder.dgl.graph_encoder import GraphEncoderDGL
 from encoder.resnet_ibn import ResNetIBN
 from eval import eval_faiss
 # from test_fp import create_fp_db, create_dummy_db
@@ -214,7 +214,7 @@ def main():
         # TODO: Add support for resnet encoder (deprecated)
         raise NotImplementedError
     elif args.encoder == 'grafp':
-        model = SimCLR(cfg, encoder=GraphEncoder(cfg=cfg, in_channels=cfg['n_filters'], k=args.k))
+        model = SimCLR(cfg, encoder=GraphEncoderDGL(cfg=cfg, in_channels=cfg['n_filters'], k=args.k))
     elif args.encoder == 'resnet-ibn':
         model = SimCLR(cfg, encoder=ResNetIBN())
         
