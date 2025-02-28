@@ -4,8 +4,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 from dgl.nn import GraphConv, EdgeConv, SAGEConv, GINConv
-# from encoder.gcn_lib.pos_embed import get_2d_relative_pos_embed
-from pos_embed import get_2d_relative_pos_embed
+from encoder.gcn_lib.pos_embed import get_2d_relative_pos_embed
+# from pos_embed import get_2d_relative_pos_embed
 
 ##############################
 #    Basic layers
@@ -64,7 +64,7 @@ class MRConv(nn.Module):
                 max_diff = torch.zeros_like(x)  
 
             concat_features = torch.cat([x, max_diff], dim=1)
-            
+
             return self.nn(concat_features)
 
 
