@@ -2,7 +2,9 @@ import dgl
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import numpy as np
 from dgl.nn import GraphConv, EdgeConv, SAGEConv, GINConv
+from encoder.gcn_lib.pos_embed import get_2d_relative_pos_embed
 
 ##############################
 #    Basic layers
@@ -79,7 +81,8 @@ class GrapherDGL(nn.Module):
     """
     DGL-based Grapher module using optimized graph convolutions.
     """
-    def __init__(self, in_channels, conv='edge', act='relu', norm=None, bias=True, dropout=0.0, drop_path=0.0):
+    def __init__(self, in_channels, conv='edge', act='relu', norm=None, bias=True, dropout=0.0, drop_path=0.0, relative_pos=False, n=196):
+
         super(GrapherDGL, self).__init__()
 
         self.norm = norm_layer(norm, in_channels) if norm else None
@@ -100,17 +103,26 @@ class GrapherDGL(nn.Module):
         else:
             raise NotImplementedError(f"Conv type {conv} is not supported.")
 
-        self.dropout = nn.Dropout(dropout)
         self.drop_path = DropPath(drop_path) if drop_path > 0. else nn.Identity()
 
+        self.relative_pos = None
+        if relative_pos:
+            relative_pos_tensor = torch.from_numpy(np.float32(get_2d_relative_pos_embed(in_channels, int(n**0.5)))).unsqueeze(0).unsqueeze(1)
+            relative_pos_tensor = F.interpolate(relative_pos_tensor, size=(n, n), mode='bicubic', align_corners=False)
+            self.relative_pos = nn.Parameter(-relative_pos_tensor.squeeze(1), requires_grad=False)
+
     def forward(self, g, x):
+        _tmp = x
         x = self.conv(g, x)
-        x = self.drop_path(x)
+        if self.relative_pos is not None:
+            x = x + self.relative_pos.to(x.device)
+
+        x = self.drop_path(x) + _tmp
 
         if self.norm:
             x = self.norm(x)
+            
         x = self.act(x)
-        x = self.dropout(x)
         return x
 
 
