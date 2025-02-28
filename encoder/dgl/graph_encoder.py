@@ -66,7 +66,7 @@ class FFN(nn.Module):
 
 
 class GraphEncoderDGL(nn.Module):
-    def __init__(self, cfg=None, k=3, conv='sage', act='relu', norm='batch', bias=True, dropout=0.0, dilation=True,
+    def __init__(self, cfg=None, k=3, conv='mr', act='relu', norm='batch', bias=True, dropout=0.0, dilation=True,
                  epsilon=0.2, drop_path=0.1, size='t', emb_dims=1024, in_channels=3, include_self=False):
         super().__init__()
 
