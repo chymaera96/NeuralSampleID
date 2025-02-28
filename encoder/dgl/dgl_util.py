@@ -4,7 +4,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 from dgl.nn import GraphConv, EdgeConv, SAGEConv, GINConv
-from encoder.gcn_lib.pos_embed import get_2d_relative_pos_embed
+# from encoder.gcn_lib.pos_embed import get_2d_relative_pos_embed
+from pos_embed import get_2d_relative_pos_embed
 
 ##############################
 #    Basic layers
@@ -31,6 +32,43 @@ def norm_layer(norm, nc):
         return nn.InstanceNorm1d(nc, affine=False)
     else:
         raise NotImplementedError(f"Normalization type {norm} is not implemented.")
+
+
+
+class MRConv(nn.Module):
+    """
+    Max-Relative Graph Convolution (MRConv) for DGL.
+    """
+    def __init__(self, in_channels, out_channels, act='relu', norm=None, bias=True):
+        super(MRConv, self).__init__()
+        self.nn = nn.Sequential(
+            nn.Linear(in_channels * 2, out_channels, bias=bias), 
+            norm_layer(norm, out_channels) if norm else nn.Identity(),
+            act_layer(act)
+        )
+
+    def forward(self, g, x):
+        with g.local_scope():
+            g.ndata['h'] = x
+
+            g.apply_edges(lambda edges: {'diff': edges.dst['h'] - edges.src['h']})
+
+            g.update_all(
+                dgl.function.copy_e('diff', 'm'),
+                lambda nodes: {'max_diff': torch.max(nodes.mailbox['m'], dim=1)[0]}
+            )
+
+            max_diff = g.ndata['max_diff']
+            if max_diff.shape[0] != x.shape[0]:  
+                print(f"Shape mismatch: x={x.shape}, max_diff={max_diff.shape}")
+                max_diff = torch.zeros_like(x)  
+
+            concat_features = torch.cat([x, max_diff], dim=1)
+            
+            return self.nn(concat_features)
+
+
+
 
 
 class DropPath(nn.Module):
@@ -81,7 +119,7 @@ class GrapherDGL(nn.Module):
     """
     DGL-based Grapher module using optimized graph convolutions.
     """
-    def __init__(self, in_channels, conv='edge', act='relu', norm=None, bias=True, dropout=0.0, drop_path=0.0, relative_pos=False, n=196):
+    def __init__(self, in_channels, conv='edge', act='relu', norm=None, bias=True, dropout=0.0, drop_path=0.0, relative_pos=False, n=196, r=1):
 
         super(GrapherDGL, self).__init__()
 
@@ -100,28 +138,51 @@ class GrapherDGL(nn.Module):
             self.conv = GINConv(mlp, learn_eps=True)
         elif conv == 'gcn':
             self.conv = GraphConv(in_channels, in_channels)
+        elif conv == 'mr':
+            self.conv = MRConv(in_channels, in_channels)
         else:
             raise NotImplementedError(f"Conv type {conv} is not supported.")
+        
+        self.fc1 = nn.Sequential(
+            nn.Linear(in_channels, in_channels),
+            nn.BatchNorm1d(in_channels)
+        )
+        self.fc2 = nn.Sequential(
+            nn.Linear(in_channels * 2, in_channels),
+            nn.BatchNorm1d(in_channels)
+        )
 
         self.drop_path = DropPath(drop_path) if drop_path > 0. else nn.Identity()
 
         self.relative_pos = None
         if relative_pos:
             relative_pos_tensor = torch.from_numpy(np.float32(get_2d_relative_pos_embed(in_channels, int(n**0.5)))).unsqueeze(0).unsqueeze(1)
-            relative_pos_tensor = F.interpolate(relative_pos_tensor, size=(n, n), mode='bicubic', align_corners=False)
+            relative_pos_tensor = F.interpolate(
+                relative_pos_tensor, size=(n, n // (r*r)), mode='bicubic', align_corners=False
+)
             self.relative_pos = nn.Parameter(-relative_pos_tensor.squeeze(1), requires_grad=False)
 
     def forward(self, g, x):
+
+        # B, N, C = x.shape
         _tmp = x
+
+        # x = self.act(self.fc1(x))
         x = self.conv(g, x)
+
+        # x = x.view(B, N, C).permute(0, 2, 1)
+        # x = self.fc2(x)
+        # x = x.permute(0, 2, 1).reshape(B * N, C)
+
         if self.relative_pos is not None:
             x = x + self.relative_pos.to(x.device)
 
-        x = self.drop_path(x) + _tmp
+        x = self.drop_path(x)
+        x = x + _tmp
 
         if self.norm:
             x = self.norm(x)
-            
+
         x = self.act(x)
         return x
 
