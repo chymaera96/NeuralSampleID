@@ -186,6 +186,7 @@ def create_dummy_db(dataloader, augment, model, output_root_dir, fname='dummy_db
             except Exception as e:
                 print(f"Error in model forward pass in file {nm}")
                 print(f"Shape of x_i (dummy): {x.shape}")
+                print(f"x_i mean: {x.mean()}, x_i std: {x.std()}")
                 print(f"All x shapes in list: {[x_.shape for x_ in x_list]}")
                 print(f"Index of data {idx}")
                 print(traceback.format_exc())
