@@ -21,7 +21,8 @@ create_fp_dir, load_config, \
 query_len_from_seconds, seconds_from_query_len, \
 load_augmentation_index
 from modules.data import Sample100Dataset
-from encoder.graph_encoder import GraphEncoder
+# from encoder.graph_encoder import GraphEncoder
+from encoder.dgl.graph_encoder import GraphEncoderDGL
 from encoder.resnet_ibn import ResNetIBN
 from simclr.simclr import SimCLR   
 from modules.transformations import GPUTransformSampleID
@@ -218,7 +219,7 @@ def main():
 
     print("Creating new model...")
     if args.encoder == 'grafp':
-        model = SimCLR(cfg, encoder=GraphEncoder(cfg=cfg, in_channels=cfg['n_filters'], k=args.k))
+        model = SimCLR(cfg, encoder=GraphEncoderDGL(cfg=cfg, in_channels=cfg['n_filters'], k=args.k))
     elif args.encoder == 'resnet-ibn':
         model = SimCLR(cfg, encoder=ResNetIBN())
     else:
