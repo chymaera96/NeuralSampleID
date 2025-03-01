@@ -12,6 +12,7 @@ from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 from torch.nn.parallel import DataParallel
 import torchaudio
+import traceback
 torchaudio.set_audio_backend("soundfile")
 
 
@@ -187,6 +188,7 @@ def create_dummy_db(dataloader, augment, model, output_root_dir, fname='dummy_db
                 print(f"Shape of x_i (dummy): {x.shape}")
                 print(f"All x shapes in list: {[x_.shape for x_ in x_list]}")
                 print(f"Index of data {idx}")
+                print(traceback.format_exc())
                 # print(f"Shape of z_i (dummy): {z_i.shape}")
                 continue 
 
