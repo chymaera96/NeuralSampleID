@@ -189,7 +189,7 @@ def create_dummy_db(dataloader, augment, model, output_root_dir, fname='dummy_db
                 print(f"x_i mean: {x.mean()}, x_i std: {x.std()}")
                 print(f"All x shapes in list: {[x_.shape for x_ in x_list]}")
                 print(f"Index of data {idx}")
-                print(traceback.format_exc())
+                # print(traceback.format_exc())
                 # print(f"Shape of z_i (dummy): {z_i.shape}")
                 continue 
 
