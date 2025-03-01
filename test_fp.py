@@ -178,8 +178,15 @@ def create_dummy_db(dataloader, augment, model, output_root_dir, fname='dummy_db
         # print(f"Number of splits: {len(x_list)}")
         fp_size = 0
         for x in x_list:
-            with torch.no_grad():
-                _, _, z_i, _= model(x.to(device),x.to(device))  
+            try:
+                with torch.no_grad():
+                    _, _, z_i, _= model(x.to(device),x.to(device)) 
+
+            except Exception as e:
+                print(f"Error in model forward pass in file {nm}")
+                print(f"Shape of x_i (dummy): {x_i.shape}")
+                # print(f"Shape of z_i (dummy): {z_i.shape}")
+                continue 
 
             fp.append(z_i.detach().cpu().numpy())
             fp_size += z_i.shape[0]
