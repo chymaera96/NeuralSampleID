@@ -186,6 +186,7 @@ def create_dummy_db(dataloader, augment, model, output_root_dir, fname='dummy_db
                 print(f"Error in model forward pass in file {nm}")
                 print(f"Shape of x_i (dummy): {x.shape}")
                 print(f"All x shapes in list: {[x_.shape for x_ in x_list]}")
+                print(f"Index of data {idx}")
                 # print(f"Shape of z_i (dummy): {z_i.shape}")
                 continue 
 
