@@ -363,6 +363,7 @@ def main():
     from encoder.graph_encoder import GraphEncoder
 
     cfg = 'configs/grafp.yaml'
+    cfg = load_config(cfg)
     model = GraphEncoder(cfg=cfg, in_channels=8).to('cuda')
     dummy_tensor = torch.rand(16, 8, 256).to('cuda')  # (B, C, N)
     out = model(dummy_tensor)
