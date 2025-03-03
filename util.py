@@ -360,23 +360,14 @@ def create_subsets(input_file, sample_ids, name):
 
 def main():
 
-    # from encoder.dgl.graph_encoder import GraphEncoderDGL
-    # model = GraphEncoderDGL().to('cuda')
-    # dummy_tensor = torch.rand(16,3,256).to('cuda')
-    # out = model(dummy_tensor)
-    # print(out.shape)
+    from encoder.graph_encoder import GraphEncoder
 
-    import pandas as pd
+    cfg = 'configs/grafp.yaml'
+    model = GraphEncoder(cfg=cfg, in_channels=8).to('cuda')
+    dummy_tensor = torch.rand(16, 8, 256).to('cuda')  # (B, C, N)
+    out = model(dummy_tensor)
+    print(out.shape)
 
-    df = pd.read_csv('data/samples_new.csv')
-    s_ids = []
-    # If query_type column value is 'beat', extract sample_id column value
-    for i, row in df.iterrows():
-        if row['interpolation'] == 'no' or row['interpolation'] == 'probably not':
-            s_ids.append(row['sample_id'])
-    
-    data = create_subsets('data/sample100_query_index.json', s_ids, 'no_interpolation')
-    print(len(data))
 
 
 if __name__ == '__main__':
