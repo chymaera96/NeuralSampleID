@@ -182,13 +182,18 @@ class Grapher(nn.Module):
 
     def forward(self, x):
         _tmp = x
+
+        print(f"Shape before fc1: {x.shape}")
         x = self.fc1(x)
+        print(f"Shape after fc1: {x.shape}")
         B, C, N,_ = x.shape
         
         #relative_pos = self._get_relative_pos(self.relative_pos, H, W)
         
         x = self.graph_conv(x,relative_pos=None)
         
+        print(f"Shape before fc2: {x.shape}")
         x = self.fc2(x)
+        print(f"Shape after fc2: {x.shape}")
         x = self.drop_path(x) + _tmp
         return x
