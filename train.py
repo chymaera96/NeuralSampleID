@@ -282,7 +282,7 @@ def main():
             best_loss = loss_epoch
             save_ckp(checkpoint, model_name, model_folder, 'best')
 
-        if epoch % 10 == 0 or epoch in np.arange(118,123):
+        if epoch % 10 == 0 or epoch in [105, 108, 113, 115, 118]:
             save_ckp(checkpoint, model_name, model_folder, epoch)
 
         if hit_rates is not None and hit_rates[0][0] > best_hr:
