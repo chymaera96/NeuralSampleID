@@ -147,7 +147,7 @@ class GraphEncoderDGL(nn.Module):
         x_nodes = graph_conv(g, x)
         x_nodes = ffn(x_nodes)
 
-        # Reshape to original format
-        x = x_nodes.reshape(B, N, -1).permute(0, 2, 1)
+        # # Reshape to original format
+        # x = x_nodes.reshape(B, N, -1).permute(0, 2, 1)
 
         return x
