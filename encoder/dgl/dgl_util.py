@@ -73,10 +73,8 @@ class MRConv(nn.Module):
 
 class DropPath(nn.Module):
     """ 
-    Stochastic Depth (DropPath) implementation for regularization. Re-implemented
-    from timm.models.layers to avoid dependency issues.
+    Stochastic Depth (DropPath) implementation matching `timm.models.layers`
     """
-
     def __init__(self, drop_prob=0.0):
         """
         Args:
@@ -97,10 +95,12 @@ class DropPath(nn.Module):
 
         keep_prob = 1 - self.drop_prob
         shape = (x.shape[0],) + (1,) * (x.ndim - 1)  # Shape: (batch_size, 1, 1, ...)
-        random_tensor = keep_prob + torch.rand(shape, dtype=x.dtype, device=x.device)
-        random_tensor.floor_()  # Convert to 0 or 1
+        
+        # Correct boolean mask for dropping paths
+        random_tensor = torch.rand(shape, dtype=x.dtype, device=x.device) < keep_prob
 
         return x.div(keep_prob) * random_tensor  # Scale output to preserve expected value
+
 
 
 class MLP(nn.Sequential):
@@ -139,16 +139,16 @@ class GrapherDGL(nn.Module):
         elif conv == 'gcn':
             self.conv = GraphConv(in_channels, in_channels)
         elif conv == 'mr':
-            self.conv = MRConv(in_channels, in_channels)
+            self.conv = MRConv(in_channels, in_channels * 2)
         else:
             raise NotImplementedError(f"Conv type {conv} is not supported.")
         
         self.fc1 = nn.Sequential(
-            nn.Linear(in_channels, in_channels),
+            nn.Conv1d(in_channels, in_channels, kernel_size=1),
             nn.BatchNorm1d(in_channels)
         )
         self.fc2 = nn.Sequential(
-            nn.Linear(in_channels * 2, in_channels),
+            nn.Conv1d(in_channels * 2, in_channels, kernel_size=1),
             nn.BatchNorm1d(in_channels)
         )
 
@@ -164,15 +164,19 @@ class GrapherDGL(nn.Module):
 
     def forward(self, g, x):
 
-        # B, N, C = x.shape
+        B, C, N = x.shape
         _tmp = x
 
-        # x = self.act(self.fc1(x))
-        x = self.conv(g, x)
+        x = self.act(self.fc1(x))
 
-        # x = x.view(B, N, C).permute(0, 2, 1)
-        # x = self.fc2(x)
-        # x = x.permute(0, 2, 1).reshape(B * N, C)
+        x_nodes = x.permute(0, 2, 1).reshape(-1, C)
+        x_nodes = self.conv(g, x_nodes)
+        x = x_nodes.reshape(B, N,-1).permute(0, 2, 1)
+
+        x = self.fc2(x)
+
+        assert x.shape == _tmp.shape, f"Mismatch in shapes: x={x.shape}, _tmp={_tmp.shape}"
+
 
         if self.relative_pos is not None:
             x = x + self.relative_pos.to(x.device)
@@ -215,12 +219,12 @@ class DenseDilatedKnnGraphDGL(nn.Module):
         Returns:
             Batched DGL Graph with dilated kNN connections and stochastic dropout
         """
-        B, N, C = x.shape
+        B, C, N = x.shape
 
         # dilation factor
         dilation = min(layer_idx // 4 + 1, self.max_dilation)
         k_dilated = self.k * dilation
-        x_flat = x.reshape(-1, C)
+        x_flat = x.permute(0,2,1).reshape(-1, C)
         
         # IDs for batched graph construction
         segs = [N] * B

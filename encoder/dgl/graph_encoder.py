@@ -2,7 +2,7 @@ import torch
 import torch.nn as nn
 import dgl
 from dgl.nn import GraphConv, EdgeConv, SAGEConv, GINConv
-from encoder.dgl.dgl_util import GrapherDGL, DenseDilatedKnnGraphDGL, act_layer, norm_layer
+from dgl_util import GrapherDGL, DenseDilatedKnnGraphDGL, act_layer, norm_layer
 
 
 class Downsample(nn.Module):
@@ -42,10 +42,10 @@ class FFN(nn.Module):
         self.act = nn.ReLU() if act == 'relu' else nn.GELU()
 
         # Keep BatchNorm1d to ensure per-node normalization (no graph mixing)
-        self.fc1 = nn.Linear(in_features, hidden_features)
+        self.fc1 = nn.Conv1d(in_features, hidden_features, 1)
         self.bn1 = nn.BatchNorm1d(hidden_features)
 
-        self.fc2 = nn.Linear(hidden_features, out_features)
+        self.fc2 = nn.Conv1d(hidden_features, out_features, 1)
         self.bn2 = nn.BatchNorm1d(out_features)
 
     def forward(self, x):
@@ -143,9 +143,8 @@ class GraphEncoderDGL(nn.Module):
 
         graph_conv, ffn = block
         B, C, N = x.shape
-        g = self.graph_builder(x.permute(0, 2, 1), layer_idx)
-        x_nodes = x.permute(0, 2, 1).reshape(-1, C)
-        x_nodes = graph_conv(g, x_nodes)
+        g = self.graph_builder(x, layer_idx)
+        x_nodes = graph_conv(g, x)
         x_nodes = ffn(x_nodes)
 
         # Reshape to original format
