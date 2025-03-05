@@ -201,7 +201,7 @@ class FrameLevelCorruption(BaseWaveformTransform):
             corrupted_samples.append(frame)
             i += frame_size
 
-        return np.concatenate(corrupted_samples) if corrupted_samples else samples
+        return np.concatenate(corrupted_samples).astype(np.float32) if corrupted_samples else samples.astype(np.float32)
     
 
 
