@@ -13,7 +13,7 @@ import warnings
 from nnAudio.Spectrogram import CQT
 
 
-from fx_util import BandEQ, Compressor
+from fx_util import BandEQ, Compressor, FrameLevelCorruption
 
 class GPUTransformSampleID(nn.Module):
     def __init__(self, cfg, ir_dir, noise_dir, train=True, cpu=False, max_transforms_1=1, max_transforms_2=1):
@@ -48,6 +48,7 @@ class GPUTransformSampleID(nn.Module):
         self.train_transform_2_options = [
             PitchShift(min_semitones=-cfg['pitch_shift'], max_semitones=cfg['pitch_shift'], p=1.0),
             TimeStretch(min_rate=cfg['min_rate'], max_rate=cfg['max_rate'], p=1.0),
+            FrameLevelCorruption()
         ]
 
         self.val_transform = Identity()
