@@ -360,7 +360,7 @@ def create_subsets(input_file, sample_ids, name):
 
 def main():
 
-    from encoder.graph_encoder import GraphEncoder
+    from encoder.dgl.graph_encoder import GraphEncoder
 
     cfg = 'config/grafp.yaml'
     cfg = load_config(cfg)
