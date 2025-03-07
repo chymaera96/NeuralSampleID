@@ -6,7 +6,7 @@ from encoder.dgl.dgl_util import GrapherDGL, DenseDilatedKnnGraphDGL, act_layer,
 
 
 class Downsample(nn.Module):
-    def __init__(self, in_dim, out_dim, reduction_ratio=2):
+    def __init__(self, in_dim, out_dim, reduction_ratio=1):
         """
         Args:
             in_dim: Input feature dimension (C)
@@ -67,7 +67,7 @@ class FFN(nn.Module):
 
 class GraphEncoderDGL(nn.Module):
     def __init__(self, cfg=None, k=3, conv='mr', act='relu', norm='batch', bias=True, dropout=0.0, dilation=True,
-                 epsilon=0.2, drop_path=0.1, size='s', emb_dims=2048, in_channels=3, include_self=False):
+                 epsilon=0.2, drop_path=0.1, size='t', emb_dims=2048, in_channels=3, include_self=False):
         super().__init__()
 
         if size == 't':
