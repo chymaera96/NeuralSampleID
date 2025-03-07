@@ -25,23 +25,47 @@ class NeuralSampleIDDataset(Dataset):
         self.filenames = load_nsid_index(cfg)
 
         print(f"Dataset loaded with {len(self.filenames)} samples containing {len(self.filenames[0])} stems each")
-        self.ignore_idx = []
+        self.ignore_idx = set()
         self.error_counts = {}
 
+    def _get_safe_index(self, idx):
+        """Get next valid index, avoiding infinite recursion."""
+        next_idx = idx
+        max_attempts = len(self)
+        attempts = 0
+        
+        while next_idx in self.ignore_idx and attempts < max_attempts:
+            next_idx = (next_idx + 1) % len(self)
+            attempts += 1
+            
+        if attempts >= max_attempts:
+            raise RuntimeError("No valid indices available in dataset")
+        return next_idx
+
     def __getitem__(self, idx):
-        if idx in self.ignore_idx:
-            return self[idx + 1]
+
+        idx = self._get_safe_index(idx)
+
+        # Check if ignore_index is empty
+        if len(self.ignore_idx) != 0:
+            print(f"Ignored indices so far: {self.ignore_idx}")
 
         datapath = self.filenames[idx]
         try:
-            audio_dict = {stem: torchaudio.load(path)[0].mean(dim=0) for stem, path in datapath.items()}
+            audio_dict = {}
+            for stem, path in datapath.items():
+                # print(f"Loading {stem}: {path}")  # Add this debug print
+                audio, _ = torchaudio.load(path)
+                audio_dict[stem] = audio.mean(dim=0)
             sr = torchaudio.load(datapath['mix'])[1]
-        except Exception:
-            print("Error loading:", datapath)
+
+        except Exception as e:
+            print(f"Error loading: {datapath}: {e}")
             self.error_counts[idx] = self.error_counts.get(idx, 0) + 1
             if self.error_counts[idx] > self.error_threshold:
-                self.ignore_idx.append(idx)
-            return self[idx + 1]
+                self.ignore_idx.add(idx)
+            next_idx = self._get_safe_index(idx)
+            return self[next_idx]
 
         resampler = torchaudio.transforms.Resample(sr, self.sample_rate)
         audio_dict = {stem: resampler(audio) for stem, audio in audio_dict.items()}
@@ -57,7 +81,8 @@ class NeuralSampleIDDataset(Dataset):
         segment_length = clip_frames + offset_frames
 
         if total_frames < segment_length:
-            return self[idx + 1]
+            next_idx = self._get_safe_index(idx)
+            return self[next_idx]
 
         start_idx = np.random.randint(0, total_frames - segment_length + 1)
         bass_mix_segment = bass_mix[start_idx:start_idx + segment_length]
@@ -79,7 +104,8 @@ class NeuralSampleIDDataset(Dataset):
                 valid_channels.append(i)
 
         if len(valid_channels) < 2:  # Not enough valid channels
-            return self[idx + 1]
+            next_idx = self._get_safe_index(idx)
+            return self[next_idx]
 
         np.random.shuffle(valid_channels)
         x_j_channels = valid_channels[:len(valid_channels) - 1]     
@@ -97,7 +123,8 @@ class NeuralSampleIDDataset(Dataset):
             x_i, x_j = self.transform(x_i, x_j)
 
         if x_i is None or x_j is None:
-            return self[idx + 1]
+            next_idx = self._get_safe_index(idx)
+            return self[next_idx]
 
         if len(x_i) < clip_frames:
             x_i = F.pad(x_i, (0, clip_frames - len(x_i)))
@@ -117,7 +144,8 @@ class NeuralSampleIDDataset(Dataset):
         # Check for silence
         if x_i.abs().max() < self.silence or x_j.abs().max() < self.silence:
             print("Silence detected. Skipping...")
-            return self[idx + 1]
+            next_idx = self._get_safe_index(idx)
+            return self[next_idx]
 
         return x_i, x_j
 
