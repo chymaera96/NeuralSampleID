@@ -67,7 +67,7 @@ class FFN(nn.Module):
 
 class GraphEncoderDGL(nn.Module):
     def __init__(self, cfg=None, k=3, conv='mr', act='relu', norm='batch', bias=True, dropout=0.0, dilation=True,
-                 epsilon=0.2, drop_path=0.1, size='t', emb_dims=1024, in_channels=3, include_self=False):
+                 epsilon=0.2, drop_path=0.1, size='s', emb_dims=2048, in_channels=3, include_self=False):
         super().__init__()
 
         if size == 't':
@@ -114,6 +114,7 @@ class GraphEncoderDGL(nn.Module):
 
         self.proj = nn.Conv2d(self.channels[-1], self.emb_dims, 1, bias=True)
 
+
     def forward(self, x):
         """
         Args:
@@ -133,11 +134,11 @@ class GraphEncoderDGL(nn.Module):
             else:
                 x = self._apply_graph_block(x, block, layer_idx)
 
-        print(f"Before projection: {x.shape}")
+        # print(f"Before projection: {x.shape}")
         x = self.proj(x.unsqueeze(-1))
-        print(f"After projection: {x.shape}")
+        # print(f"After projection: {x.shape}")
         x = x.mean(dim=2).squeeze(-1)
-        print(f"After pooling: {x.shape}")
+        # print(f"After pooling: {x.shape}")
 
         return x
 
