@@ -360,11 +360,11 @@ def create_subsets(input_file, sample_ids, name):
 
 def main():
 
-    from encoder.dgl.graph_encoder import GraphEncoder
+    from encoder.dgl.graph_encoder import GraphEncoderDGL
 
     cfg = 'config/grafp.yaml'
     cfg = load_config(cfg)
-    model = GraphEncoder(cfg=cfg, in_channels=8).to('cuda')
+    model = GraphEncoderDGL(cfg=cfg, in_channels=8).to('cuda')
     dummy_tensor = torch.rand(16, 8, 256).to('cuda')  # (B, C, N)
     out = model(dummy_tensor)
     print(out.shape)
