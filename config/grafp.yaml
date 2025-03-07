@@ -45,7 +45,7 @@ n_epochs: 400
 T_max: 400
 lambda: 0.0
 beta: 0.0
-error_threshold: 5
+error_threshold: 1
 
 # Augmentation hyperparameters
 n_frames: 128 # depends on the spectrogram parameters
