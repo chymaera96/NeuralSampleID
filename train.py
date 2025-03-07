@@ -50,6 +50,7 @@ parser.add_argument('--seed', default=42, type=int,
 parser.add_argument('--ckp', default='test', type=str,
                     help='checkpoint_name')
 parser.add_argument('--encoder', default='grafp', type=str)
+parser.add_argument('--size_opt', default='t', type=str)
 parser.add_argument('--n_dummy_db', default=None, type=int)
 parser.add_argument('--n_query_db', default=None, type=int)
 parser.add_argument('--k', default=3, type=int)
@@ -214,7 +215,7 @@ def main():
         # TODO: Add support for resnet encoder (deprecated)
         raise NotImplementedError
     elif args.encoder == 'grafp':
-        model = SimCLR(cfg, encoder=GraphEncoderDGL(cfg=cfg, in_channels=cfg['n_filters'], k=args.k))
+        model = SimCLR(cfg, encoder=GraphEncoderDGL(cfg=cfg, in_channels=cfg['n_filters'], k=args.k, size=args.size_opt))
     elif args.encoder == 'resnet-ibn':
         model = SimCLR(cfg, encoder=ResNetIBN())
         
