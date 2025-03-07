@@ -133,8 +133,11 @@ class GraphEncoderDGL(nn.Module):
             else:
                 x = self._apply_graph_block(x, block, layer_idx)
 
+        print(f"Before projection: {x.shape}")
         x = self.proj(x.unsqueeze(-1))
+        print(f"After projection: {x.shape}")
         x = x.mean(dim=2).squeeze(-1)
+        print(f"After pooling: {x.shape}")
 
         return x
 
