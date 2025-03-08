@@ -6,7 +6,7 @@ from encoder.dgl.dgl_util import GrapherDGL, DenseDilatedKnnGraphDGL, act_layer,
 
 
 class Downsample(nn.Module):
-    def __init__(self, in_dim, out_dim, reduction_ratio=1):
+    def __init__(self, in_dim, out_dim, reduction_ratio=2):
         """
         Args:
             in_dim: Input feature dimension (C)
