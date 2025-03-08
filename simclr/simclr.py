@@ -49,7 +49,7 @@ class SimCLR(nn.Module):
 
 
 class MoCo(nn.Module):
-    def __init__(self, cfg, encoder, queue_size=65536, momentum=0.999):
+    def __init__(self, cfg, encoder, queue_size=65536, momentum=0.99):
         super(MoCo, self).__init__()
         self.encoder_q = encoder
         self.encoder_k = encoder  # Momentum encoder
