@@ -222,6 +222,9 @@ def main():
     else:
         model = model.to(device)
         
+    # Before counting parameters, check if encoder_q is trainable
+    assert all([p.requires_grad for p in model.encoder_q.parameters()]), "Encoder_q is not trainable"
+
     print(count_parameters(model, args.encoder))
 
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)

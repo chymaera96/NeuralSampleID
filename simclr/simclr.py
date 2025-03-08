@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+import copy
 from peak_extractor import GPUPeakExtractorv2
 
 
@@ -52,7 +53,10 @@ class MoCo(nn.Module):
     def __init__(self, cfg, encoder, queue_size=65536, momentum=0.99):
         super(MoCo, self).__init__()
         self.encoder_q = encoder
-        self.encoder_k = encoder  # Momentum encoder
+        self.add_module("encoder_q", self.encoder_q)
+        self.encoder_k = copy.deepcopy(encoder)
+        for param in self.encoder_k.parameters():
+            param.requires_grad = False  # Freezes the momentum encoder
         self.cfg = cfg
         self.momentum = momentum
 
