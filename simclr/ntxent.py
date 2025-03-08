@@ -29,6 +29,23 @@ def ntxent_loss(z_i, z_j, cfg):
     loss = torch.sum(Ls) / -z.shape[0]
     return loss
 
+def moco_loss(z_i, z_j, k_i, k_j, queue, cfg):
+    tau = cfg['tau']
+    batch_size = z_i.shape[0]
+
+    # Compute logits
+    positives = torch.cat([torch.einsum('nc,nc->n', [z_i, k_i]), torch.einsum('nc,nc->n', [z_j, k_j])], dim=0).unsqueeze(-1)
+    negatives = torch.cat([torch.einsum('nc,ck->nk', [z_i, queue]), torch.einsum('nc,ck->nk', [z_j, queue])], dim=0)
+
+    logits = torch.cat([positives, negatives], dim=1)
+    logits /= tau
+
+    # Labels: positives are at index 0
+    labels = torch.zeros(logits.shape[0], dtype=torch.long, device=logits.device)
+    loss = F.cross_entropy(logits, labels)
+    return loss
+
+
 # For mixup-based contrastive learning
 class SoftCrossEntropy(nn.Module):
     def __init__(self):

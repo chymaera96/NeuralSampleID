@@ -14,8 +14,8 @@ import torchaudio
 
 
 from util import *
-from simclr.ntxent import ntxent_loss, SoftCrossEntropy
-from simclr.simclr import SimCLR   
+from simclr.ntxent import ntxent_loss, moco_loss, SoftCrossEntropy
+from simclr.simclr import SimCLR, MoCo
 from modules.transformations import GPUTransformSampleID
 from modules.data import NeuralSampleIDDataset
 # from encoder.graph_encoder import GraphEncoder
@@ -100,22 +100,17 @@ def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augmen
         with torch.no_grad():
             x_i, x_j = augment(x_i, x_j)
 
-        _, _, z_i, z_j = model(x_i, x_j)
+        z_i, z_j, k_i, k_j = model(x_i, x_j)
 
-        simclr_loss = ntxent_loss(z_i, z_j, cfg)
+        loss = moco_loss(z_i, z_j, k_i, k_j, model.queue, cfg)
 
 
-        if torch.isnan(simclr_loss):
+        if torch.isnan(loss):
             print(f"NaN detected in loss at step {idx}, skipping batch")
             nan_counter = save_nan_batch(x_i, x_j, save_dir="nan_batches", counter=nan_counter)
             continue
 
-        if cfg['beta'] > 0.0:       # Beta set to 0.0 as mixco support is not implemented
-            mixco_loss = mixco(model, x_i, x_j, z_i, z_j, cfg)
-        else:
-            mixco_loss = torch.tensor(0.0)
 
-        loss = simclr_loss
         assert not torch.isnan(loss), "Loss is NaN"
 
         scaler.scale(loss).backward()
@@ -127,7 +122,7 @@ def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augmen
         scaler.update()
 
         if idx % 10 == 0:
-            print(f"Step [{idx}/{len(train_loader)}]\t SimCLR Loss: {simclr_loss.item()} \t MixCo Loss: {mixco_loss.item()}")
+            print(f"Step [{idx}/{len(train_loader)}]\t SimCLR Loss: {loss.item()}")
 
         loss_epoch += loss.item()
 
@@ -215,9 +210,9 @@ def main():
         # TODO: Add support for resnet encoder (deprecated)
         raise NotImplementedError
     elif args.encoder == 'grafp':
-        model = SimCLR(cfg, encoder=GraphEncoderDGL(cfg=cfg, in_channels=cfg['n_filters'], k=args.k, size=args.size_opt))
+        model = MoCo(cfg, encoder=GraphEncoderDGL(cfg=cfg, in_channels=cfg['n_filters'], k=args.k, size=args.size_opt))
     elif args.encoder == 'resnet-ibn':
-        model = SimCLR(cfg, encoder=ResNetIBN())
+        model = MoCo(cfg, encoder=ResNetIBN())
         
     if torch.cuda.device_count() > 1:
         print("Using", torch.cuda.device_count(), "GPUs!")
