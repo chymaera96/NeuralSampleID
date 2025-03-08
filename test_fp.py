@@ -48,7 +48,7 @@ parser.add_argument('--noise_split', default='all', type=str,
                     help='Noise index file split to use for testing (all, test)')
 parser.add_argument('--fp_dir', default='fingerprints', type=str)
 parser.add_argument('--query_lens', default=None, type=str)
-parser.add_argument('--encoder', default='grafp', type=str)
+parser.add_argument('--encoder', default='grafp_t', type=str)
 parser.add_argument('--n_dummy_db', default=None, type=int)
 # parser.add_argument('--n_query_db', default=350, type=int)
 parser.add_argument('--small_test', action='store_true', default=False)
@@ -221,6 +221,8 @@ def main():
     ir_dir = cfg['ir_dir']
     noise_dir = cfg['noise_dir']
     annot_path = cfg['annot_path']
+    enc = args.encoder.split('_')[0]
+    size = args.encoder.split('_')[1]
     # args.recompute = False
     # assert args.recompute is False
     assert args.small_test is False
@@ -230,12 +232,12 @@ def main():
 
 
     print("Creating new model...")
-    if args.encoder == 'grafp':
-        model = SimCLR(cfg, encoder=GraphEncoderDGL(cfg=cfg, in_channels=cfg['n_filters'], k=args.k))
-    elif args.encoder == 'resnet-ibn':
+    if enc == 'grafp':
+        model = SimCLR(cfg, encoder=GraphEncoderDGL(cfg=cfg, in_channels=cfg['n_filters'], k=args.k, size=size))
+    elif enc == 'resnet-ibn':
         model = SimCLR(cfg, encoder=ResNetIBN())
     else:
-        raise ValueError(f"Invalid encoder: {args.encoder}")
+        raise ValueError(f"Invalid encoder: {enc}")
     
     if torch.cuda.device_count() > 1:
         print("Using", torch.cuda.device_count(), "GPUs!")
