@@ -94,6 +94,6 @@ class MoCo(nn.Module):
 
         with torch.no_grad():
             h_j = self.encoder_k(x_j)  
-            k_j = F.normalize(self.projector_k(h_j), p=2, eps=1e-10)
+            z_j = F.normalize(self.projector_k(h_j), p=2, eps=1e-10)
 
-        return z_i, k_j 
+        return h_i, h_j, z_i, z_j
