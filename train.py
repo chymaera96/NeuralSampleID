@@ -102,8 +102,8 @@ def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augmen
 
         z_i, z_j, k_i, k_j = model(x_i, x_j)
 
-        # loss = moco_loss(z_i, z_j, k_i, k_j, model.queue, cfg)
-        loss = ntxent_loss(z_i, z_j, cfg)
+        loss = moco_loss(z_i, z_j, k_i, k_j, model.queue, cfg)
+        # loss = ntxent_loss(z_i, z_j, cfg)
 
 
         if torch.isnan(loss):
@@ -211,7 +211,7 @@ def main():
         # TODO: Add support for resnet encoder (deprecated)
         raise NotImplementedError
     elif args.encoder == 'grafp':
-        model = SimCLR(cfg, encoder=GraphEncoderDGL(cfg=cfg, in_channels=cfg['n_filters'], k=args.k, size=args.size_opt))
+        model = MoCo(cfg, encoder=GraphEncoderDGL(cfg=cfg, in_channels=cfg['n_filters'], k=args.k, size=args.size_opt))
     elif args.encoder == 'resnet-ibn':
         model = MoCo(cfg, encoder=ResNetIBN())
         
