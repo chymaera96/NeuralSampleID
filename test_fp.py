@@ -25,7 +25,7 @@ from modules.data import Sample100Dataset
 # from encoder.graph_encoder import GraphEncoder
 from encoder.dgl.graph_encoder import GraphEncoderDGL
 from encoder.resnet_ibn import ResNetIBN
-from simclr.simclr import SimCLR   
+from simclr.simclr import SimCLR, MoCo  
 from modules.transformations import GPUTransformSampleID
 from eval import get_index, load_memmap_data, eval_faiss
 from eval_map import eval_faiss_with_map
@@ -98,7 +98,8 @@ def create_query_db(dataloader, augment, model, output_root_dir, fname='query_db
         fp_size = 0
         for x in x_list:
             with torch.no_grad():
-                _, _, z_i, _= model(x.to(device),x.to(device))  
+                    # _, _, z_i, _= model(x.to(device),x.to(device)) 
+                    z_i, _, _, _ = model(x.to(device), x.to(device))
 
             fp.append(z_i.detach().cpu().numpy())
             fp_size += z_i.shape[0]
@@ -141,7 +142,8 @@ def create_ref_db(dataloader, augment, model, output_root_dir, fname='ref_db', v
         fp_size = 0
         for x in x_list:
             with torch.no_grad():
-                _, _, z_i, _= model(x.to(device),x.to(device))  
+                    # _, _, z_i, _= model(x.to(device),x.to(device)) 
+                    z_i, _, _, _ = model(x.to(device), x.to(device))
 
             fp.append(z_i.detach().cpu().numpy())
             fp_size += z_i.shape[0]
@@ -181,7 +183,8 @@ def create_dummy_db(dataloader, augment, model, output_root_dir, fname='dummy_db
         for x in x_list:
             try:
                 with torch.no_grad():
-                    _, _, z_i, _= model(x.to(device),x.to(device)) 
+                    # _, _, z_i, _= model(x.to(device),x.to(device)) 
+                    z_i, _, _, _ = model(x.to(device), x.to(device))
 
             except Exception as e:
                 print(f"Error in model forward pass in file {nm}")
@@ -233,7 +236,7 @@ def main():
 
     print("Creating new model...")
     if enc == 'grafp':
-        model = SimCLR(cfg, encoder=GraphEncoderDGL(cfg=cfg, in_channels=cfg['n_filters'], k=args.k, size=size))
+        model = MoCo(cfg, encoder=GraphEncoderDGL(cfg=cfg, in_channels=cfg['n_filters'], k=args.k, size=size))
     elif enc == 'resnet-ibn':
         model = SimCLR(cfg, encoder=ResNetIBN())
     else:
