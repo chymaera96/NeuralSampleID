@@ -100,10 +100,11 @@ def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augmen
         with torch.no_grad():
             x_i, x_j = augment(x_i, x_j)
 
-        z_i, z_j, k_i, k_j = model(x_i, x_j)
+        h_i, h_j, z_i, z_j = model(x_i, x_j)
 
-        loss = moco_loss(z_i, z_j, k_i, k_j, model.queue, cfg)
-        # loss = ntxent_loss(z_i, z_j, cfg)
+        # loss = ntxent_loss(z_i, z_j, cfg) + ntxent_loss(k_i, k_j, cfg)
+        # loss = moco_loss(z_i, z_j, k_i, k_j, model.queue, cfg)
+        loss = ntxent_loss(z_i, z_j, cfg)
 
 
         if torch.isnan(loss):
@@ -121,6 +122,9 @@ def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augmen
 
         scaler.step(optimizer)
         scaler.update()
+    
+        with torch.no_grad():
+            model.update_momentum_encoder()
 
         if idx % 10 == 0:
             print(f"Step [{idx}/{len(train_loader)}]\t SimCLR Loss: {loss.item()}")

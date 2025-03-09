@@ -98,8 +98,7 @@ def create_query_db(dataloader, augment, model, output_root_dir, fname='query_db
         fp_size = 0
         for x in x_list:
             with torch.no_grad():
-                    # _, _, z_i, _= model(x.to(device),x.to(device)) 
-                    z_i, _, _, _ = model(x.to(device), x.to(device))
+                    _, _, z_i, _= model(x.to(device),x.to(device)) 
 
             fp.append(z_i.detach().cpu().numpy())
             fp_size += z_i.shape[0]
@@ -142,8 +141,7 @@ def create_ref_db(dataloader, augment, model, output_root_dir, fname='ref_db', v
         fp_size = 0
         for x in x_list:
             with torch.no_grad():
-                    # _, _, z_i, _= model(x.to(device),x.to(device)) 
-                    z_i, _, _, _ = model(x.to(device), x.to(device))
+                    _, _, z_i, _= model(x.to(device),x.to(device)) 
 
             fp.append(z_i.detach().cpu().numpy())
             fp_size += z_i.shape[0]
@@ -183,8 +181,7 @@ def create_dummy_db(dataloader, augment, model, output_root_dir, fname='dummy_db
         for x in x_list:
             try:
                 with torch.no_grad():
-                    # _, _, z_i, _= model(x.to(device),x.to(device)) 
-                    z_i, _, _, _ = model(x.to(device), x.to(device))
+                    _, _, z_i, _= model(x.to(device),x.to(device)) 
 
             except Exception as e:
                 print(f"Error in model forward pass in file {nm}")
