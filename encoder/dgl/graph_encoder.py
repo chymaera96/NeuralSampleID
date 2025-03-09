@@ -85,7 +85,7 @@ class GraphEncoderDGL(nn.Module):
 
         self.k = k
         self.emb_dims = emb_dims
-
+        self.in_channels = in_channels
         # Initialize graph builder with configurable self-loops
         self.graph_builder = DenseDilatedKnnGraphDGL(k, include_self=include_self, epsilon=epsilon)
 
