@@ -204,7 +204,7 @@ def main():
         if loss_epoch < best_loss:
             best_loss = loss_epoch
             torch.save(classifier.state_dict(), f'checkpoint/clf_{args.ckp}_best.pth')
-        elif epoch % 10 == 0:
+        elif epoch % 5 == 0:
             torch.save(classifier.state_dict(), f'checkpoint/clf_{args.ckp}_{epoch}.pth')
 
 if __name__ == '__main__':
