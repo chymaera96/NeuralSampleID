@@ -111,7 +111,7 @@ def train(cfg, train_loader, model, classifier, optimizer, scaler, augment=None)
     criterion = nn.BCELoss()
     loss_epoch = 0
 
-    for idx, (x_i, x_j) in train_loader:  # Training data is unlabeled pairs
+    for idx, (x_i, x_j) in enumerate(train_loader):
         x_i, x_j = x_i.to(device), x_j.to(device)
         optimizer.zero_grad()
 
