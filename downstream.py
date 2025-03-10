@@ -9,7 +9,7 @@ from torch.utils.data import DataLoader
 from torch.nn.parallel import DataParallel
 from torch.cuda.amp import GradScaler
 
-from util import load_augmentation_index
+from util import load_augmentation_index, load_config
 from modules.transformations import GPUTransformSampleID
 from encoder.dgl.graph_encoder import GraphEncoderDGL
 from simclr.simclr import SimCLR
@@ -155,6 +155,7 @@ def train(cfg, train_loader, model, classifier, optimizer, scaler, augment=None)
 
 def main():
     args = parser.parse_args()
+    cfg = load_config(args.config)
     noise_dir = cfg['noise_dir']
     ir_dir = cfg['ir_dir']
     cfg = load_config(args.config)
