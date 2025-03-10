@@ -40,29 +40,29 @@ parser.add_argument('--enc_wts', required=True, type=str, help='Path to pretrain
 #         x = self.pool(x).squeeze(-1)
 #         return self.fc(x)
 
-import torch
-import torch.nn as nn
 
 class CrossAttentionClassifier(nn.Module):
-    def __init__(self, in_dim, num_heads=4, hidden_dim=128, num_nodes=100, pos_embed=False):
+    def __init__(self, in_dim, num_heads=4, hidden_dim=128, num_nodes=100, pos_embed=True):
         """
-        Cross-Attention Classifier with spatial-aware embeddings.
+        Cross-Attention Classifier with optional spatial positional embeddings.
+
         Args:
             in_dim: Feature dimension of each node.
             num_heads: Number of attention heads.
             hidden_dim: Hidden layer size.
             num_nodes: Maximum number of nodes (for learnable positional embeddings).
+            pos_embed: Boolean flag to enable/disable positional embeddings.
         """
         super().__init__()
 
-        # Learnable positional embedding for each node
-        if pos_embed:
-            self.positional_embedding = nn.Parameter(torch.randn(1, num_nodes, in_dim))
-        else:
-            self.positional_embedding = nn.Parameter(torch.zeros(1, num_nodes, in_dim))
+        self.pos_embed = pos_embed  # Store flag for later use
+
+        if self.pos_embed:
+            # Register positional embedding as a buffer so it moves with .to(device)
+            self.register_buffer("positional_embedding", torch.randn(1, num_nodes, in_dim))  
 
         self.attn = nn.MultiheadAttention(embed_dim=in_dim, num_heads=num_heads, batch_first=True)
-        
+
         self.fc = nn.Sequential(
             nn.Linear(in_dim, hidden_dim),
             nn.ReLU(),
@@ -75,15 +75,15 @@ class CrossAttentionClassifier(nn.Module):
         x_i, x_j: (B, C, N) graph embeddings
         """
 
-        # Reshape to (B, N, C)
-        x_i = x_i.permute(0, 2, 1)
+        x_i = x_i.permute(0, 2, 1)  # Convert to (B, N, C)
         x_j = x_j.permute(0, 2, 1)
 
-        x_i = x_i + self.positional_embedding[:, :x_i.shape[1], :]
-        x_j = x_j + self.positional_embedding[:, :x_j.shape[1], :]
+        if self.pos_embed:
+            pos_emb = self.positional_embedding[:, :x_i.shape[1], :].to(x_i.device)
+            x_i = x_i + pos_emb
+            x_j = x_j + pos_emb
 
-        # Apply cross-attention
-        attn_out, _ = self.attn(x_i, x_j, x_j)  # x_i attends over x_j's spatial structure
+        attn_out, _ = self.attn(x_i, x_j, x_j)  
         x = attn_out.mean(dim=1)
 
         return self.fc(x)
