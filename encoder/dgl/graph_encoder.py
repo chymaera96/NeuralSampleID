@@ -115,7 +115,7 @@ class GraphEncoderDGL(nn.Module):
         self.proj = nn.Conv2d(self.channels[-1], self.emb_dims, 1, bias=True)
 
 
-    def forward(self, x):
+    def forward(self, x, return_pre_proj=False):
         """
         Args:
             x: Input tensor of shape (B, C, N)
@@ -134,13 +134,17 @@ class GraphEncoderDGL(nn.Module):
             else:
                 x = self._apply_graph_block(x, block, layer_idx)
 
+        x_nodes = x
         # print(f"Before projection: {x.shape}")
         x = self.proj(x.unsqueeze(-1))
         # print(f"After projection: {x.shape}")
-        x = x.mean(dim=2).squeeze(-1)
+        x_emb = x.mean(dim=2).squeeze(-1)
         # print(f"After pooling: {x.shape}")
 
-        return x
+        if return_pre_proj:
+            return x_nodes, x_emb
+        else:
+            return x_emb
 
     def _apply_graph_block(self, x, block, layer_idx):
         """Helper method to apply a graph convolution block"""
