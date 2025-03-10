@@ -155,8 +155,8 @@ def train(cfg, train_loader, model, classifier, optimizer, scaler, augment=None)
 
 def main():
     args = parser.parse_args()
-    noise_dir = args.noise_dir
-    ir_dir = args.ir_dir
+    noise_dir = cfg['noise_dir']
+    ir_dir = cfg['ir_dir']
     cfg = load_config(args.config)
     wts = args.enc_wts
     
