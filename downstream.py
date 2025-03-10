@@ -25,44 +25,132 @@ parser.add_argument('--resume', default=None, type=str, metavar='PATH', help='Pa
 parser.add_argument('--ckp', default='test', type=str, help='Checkpoint name')
 parser.add_argument('--enc_wts', required=True, type=str, help='Path to pretrained GraphEncoderDGL weights')
 
-class GraphClassifier(nn.Module):
-    def __init__(self, in_dim, hidden_dim, num_classes=2):
+# class GraphClassifier(nn.Module):
+#     def __init__(self, in_dim, hidden_dim, num_classes=2):
+#         super().__init__()
+#         self.pool = nn.AdaptiveAvgPool1d(1)
+#         self.fc = nn.Sequential(
+#             nn.Linear(in_dim, hidden_dim),
+#             nn.ReLU(),
+#             nn.Linear(hidden_dim, num_classes),
+#             nn.Sigmoid()
+#         )
+
+#     def forward(self, x):
+#         x = self.pool(x).squeeze(-1)
+#         return self.fc(x)
+
+import torch
+import torch.nn as nn
+
+class CrossAttentionClassifier(nn.Module):
+    def __init__(self, in_dim, num_heads=4, hidden_dim=128, num_nodes=100, pos_embed=False):
+        """
+        Cross-Attention Classifier with spatial-aware embeddings.
+        Args:
+            in_dim: Feature dimension of each node.
+            num_heads: Number of attention heads.
+            hidden_dim: Hidden layer size.
+            num_nodes: Maximum number of nodes (for learnable positional embeddings).
+        """
         super().__init__()
-        self.pool = nn.AdaptiveAvgPool1d(1)
+
+        # Learnable positional embedding for each node
+        if pos_embed:
+            self.positional_embedding = nn.Parameter(torch.randn(1, num_nodes, in_dim))
+        else:
+            self.positional_embedding = nn.Parameter(torch.zeros(1, num_nodes, in_dim))
+
+        self.attn = nn.MultiheadAttention(embed_dim=in_dim, num_heads=num_heads, batch_first=True)
+        
         self.fc = nn.Sequential(
             nn.Linear(in_dim, hidden_dim),
             nn.ReLU(),
-            nn.Linear(hidden_dim, num_classes),
+            nn.Linear(hidden_dim, 1),
             nn.Sigmoid()
         )
 
-    def forward(self, x):
-        x = self.pool(x).squeeze(-1)
+    def forward(self, x_i, x_j):
+        """
+        x_i, x_j: (B, C, N) graph embeddings
+        """
+
+        # Reshape to (B, N, C)
+        x_i = x_i.permute(0, 2, 1)
+        x_j = x_j.permute(0, 2, 1)
+
+        x_i = x_i + self.positional_embedding[:, :x_i.shape[1], :]
+        x_j = x_j + self.positional_embedding[:, :x_j.shape[1], :]
+
+        # Apply cross-attention
+        attn_out, _ = self.attn(x_i, x_j, x_j)  # x_i attends over x_j's spatial structure
+        x = attn_out.mean(dim=1)
+
         return self.fc(x)
 
-def train(cfg, train_loader, encoder, classifier, optimizer, scaler):
-    encoder.eval()  # Keep the encoder frozen
-    classifier.train()
-    loss_epoch = 0
-    criterion = nn.BCELoss()
 
-    for x, labels in train_loader:
-        x, labels = x.to(device), labels.to(device)
+def mine_hard_negatives(z_i, z_j, negatives, num_negatives=3):
+    """
+    Mines `num_negatives` hardest negatives for each positive pair.
+    Uses cosine similarity between projector outputs.
+    """
+    B = z_i.shape[0]
+    similarity_matrix = torch.matmul(z_i, negatives.T)  # Cosine similarities
+
+    hard_negatives = []
+    for idx in range(B):
+        neg_indices = torch.argsort(similarity_matrix[idx], descending=True)  # Sort by highest similarity
+        top_negatives = negatives[neg_indices[1:num_negatives+1]]  # Exclude self, take top hard negatives
+        hard_negatives.append(top_negatives)
+
+    return torch.cat(hard_negatives)
+
+def train(cfg, train_loader, model, classifier, optimizer, scaler):
+    model.eval()  # Keep the encoder frozen
+    classifier.train()
+    criterion = nn.BCELoss()
+    loss_epoch = 0
+
+    for idx, (x_i, x_j) in train_loader:  # Training data is unlabeled pairs
+        x_i, x_j = x_i.to(device), x_j.to(device)
         optimizer.zero_grad()
 
+        # Extract features using frozen encoder
         with torch.no_grad():
-            x_before_proj, _ = encoder(x, return_pre_proj=True)
+            x_before_proj_i, _ = model.encoder(x_i, return_pre_proj=True)  # (B, C, N)
+            x_before_proj_j, _ = model.encoder(x_j, return_pre_proj=True)  # (B, C, N)
+            _, _, z_i, z_j = model(x_i, x_j)  # Projector outputs for mining negatives
 
-        preds = classifier(x_before_proj)
-        loss = criterion(preds, labels)
-        
-        scaler.scale(loss).backward()
+        # Mine hardest negatives
+        negatives = torch.cat((z_i, z_j), dim=0)  # Pool negatives from the batch
+        hard_negatives = mine_hard_negatives(z_i, z_j, negatives, num_negatives=3)  # Still (B, C)
+
+        # Reshape negatives to match (B, C, N)
+        hard_negatives = hard_negatives.unsqueeze(-1).expand(-1, -1, x_before_proj_i.shape[-1])  # (B*3, C, N)
+
+        # Train classifier using cross-attention
+        logits_pos = classifier(x_before_proj_i, x_before_proj_j)  # (B, 1)
+        logits_neg = classifier(x_before_proj_i.repeat(3, 1, 1), hard_negatives)  # (B*3, 1)
+
+        # Labels
+        pos_labels = torch.ones(logits_pos.shape[0], 1).to(device)
+        neg_labels = torch.zeros(logits_neg.shape[0], 1).to(device)
+
+        # Compute loss
+        clf_loss = criterion(logits_pos, pos_labels) + criterion(logits_neg, neg_labels)
+
+        # Backpropagation
+        scaler.scale(clf_loss).backward()
         scaler.step(optimizer)
         scaler.update()
         
-        loss_epoch += loss.item()
-    
+        if idx % 20 == 0:
+            print(f"Step [{idx}/{len(train_loader)}]\t Loss: {clf_loss.item()}")
+
+        loss_epoch += clf_loss.item()
+
     return loss_epoch / len(train_loader)
+
 
 def main():
     args = parser.parse_args()
@@ -91,12 +179,11 @@ def main():
     model.load_state_dict(checkpoint['state_dict'])
     model = model.to(device)
     model.eval()
-    encoder = model.encoder
     
-    for param in encoder.parameters():
+    for param in model.encoder.parameters():
         param.requires_grad = False  # Keep encoder frozen
     
-    classifier = GraphClassifier(in_dim=encoder.channels[-1], hidden_dim=256).to(device)
+    classifier = CrossAttentionClassifier(in_dim=512, num_nodes=32)
     optimizer = torch.optim.Adam(classifier.parameters(), lr=cfg['clf_lr'])
     scaler = GradScaler()
     
@@ -110,7 +197,7 @@ def main():
     print("Starting training...")
     best_loss = float('inf')
     for epoch in range(args.epochs):
-        loss_epoch = train(cfg, train_loader, encoder, classifier, optimizer, scaler)        
+        loss_epoch = train(cfg, train_loader, model, classifier, optimizer, scaler)        
         print(f"Epoch {epoch}, Loss: {loss_epoch}")
         if loss_epoch < best_loss:
             best_loss = loss_epoch

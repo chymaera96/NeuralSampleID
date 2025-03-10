@@ -47,6 +47,10 @@ lambda: 0.0
 beta: 0.0
 error_threshold: 1
 
+# Classification hyperparameters
+clf_lr: 1.0e-3
+clf_bsz: 32
+
 # Augmentation hyperparameters
 n_frames: 128 # depends on the spectrogram parameters
 overlap: 0.875
