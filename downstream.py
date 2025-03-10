@@ -118,8 +118,10 @@ def train(cfg, train_loader, model, classifier, optimizer, scaler, augment=None)
         # Extract features using frozen encoder
         with torch.no_grad():
             x_i, x_j = augment(x_i, x_j)
-            x_before_proj_i, _ = model.encoder(x_i, return_pre_proj=True)  # (B, C, N)
-            x_before_proj_j, _ = model.encoder(x_j, return_pre_proj=True)  # (B, C, N)
+            p_i = model.peak_extractor(x_i)
+            p_j = model.peak_extractor(x_j)
+            x_before_proj_i, _ = model.encoder(p_i, return_pre_proj=True)  # (B, C, N)
+            x_before_proj_j, _ = model.encoder(p_j, return_pre_proj=True)  # (B, C, N)
             _, _, z_i, z_j = model(x_i, x_j)  # Projector outputs for mining negatives
 
         # Mine hardest negatives
