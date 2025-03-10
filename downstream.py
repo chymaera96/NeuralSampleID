@@ -171,7 +171,7 @@ def main():
     train_loader = DataLoader(train_dataset, batch_size=cfg['clf_bsz'], shuffle=True, num_workers=2, pin_memory=True, drop_last=True)
     
     print("Loading pretrained encoder...")
-    model = SimCLR(cfg, encoder=GraphEncoderDGL(cfg=cfg, in_channels=cfg['n_filters'], k=cfg['k']))
+    model = SimCLR(cfg, encoder=GraphEncoderDGL(cfg=cfg, in_channels=cfg['n_filters'], k=3))
 
     print("=> loading checkpoint '{}'".format(wts))
     checkpoint = torch.load(wts, map_location=device)    
