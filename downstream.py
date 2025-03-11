@@ -94,19 +94,18 @@ class CrossAttentionClassifier(nn.Module):
 
 def mine_hard_negatives(z_i, z_j, negatives, num_negatives=3):
     """
-    Mines `num_negatives` hardest negatives for each positive pair.
-    Uses cosine similarity between projector outputs.
+    Mines `num_negatives` hardest negatives per sample based on cosine similarity.
+    Instead of returning the embeddings, returns the indices of hardest negatives.
     """
     B = z_i.shape[0]
     similarity_matrix = torch.matmul(z_i, negatives.T)  # Cosine similarities
 
-    hard_negatives = []
+    hard_negative_indices = []
     for idx in range(B):
         neg_indices = torch.argsort(similarity_matrix[idx], descending=True)  # Sort by highest similarity
-        top_negatives = negatives[neg_indices[1:num_negatives+1]]  # Exclude self, take top hard negatives
-        hard_negatives.append(top_negatives)
+        hard_negative_indices.append(neg_indices[1:num_negatives+1])  # Exclude self, take hardest ones
 
-    return torch.cat(hard_negatives)
+    return torch.stack(hard_negative_indices)  # (B, num_negatives)
 
 def train(cfg, train_loader, model, classifier, optimizer, scaler, augment=None):
     model.eval()  # Keep the encoder frozen
@@ -127,12 +126,15 @@ def train(cfg, train_loader, model, classifier, optimizer, scaler, augment=None)
             x_before_proj_j, _ = model.encoder(p_j, return_pre_proj=True)  # (B, C, N)
             _, _, z_i, z_j = model(x_i, x_j)  # Projector outputs for mining negatives
 
+        x_before_proj_all = torch.cat((x_before_proj_i, x_before_proj_j), dim=0)    # (2B, C, N)
+        z_all = torch.cat((z_i, z_j), dim=0)    # (2B, C)
+
         # Mine hardest negatives
         negatives = torch.cat((z_i, z_j), dim=0)  # Pool negatives from the batch
-        hard_negatives = mine_hard_negatives(z_i, z_j, negatives, num_negatives=3)  # Still (B, C)
+        hard_negative_idxs = mine_hard_negatives(z_i, z_j, z_all, num_negatives=3)  # Still (B, C)
 
-        # Reshape negatives to match (B, C, N)
-        hard_negatives = hard_negatives.unsqueeze(-1).expand(-1, -1, x_before_proj_i.shape[-1])  # (B*3, C, N)
+        # Use indices to fetch corresponding x_before_proj negatives
+        hard_negatives = x_before_proj_all[hard_negative_idxs.view(-1)]  # (B*3, C, N)
 
         # Train classifier using cross-attention
         logits_pos = classifier(x_before_proj_i, x_before_proj_j)  # (B, 1)
