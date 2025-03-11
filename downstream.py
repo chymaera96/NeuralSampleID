@@ -187,7 +187,7 @@ def main():
     for param in model.encoder.parameters():
         param.requires_grad = False  # Keep encoder frozen
     
-    classifier = CrossAttentionClassifier(in_dim=512, num_nodes=32)
+    classifier = CrossAttentionClassifier(in_dim=512, num_nodes=32).to(device)
     optimizer = torch.optim.Adam(classifier.parameters(), lr=cfg['clf_lr'])
     scaler = GradScaler()
     
