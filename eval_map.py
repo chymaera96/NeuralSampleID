@@ -1,13 +1,15 @@
+import os
 import json
+import torch
 import numpy as np
 from collections import defaultdict
 import faiss
 from sklearn.metrics.pairwise import cosine_similarity
 from scipy.spatial.distance import cdist
 
+from eval import load_memmap_data, get_index
 
-from eval import load_memmap_data, get_index, extract_test_ids
-
+device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
 def calculate_map(ground_truth, predictions, k=10):
     """
@@ -39,77 +41,52 @@ def calculate_map(ground_truth, predictions, k=10):
 
 
 
-def sliding_window_similarity(q_match, candidate_seq, metric='cosine'):
+def extract_test_ids(lookup_table):
+    starts = []
+    lengths = []
+    
+    # Initialize the first string and starting index
+    current_string = lookup_table[0]
+    current_start = 0
+    
+    # Iterate through the list to detect changes in strings
+    for i in range(1, len(lookup_table)):
+        if lookup_table[i] != current_string:
+            # When a new string is found, record the start and length of the previous group
+            starts.append(current_start)
+            lengths.append(i - current_start)
+            
+            # Update the current string and starting index
+            current_string = lookup_table[i]
+            current_start = i
+    
+    # Add the last group
+    starts.append(current_start)
+    lengths.append(len(lookup_table) - current_start)
+    
+    return np.array(starts), np.array(lengths)
+
+
+
+
+
+def eval_faiss_with_map_classifier(emb_dir, classifier, 
+                                   index_type='ivfpq', nogpu=False, max_train=1e7,
+                                   k_probe=20, n_centroids=32, k_map=20):
     """
-    Computes the best alignment score by sliding the query over the candidate sequence.
-
-    Parameters:
-    - q_match: Query sequence of shape (q_len, fp_dim)
-    - candidate_seq: Candidate sequence of shape (cand_len, fp_dim)
-    - metric: Distance metric ('cosine', 'euclidean', etc.)
-
-    Returns:
-    - max_score: Best similarity score across all alignments
+    Evaluation using classifier logits instead of cosine similarity.
     """
-    q_len, fp_dim = q_match.shape
-    cand_len, _ = candidate_seq.shape
+    classifier.to(device).eval()
 
+    query_nmatrix_path = os.path.join(emb_dir, 'query_nmatrix.npy')
+    ref_nmatrix_dir = os.path.join(emb_dir, 'ref_nmatrix')
 
-    max_score = -np.inf  # Initialize best similarity score
-
-    # Slide query over candidate sequence
-    for start in range(cand_len - q_len + 1):
-        aligned_seq = candidate_seq[start:start + q_len, :]  # Extract aligned segment
-
-        # Compute similarity (convert cdist to similarity: 1 - distance)
-        sim = np.mean(cosine_similarity(q_match, aligned_seq))
-
-        max_score = max(max_score, sim)  # Keep best alignment score
-
-    return max_score
-
-
-
-
-
-def eval_faiss_with_map(emb_dir,
-                         emb_dummy_dir=None,
-                         index_type='ivfpq',
-                         nogpu=False,
-                         max_train=1e7,
-                         test_ids='icassp',
-                         test_seq_len='1 3 5 9 11 19',
-                         k_probe=20,
-                         n_centroids=32,
-                         k_map=20):
-    """
-    Extended evaluation function to compute Mean Average Precision (MAP).
-    """
-
-    if type(test_seq_len) == str:
-        test_seq_len = np.asarray(
-            list(map(int, test_seq_len.split())))  # '1 3 5' --> [1, 3, 5]
-    elif type(test_seq_len) == list:
-        test_seq_len = np.asarray(test_seq_len)
-
+    # Load FAISS index
     query, query_shape = load_memmap_data(emb_dir, 'query_full_db')
     db, db_shape = load_memmap_data(emb_dir, 'ref_db')
-    if emb_dummy_dir is None:
-        emb_dummy_dir = emb_dir
-    dummy_db, dummy_db_shape = load_memmap_data(emb_dummy_dir, 'dummy_db')
-
-    index = get_index(index_type, dummy_db, dummy_db.shape, (not nogpu),
-                      max_train, n_centroids=n_centroids)
-
-    index.add(dummy_db)
+    index = get_index(index_type, db, db.shape, (not nogpu), max_train, n_centroids=n_centroids)
     index.add(db)
-    del dummy_db
-
-    fake_recon_index, index_shape = load_memmap_data(
-        emb_dummy_dir, 'dummy_db', append_extra_length=db_shape[0],
-        display=False)
-    fake_recon_index[dummy_db_shape[0]:dummy_db_shape[0] + db_shape[0], :] = db[:, :]
-    fake_recon_index.flush()
+    del db
 
     # Load lookup tables
     query_lookup = json.load(open(f'{emb_dir}/query_full_db_lookup.json', 'r'))
@@ -118,11 +95,12 @@ def eval_faiss_with_map(emb_dir,
     with open('data/gt_dict.json', 'r') as fp:
         ground_truth = json.load(fp)
 
+    # Load query node matrices
+    query_nmatrix = np.load(query_nmatrix_path, allow_pickle=True).item()
     test_ids, max_test_seq_len = extract_test_ids(query_lookup)
     predictions = {}
 
     for ix, test_id in enumerate(test_ids):
-
         q_id = query_lookup[test_id].split("_")[0]
         max_len = max_test_seq_len[ix]
         q = query[test_id: test_id + max_len, :]
@@ -132,37 +110,46 @@ def eval_faiss_with_map(emb_dir,
         _, I = index.search(q, k_probe)
         candidates = I[np.where(I >= 0)].flatten()
 
-
         hist = defaultdict(int)
-
         for cid in candidates:
-            if cid < dummy_db_shape[0]:
+            if cid < db_shape[0]:
                 continue
-            match = ref_lookup[cid - dummy_db_shape[0]]
+            match = ref_lookup[cid - db_shape[0]]
             if match == q_id:
                 continue
-            candidate_seq = fake_recon_index[cid:(cid + q.shape[0]), :]
-            if candidate_seq.shape[0] < q.shape[0]:
-                q_match = q[:candidate_seq.shape[0], :]
-            else:
-                q_match = q
-            # score = sliding_window_similarity(q_match, candidate_seq, metric='cosine')
-            score = np.max(cosine_similarity(q_match, candidate_seq))
-            hist[match] += score
-        
-        if ix % 20 == 0:
-            print(f"Processed {ix} / {len(test_ids)} queries...")
+
+            # Get correct segment index in the retrieved song
+            ref_song_starts, _ = extract_test_ids(ref_lookup)
+            song_start_idx = ref_song_starts[ref_song_starts <= cid].max()
+            segment_idx = cid - song_start_idx
+
+            # Load the reference node matrix
+            ref_nmatrix_path = os.path.join(ref_nmatrix_dir, f"{match}.npy")
+            if not os.path.exists(ref_nmatrix_path):
+                continue  # Skip if missing reference
+
+            ref_nmatrix = np.load(ref_nmatrix_path)  # (num_segments, C, N)
+            if segment_idx >= ref_nmatrix.shape[0]:
+                continue  # Skip if index out of bounds
+
+            x_before_proj_candidate = torch.tensor(ref_nmatrix[segment_idx]).to(device)
+            x_before_proj_query = torch.tensor(query_nmatrix[q_id]).to(device)
+
+            # Compute classifier score
+            classifier_score = classifier(x_before_proj_query, x_before_proj_candidate).item()
+            hist[match] += classifier_score
 
         sorted_predictions = sorted(hist, key=hist.get, reverse=True)
         predictions[q_id] = sorted_predictions
 
+        if ix % 20 == 0:
+            print(f"Processed {ix} / {len(test_ids)} queries...")
+
     # Compute MAP
     map_score = calculate_map(ground_truth, predictions, k=k_map)
-
-    del query, db, fake_recon_index
-
     np.save(f'{emb_dir}/predictions.npy', predictions)
     np.save(f'{emb_dir}/map_score.npy', map_score)
     print(f"Saved predictions and MAP score to {emb_dir}")
 
     return map_score, k_map
+

@@ -213,6 +213,65 @@ def create_dummy_db(dataloader, augment, model, output_root_dir, fname='dummy_db
     np.save(f'{output_root_dir}/{fname}_shape.npy', arr_shape)
 
 
+def create_ref_nmatrix(dataloader, augment, model, save_dir, max_size=512, verbose=False):
+
+    os.makedirs(save_dir, exist_ok=True)
+    model.eval() 
+
+    ref_nmatrix = {}  
+
+    with torch.no_grad():
+        for idx, (nm, audio) in dataloader:
+            audio = audio.to(device)
+            x_i, _ = augment(audio, None)
+            x_list = torch.split(x_i, max_size, dim=0)
+            nmat = []
+            for x in x_list:
+                p = model.peak_extractor(x)
+                x_before_proj, _ = model.encoder(p, return_pre_proj=True)  # (B, C, N)
+                x_before_proj = x_before_proj.cpu().numpy()
+                nmat.append(x_before_proj)
+
+            ref_nmatrix[nm] = nmat
+            if verbose and idx % 20 == 0:
+                        print(f"Step [{idx}/{len(dataloader)}]\t shape: {ref_nmatrix[nm].shape}")
+
+    for song_id, nmatrices in ref_nmatrix.items():
+        save_path = os.path.join(save_dir, f"{song_id}.npy")
+        np.save(save_path, np.array(nmatrices))  # Save as (num_segments, C, N)
+
+    print(f"Saved node matrices for {len(ref_nmatrix)} songs in {save_dir}")
+
+
+
+def create_query_nmatrix(dataloader, augment, model, save_path, max_size=512, verbose=False):
+
+    model.eval()  
+    query_nmatrix = {}
+
+    with torch.no_grad():
+        for idx, (nm, audio) in dataloader:
+            audio = audio.to(device)
+            x_i, _ = augment(audio, None)
+            x_list = torch.split(x_i, max_size, dim=0)  # Prevent OOM errors
+            nmat = []
+            for x in x_list:
+                p = model.peak_extractor(x)
+                x_before_proj, _ = model.encoder(p, return_pre_proj=True)  # (B, C, N)
+                x_before_proj = x_before_proj.cpu().numpy()
+                nmat.append(x_before_proj)
+
+            query_nmatrix[nm] = nmat
+            if verbose and idx % 20 == 0:
+                print(f"Step [{idx}/{len(dataloader)}]\t shape: {query_nmatrix[nm].shape}")
+
+    np.save(save_path, query_nmatrix)
+
+
+    print(f"Saved node matrices for {len(query_nmatrix)} queries in {save_dir}")
+
+
+
 def main():
 
     args = parser.parse_args()
@@ -265,6 +324,7 @@ def main():
     dummy_path = 'data/sample_100.json'     # Required for dummy db
     dummy_dataset = Sample100Dataset(cfg, path=dummy_path, annot_path=annot_path, mode="dummy")
 
+
     # Create DataLoader instances for each dataset
     dummy_db_loader = DataLoader(dummy_dataset, batch_size=1, 
                                 shuffle=False, num_workers=4, 
@@ -281,6 +341,8 @@ def main():
     ref_db_loader = DataLoader(ref_dataset, batch_size=1, 
                             shuffle=False, num_workers=4, 
                             pin_memory=True, drop_last=False)
+    
+
 
 
     if args.small_test:
@@ -330,6 +392,11 @@ def main():
                 create_query_db(query_full_db_loader, augment=test_augment,
                                 model=model, output_root_dir=fp_dir, fname='query_full_db', verbose=True)
             
+                create_ref_nmatrix(ref_db_loader, augment=test_augment,
+                                model=model, save_dir=f'{fp_dir}/ref_nmatrix', verbose=True)
+                
+                create_query_nmatrix(query_full_db_loader, augment=test_augment,
+                                model=model, save_path=f'{fp_dir}/query_nmatrix.npy', verbose=True)
             
             text = f'{args.text}_{str(epoch)}'
             label = epoch if type(epoch) == int else 0
