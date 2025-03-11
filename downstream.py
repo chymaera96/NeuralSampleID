@@ -78,11 +78,11 @@ class CrossAttentionClassifier(nn.Module):
         x_i = x_i.permute(0, 2, 1)  # Convert to (B, N, C)
         x_j = x_j.permute(0, 2, 1)
 
-        print(f"x_i shape: {x_i.shape}, x_j shape: {x_j.shape}")
+        # print(f"x_i shape: {x_i.shape}, x_j shape: {x_j.shape}")
 
         if self.pos_embed:
             pos = self.positional_embedding[:, :x_i.shape[1], :].to(x_i.device)
-            print(f"Positional embedding shape: {pos.shape}")
+            # print(f"Positional embedding shape: {pos.shape}")
             x_i = x_i + pos
             x_j = x_j + pos
 

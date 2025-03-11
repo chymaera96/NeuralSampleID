@@ -48,7 +48,7 @@ beta: 0.0
 error_threshold: 1
 
 # Classification hyperparameters
-clf_lr: 1.0e-3
+clf_lr: 1.0e-4
 clf_bsz: 32
 
 # Augmentation hyperparameters
