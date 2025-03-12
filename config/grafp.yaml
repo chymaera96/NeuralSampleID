@@ -23,7 +23,7 @@ fs: 16000
 dur: 4.08
 offset: 0.25
 norm: 0.95
-win_len: 1024
+win_len: 512
 hop_len: 512
 n_mels: 64
 n_fft: 1024
