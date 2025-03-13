@@ -23,7 +23,7 @@ fs: 16000
 dur: 4.08
 offset: 0.25
 norm: 0.95
-win_len: 512
+win_len: 1024
 hop_len: 512
 n_mels: 64
 n_fft: 1024
@@ -33,7 +33,7 @@ silence: 1.0e-5
 # Dataset and Model hyperparameters
 train_sz: 8000
 val_sz: 25000
-bsz_train: 1024
+bsz_train: 512S
 n_filters : 8 # number of filters in the peak extraction layer
 patch_frames: 8
 patch_bins: 4
