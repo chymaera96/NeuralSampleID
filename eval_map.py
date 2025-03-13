@@ -70,9 +70,9 @@ def extract_test_ids(lookup_table):
 
 
 
-def eval_faiss_with_map_classifier(emb_dir, classifier, 
-                                   index_type='ivfpq', nogpu=False, max_train=1e7,
-                                   k_probe=20, n_centroids=32, k_map=20):
+def eval_faiss_map_clf(emb_dir, classifier, emb_dummy_dir=None,
+                       index_type='ivfpq', nogpu=False, max_train=1e7,
+                       k_probe=20, n_centroids=32, k_map=20):
     """
     Evaluation using classifier logits instead of cosine similarity.
     """
@@ -84,9 +84,14 @@ def eval_faiss_with_map_classifier(emb_dir, classifier,
     # Load FAISS index
     query, query_shape = load_memmap_data(emb_dir, 'query_full_db')
     db, db_shape = load_memmap_data(emb_dir, 'ref_db')
-    index = get_index(index_type, db, db.shape, (not nogpu), max_train, n_centroids=n_centroids)
+    if emb_dummy_dir is None:
+        emb_dummy_dir = emb_dir
+    dummy_db, dummy_db_shape = load_memmap_data(emb_dummy_dir, 'dummy_db')
+
+    index = get_index(index_type, dummy_db, dummy_db.shape, (not nogpu), max_train, n_centroids=n_centroids)
+    index.add(dummy_db)
     index.add(db)
-    del db
+    del dummy_db
 
     # Load lookup tables
     query_lookup = json.load(open(f'{emb_dir}/query_full_db_lookup.json', 'r'))
@@ -98,30 +103,32 @@ def eval_faiss_with_map_classifier(emb_dir, classifier,
     # Load query node matrices
     query_nmatrix = np.load(query_nmatrix_path, allow_pickle=True).item()
     test_ids, max_test_seq_len = extract_test_ids(query_lookup)
+    ref_song_starts, _ = extract_test_ids(ref_lookup)
+    
     predictions = {}
 
     for ix, test_id in enumerate(test_ids):
         q_id = query_lookup[test_id].split("_")[0]
         max_len = max_test_seq_len[ix]
         q = query[test_id: test_id + max_len, :]
-        if q.shape[0] <= 10:
-            continue
+        # if q.shape[0] <= 10:
+        #     continue
 
         _, I = index.search(q, k_probe)
-        candidates = I[np.where(I >= 0)].flatten()
+        # candidates = I[np.where(I >= 0)].flatten()
+        candidates = np.unique(I[np.where(I >= 0)])
 
         hist = defaultdict(int)
         for cid in candidates:
-            if cid < db_shape[0]:
+            if cid < dummy_db_shape[0]:
                 continue
-            match = ref_lookup[cid - db_shape[0]]
+            match = ref_lookup[cid - dummy_db_shape[0]]
             if match == q_id:
                 continue
 
             # Get correct segment index in the retrieved song
-            ref_song_starts, _ = extract_test_ids(ref_lookup)
             song_start_idx = ref_song_starts[ref_song_starts <= cid].max()
-            segment_idx = cid - song_start_idx
+            ref_seg_idx = cid - song_start_idx
 
             # Load the reference node matrix
             ref_nmatrix_path = os.path.join(ref_nmatrix_dir, f"{match}.npy")
@@ -129,18 +136,21 @@ def eval_faiss_with_map_classifier(emb_dir, classifier,
                 continue  # Skip if missing reference
 
             ref_nmatrix = np.load(ref_nmatrix_path)  # (num_segments, C, N)
-            if segment_idx >= ref_nmatrix.shape[0]:
+            if ref_seg_idx >= ref_nmatrix.shape[0]:
                 continue  # Skip if index out of bounds
 
-            x_before_proj_candidate = torch.tensor(ref_nmatrix[segment_idx]).to(device)
-            x_before_proj_query = torch.tensor(query_nmatrix[q_id]).to(device)
+            nm_candidate = torch.tensor(ref_nmatrix[ref_seg_idx]).to(device)
+            nm_query = torch.tensor(query_nmatrix[q_id]).to(device)
 
-            # Compute classifier score
-            classifier_score = classifier(x_before_proj_query, x_before_proj_candidate).item()
+            # Ensure nm_candidate is repeated across nm_query's segments
+            nm_candidate = nm_candidate.unsqueeze(0).repeat(nm_query.shape[0], 1, 1)  # (num_segments, C, N)
+
+            # Compute classifier logits in batch mode
+            logits = classifier(nm_query, nm_candidate)  # (num_segments, 1)
+
+            # Take the max score across all segments
+            classifier_score = logits.max().item()
             hist[match] += classifier_score
-
-        sorted_predictions = sorted(hist, key=hist.get, reverse=True)
-        predictions[q_id] = sorted_predictions
 
         if ix % 20 == 0:
             print(f"Processed {ix} / {len(test_ids)} queries...")

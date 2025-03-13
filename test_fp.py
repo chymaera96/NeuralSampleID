@@ -266,9 +266,7 @@ def create_query_nmatrix(dataloader, augment, model, save_path, max_size=512, ve
                 print(f"Step [{idx}/{len(dataloader)}]\t shape: {query_nmatrix[nm].shape}")
 
     np.save(save_path, query_nmatrix)
-
-
-    print(f"Saved node matrices for {len(query_nmatrix)} queries in {save_dir}")
+    print(f"Saved node matrices for {len(query_nmatrix)} queries in {save_path}")
 
 
 
