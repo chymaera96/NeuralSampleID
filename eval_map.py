@@ -72,7 +72,7 @@ def extract_test_ids(lookup_table):
 
 def eval_faiss_map_clf(emb_dir, classifier, emb_dummy_dir=None,
                        index_type='ivfpq', nogpu=False, max_train=1e7,
-                       k_probe=20, n_centroids=32, k_map=20):
+                       k_probe=5, n_centroids=32, k_map=20):
     """
     Evaluation using classifier logits instead of cosine similarity.
     """
@@ -160,6 +160,7 @@ def eval_faiss_map_clf(emb_dir, classifier, emb_dummy_dir=None,
             hist[match] += weighted_score
             # print(f"Updated hist[{match}] = {hist[match]:.4f} (after weighting with freq={freq})")
 
+        print(f"Top 10 scores for {q_id}: {sorted(hist.items(), key=lambda x: x[1], reverse=True)[:10]}")
         if ix % 5 == 0:
             print(f"Processed {ix} / {len(test_ids)} queries...")
 
