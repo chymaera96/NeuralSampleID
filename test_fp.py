@@ -27,8 +27,10 @@ from encoder.dgl.graph_encoder import GraphEncoderDGL
 from encoder.resnet_ibn import ResNetIBN
 from simclr.simclr import SimCLR   
 from modules.transformations import GPUTransformSampleID
+from downstream import CrossAttentionClassifier
 from eval import get_index, load_memmap_data, eval_faiss
-from eval_map import eval_faiss_with_map
+# from eval_map import eval_faiss_with_map
+from eval_map import eval_faiss_map_clf
 
 
 # Directories
@@ -383,8 +385,8 @@ def main():
             create_ref_db(ref_db_loader, augment=test_augment,
                             model=model, output_root_dir=fp_dir, verbose=True)
             
-            create_query_db(query_db_loader, augment=test_augment,
-                            model=model, output_root_dir=fp_dir, verbose=True)
+            # create_query_db(query_db_loader, augment=test_augment,
+            #                 model=model, output_root_dir=fp_dir, verbose=True)
             
             if args.map:
                 create_query_db(query_full_db_loader, augment=test_augment,
@@ -400,41 +402,42 @@ def main():
             label = epoch if type(epoch) == int else 0
 
 
-            if args.query_lens is not None:
-                hit_rates = eval_faiss(emb_dir=fp_dir,
-                                    test_seq_len=test_seq_len, 
-                                    index_type=index_type,
-                                    nogpu=True) 
+            # if args.query_lens is not None:
+            #     hit_rates = eval_faiss(emb_dir=fp_dir,
+            #                         test_seq_len=test_seq_len, 
+            #                         index_type=index_type,
+            #                         nogpu=True) 
 
 
-                writer.add_text("table", 
-                                create_table(hit_rates, 
-                                            cfg['overlap'], cfg['dur'],
-                                            test_seq_len, text=text), 
-                                label)
+            #     writer.add_text("table", 
+            #                     create_table(hit_rates, 
+            #                                 cfg['overlap'], cfg['dur'],
+            #                                 test_seq_len, text=text), 
+            #                     label)
   
-            else:
-                hit_rates = eval_faiss(emb_dir=fp_dir, 
-                                    index_type=index_type,
-                                    nogpu=True)
+            # else:
+            #     hit_rates = eval_faiss(emb_dir=fp_dir, 
+            #                         index_type=index_type,
+            #                         nogpu=True)
                 
-                writer.add_text("table", 
-                                create_table(hit_rates, 
-                                            cfg['overlap'], cfg['dur'], text=text), 
-                                label)
+            #     writer.add_text("table", 
+            #                     create_table(hit_rates, 
+            #                                 cfg['overlap'], cfg['dur'], text=text), 
+            #                     label)
                 
-            print("-------Test hit-rates-------")
-            # Create table
-            print(f'Top-1 exact hit rate = {hit_rates[0]}')
-            print(f'Top-3 exact hit rate = {hit_rates[1]}')
-            print(f'Top-10 exact hit rate = {hit_rates[2]}')
+            # print("-------Test hit-rates-------")
+            # # Create table
+            # print(f'Top-1 exact hit rate = {hit_rates[0]}')
+            # print(f'Top-3 exact hit rate = {hit_rates[1]}')
+            # print(f'Top-10 exact hit rate = {hit_rates[2]}')
             
             if args.map:
-                map_score, k_map = eval_faiss_with_map(emb_dir=fp_dir, 
-                                        index_type='ivfpq',
-                                        test_seq_len=test_seq_len,
-                                        nogpu=True)
+                classifier = CrossAttentionClassifier(in_dim=512, num_nodes=32).to(device)
 
+                map_score, k_map = eval_faiss_map_clf(emb_dir=fp_dir, 
+                                        classifier=classifier,
+                                        index_type='ivfpq',
+                                        nogpu=True)
 
 
 

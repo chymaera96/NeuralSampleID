@@ -115,11 +115,13 @@ def eval_faiss_map_clf(emb_dir, classifier, emb_dummy_dir=None,
         #     continue
 
         _, I = index.search(q, k_probe)
+
+        candidates, freqs = np.unique(I[I >= 0], return_counts=True)
         # candidates = I[np.where(I >= 0)].flatten()
-        candidates = np.unique(I[np.where(I >= 0)])
+        # candidates = np.unique(I[np.where(I >= 0)])
 
         hist = defaultdict(int)
-        for cid in candidates:
+        for cid, freq in zip(candidates, freqs):
             if cid < dummy_db_shape[0]:
                 continue
             match = ref_lookup[cid - dummy_db_shape[0]]
@@ -149,7 +151,7 @@ def eval_faiss_map_clf(emb_dir, classifier, emb_dummy_dir=None,
             logits = classifier(nm_query, nm_candidate)  # (num_segments, 1)
 
             # Take the max score across all segments
-            classifier_score = logits.max().item()
+            classifier_score = logits.max().item() * freq
             hist[match] += classifier_score
 
         if ix % 20 == 0:
