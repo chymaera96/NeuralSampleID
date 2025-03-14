@@ -238,13 +238,12 @@ def create_ref_nmatrix(dataloader, augment, model, save_dir, max_size=512, verbo
                 nmat.append(x_before_proj)
                 fp_size += x_before_proj.shape[0]
 
-            ref_nmatrix[nm] = nmat
+            ref_nmatrix[nm] = np.concatenate(nmat)
             if verbose and idx % 20 == 0:
-                print(f"Step [{idx}/{len(dataloader)}]\t shape: {[fp_size, x_before_proj.shape[1], x_before_proj.shape[2]]}")
+                print(f"Step [{idx}/{len(dataloader)}]\t shape: {ref_nmatrix[nm].shape}")
 
     for song_id, nmatrices in ref_nmatrix.items():
         save_path = os.path.join(save_dir, f"{song_id}.npy")
-        nmatrices = np.array(nmatrices)
         np.save(save_path, nmatrices)  # Save as (num_segments, C, N)
 
     print(f"Saved node matrices for {len(ref_nmatrix)} songs in {save_dir}")
