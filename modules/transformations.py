@@ -198,6 +198,7 @@ class GPUTransformAdditiveSampleid(nn.Module):
         self.mix_prob = float(cfg.get("mix_prob", 0.95))
         self.mix_gain_range = cfg.get("mix_gain_range", [0.05, 0.5])  # Narrower range
         self.mix_gain_range = [float(i) for i in self.mix_gain_range]
+        self.tempo_ratio_range = cfg.get("tempo_ratio_range", [0.5,2.0])
 
         # Keep melspec transform
         self.logmelspec = nn.Sequential(
@@ -232,10 +233,15 @@ class GPUTransformAdditiveSampleid(nn.Module):
             to_key = (to_key - 7) % 12
 
         # Calculate the smallest semitone difference needed
-        difference = (to_key - from_key) % 12
-        if difference > 6:
-            difference -= 12
-        return difference
+        # Calculate direct difference first
+        direct_diff = to_key - from_key
+        
+        # Normalize to find shortest path
+        if direct_diff > 6:
+            direct_diff -= 12
+        elif direct_diff < -6:
+            direct_diff += 12
+        return direct_diff
 
     def analyze_tempo(self, beats_data):
         """Calculate tempo and time between beats"""
@@ -261,9 +267,9 @@ class GPUTransformAdditiveSampleid(nn.Module):
         raw_ratio = target_tempo / source_tempo
 
         # Find the closest power of 2 multiple/divisor that keeps ratio between 0.5 and 2.0
-        while raw_ratio > 2.0:
+        while raw_ratio > self.tempo_ratio_range[1]: #1.5: #2.0:
             raw_ratio /= 2.0
-        while raw_ratio < 0.5:
+        while raw_ratio < self.tempo_ratio_range[0]: #0.75: #0.5:
             raw_ratio *= 2.0
 
         return raw_ratio
@@ -411,26 +417,26 @@ class GPUTransformAdditiveSampleid(nn.Module):
                     # print("Offset", offset)
 
                     # Apply offset and padding/trimming to same length
-                    target_length = len(audio)
+                    target_length = len(other_audio)
                     if offset >= 0:
                         # Add offset zeros at the start
-                        other_audio = np.pad(other_audio, (offset, 0))
+                        audio = np.pad(audio, (offset, 0))
                         # Then trim/pad to target length
-                        if len(other_audio) > target_length:
-                            other_audio = other_audio[:target_length]
+                        if len(audio) > target_length:
+                            audio = audio[:target_length]
                         else:
-                            other_audio = np.pad(
-                                other_audio, (0, target_length - len(other_audio))
+                            audio = np.pad(
+                                audio, (0, target_length - len(audio))
                             )
                     elif offset < 0:
-                        other_audio = other_audio[-offset:]
-                        if len(other_audio) > target_length:
+                        audio = audio[-offset:]
+                        if len(audio) > target_length:
                             # If longer than target, trim the end
-                            other_audio = other_audio[:target_length]
+                            audio = audio[:target_length]
                         else:
                             # If shorter than target, pad the end
-                            other_audio = np.pad(
-                                other_audio, (0, target_length - len(other_audio))
+                            audio = np.pad(
+                                audio, (0, target_length - len(audio))
                             )
 
                     # Verify lengths match before mixing

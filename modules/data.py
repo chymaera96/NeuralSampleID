@@ -433,9 +433,11 @@ class AdditiveSampleIDDataset(Dataset):
         audio_resampled = resampler(audio_mono)
 
         clip_frames = int(self.sample_rate * self.dur)
+        offset_frames = int(self.sample_rate * self.offset)
 
-        if len(audio_resampled) <= clip_frames:
-            # self.ignore_idx.append(idx)
+        segment_length = clip_frames + offset_frames
+
+        if len(audio_resampled) < segment_length:
             return self[idx + 1]
 
         key = self.get_key_for_file(datapath)
@@ -449,63 +451,56 @@ class AdditiveSampleIDDataset(Dataset):
             "beats": beats,
         }
 
-        #   For training pipeline, output a random frame of the audio
-        if self.train:
-            a_i = audio_resampled
-            a_j = a_i.clone()
+        a_i = audio_resampled
 
-            offset_mod = int(self.sample_rate * (self.offset) + clip_frames)
-            if len(audio_resampled) < offset_mod:
-                print(
-                    "Audio too short (offset_mod > len(audio resampled)). Skipping..."
-                )
-                return self[idx + 1]
-            r = np.random.randint(0, len(audio_resampled) - offset_mod)
-            ri = np.random.randint(0, offset_mod - clip_frames)
-            rj = np.random.randint(0, offset_mod - clip_frames)
+        start_idx = np.random.randint(0, len(audio_resampled) - segment_length + 1)
+        a_i = a_i[start_idx : start_idx + segment_length]
 
-            # Add timestamps to metadata
-            metadata.update(
-                {"start_i": r + ri, "start_j": r + rj, "clip_length": clip_frames}
-            )
+        a_j = a_i.clone()
 
-            clip_i = a_i[r : r + offset_mod]
-            clip_j = a_j[r : r + offset_mod]
-            x_i = clip_i[ri : ri + clip_frames]
-            x_j = clip_j[rj : rj + clip_frames]
+        # Introduce offset by extracting a random dur-length segment
+        x_i_start = np.random.randint(0, offset_frames)
+        x_j_start = np.random.randint(0, offset_frames)
 
-            if x_i.abs().max() < self.silence or x_j.abs().max() < self.silence:
-                print("Silence detected. Skipping...")
-                return self[idx + 1]
+        x_i = a_i[x_i_start : x_i_start + clip_frames]
+        x_j = a_j[x_j_start : x_j_start + clip_frames]
 
-            if self.norm is not None:
-                norm_val = qtile_norm(audio_resampled, q=self.norm)
-                x_i = x_i / norm_val
-                x_j = x_j / norm_val
+        # Add timestamps to metadata
+        metadata.update(
+            {
+                "start_i": start_idx + x_i_start,
+                "start_j": start_idx + x_j_start,
+                "clip_length": clip_frames,
+            }
+        )
 
-            if self.transform is not None:
-                x_i, x_j, transform_metadata = self.transform(x_i, x_j, metadata)
+        if x_i.abs().max() < self.silence or x_j.abs().max() < self.silence:
+            print("Silence detected. Skipping...")
+            return self[idx + 1]
 
-            if x_i is None or x_j is None:
-                return self[idx + 1]
+        # if self.norm is not None:
+        #     norm_val = qtile_norm(audio_resampled, q=self.norm)
+        #     x_i = x_i / norm_val
+        #     x_j = x_j / norm_val
 
-            # Pad or truncate to sample_rate * dur
-            if len(x_i) < clip_frames:
-                x_i = F.pad(x_i, (0, clip_frames - len(x_i)))
-            else:
-                x_i = x_i[:clip_frames]
+        if self.transform is not None:
+            x_i, x_j, transform_metadata = self.transform(x_i, x_j, metadata)
 
-            if len(x_j) < clip_frames:
-                x_j = F.pad(x_j, (0, clip_frames - len(x_j)))
-            else:
-                x_j = x_j[:clip_frames]
+        if x_i is None or x_j is None:
+            return self[idx + 1]
 
-            return x_i, x_j, metadata
-
-        #   For validation / test, output consecutive (overlapping) frames
+        # Pad or truncate to sample_rate * dur
+        if len(x_i) < clip_frames:
+            x_i = F.pad(x_i, (0, clip_frames - len(x_i)))
         else:
-            return audio_resampled, None, metadata
-            # return audio_resampled
+            x_i = x_i[:clip_frames]
+
+        if len(x_j) < clip_frames:
+            x_j = F.pad(x_j, (0, clip_frames - len(x_j)))
+        else:
+            x_j = x_j[:clip_frames]
+
+        return x_i, x_j, metadata
 
     def __len__(self):
         return len(self.filenames)
