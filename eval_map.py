@@ -123,7 +123,8 @@ def eval_faiss_map_clf(emb_dir, classifier, emb_dummy_dir=None,
         for cid, freq in zip(candidates, freqs):
             if cid < dummy_db_shape[0]:
                 continue
-            match = ref_lookup[cid - dummy_db_shape[0]]
+            cid = cid - dummy_db_shape[0]
+            match = ref_lookup[cid]
             if match == q_id:
                 continue
 
