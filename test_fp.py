@@ -61,6 +61,7 @@ parser.add_argument('--map', action='store_true', default=False)
 # parser.add_argument('--hit_rate', action='store_true', default=True)
 parser.add_argument('--k', default=3, type=int)
 parser.add_argument('--test_ids', default='1000', type=str)
+parser.add_argument('--clf_ckp', default='clf_test_best.pth', type=str)
 
 device = torch.device('cuda' if torch.cuda.is_available else 'cpu')
 
@@ -306,6 +307,17 @@ def main():
     else:
         model = model.to(device)
 
+    classifier = CrossAttentionClassifier(in_dim=512, num_nodes=32).to(device)
+
+    # Load classifier checkpoint
+    clf_ckpt = f'checkpoint/{args.clf_ckp}'
+    if os.path.isfile(clf_ckpt):
+        print(f"=> Loading classifier checkpoint '{clf_ckpt}'")
+        classifier.load_state_dict(torch.load(clf_ckpt))
+    else:
+        print(f"=> No classifier checkpoint found at '{clf_ckpt}'")
+
+
     print("Creating dataloaders ...")
 
     # Augmentation for testing with specific noise subsets
@@ -432,7 +444,6 @@ def main():
             # print(f'Top-10 exact hit rate = {hit_rates[2]}')
             
             if args.map:
-                classifier = CrossAttentionClassifier(in_dim=512, num_nodes=32).to(device)
 
                 map_score, k_map = eval_faiss_map_clf(emb_dir=fp_dir, 
                                         classifier=classifier,
