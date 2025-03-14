@@ -225,6 +225,7 @@ def create_ref_nmatrix(dataloader, augment, model, save_dir, max_size=512, verbo
 
     with torch.no_grad():
         for idx, (nm, audio) in enumerate(dataloader):
+            nm = nm[0]  # Extract filename from list
             audio = audio.to(device)
             x_i, _ = augment(audio, None)
             x_list = torch.split(x_i, max_size, dim=0)
@@ -254,6 +255,7 @@ def create_query_nmatrix(dataloader, augment, model, save_path, max_size=512, ve
 
     with torch.no_grad():
         for idx, (nm, audio) in enumerate(dataloader):
+            nm = nm[0]  # Extract filename from list
             audio = audio.to(device)
             x_i, _ = augment(audio, None)
             x_list = torch.split(x_i, max_size, dim=0)  # Prevent OOM errors
