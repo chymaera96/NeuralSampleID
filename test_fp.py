@@ -222,7 +222,7 @@ def create_ref_nmatrix(dataloader, augment, model, save_dir, max_size=512, verbo
     model.eval() 
 
     ref_nmatrix = {}  
-
+    print("=> Creating reference node matrices...")
     with torch.no_grad():
         for idx, (nm, audio) in enumerate(dataloader):
             nm = nm[0]  # Extract filename from list
@@ -244,7 +244,8 @@ def create_ref_nmatrix(dataloader, augment, model, save_dir, max_size=512, verbo
 
     for song_id, nmatrices in ref_nmatrix.items():
         save_path = os.path.join(save_dir, f"{song_id}.npy")
-        np.save(save_path, np.array(nmatrices))  # Save as (num_segments, C, N)
+        nmatrices = np.array(nmatrices)
+        np.save(save_path, nmatrices)  # Save as (num_segments, C, N)
 
     print(f"Saved node matrices for {len(ref_nmatrix)} songs in {save_dir}")
 
@@ -254,7 +255,7 @@ def create_query_nmatrix(dataloader, augment, model, save_path, max_size=512, ve
 
     model.eval()  
     query_nmatrix = {}
-
+    print("=> Creating query node matrices...")
     with torch.no_grad():
         for idx, (nm, audio) in enumerate(dataloader):
             nm = nm[0]  # Extract filename from list
