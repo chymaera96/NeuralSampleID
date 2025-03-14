@@ -107,18 +107,17 @@ def eval_faiss_map_clf(emb_dir, classifier, emb_dummy_dir=None,
     
     predictions = {}
 
+    print("Starting FAISS-based retrieval and ranking...")
+
     for ix, test_id in enumerate(test_ids):
         q_id = query_lookup[test_id].split("_")[0]
         max_len = max_test_seq_len[ix]
         q = query[test_id: test_id + max_len, :]
-        # if q.shape[0] <= 10:
-        #     continue
 
         _, I = index.search(q, k_probe)
 
         candidates, freqs = np.unique(I[I >= 0], return_counts=True)
-        # candidates = I[np.where(I >= 0)].flatten()
-        # candidates = np.unique(I[np.where(I >= 0)])
+        print(f"\nQuery {ix}: Retrieved {len(candidates)} candidates.")
 
         hist = defaultdict(int)
         for cid, freq in zip(candidates, freqs):
@@ -135,11 +134,13 @@ def eval_faiss_map_clf(emb_dir, classifier, emb_dummy_dir=None,
             # Load the reference node matrix
             ref_nmatrix_path = os.path.join(ref_nmatrix_dir, f"{match}.npy")
             if not os.path.exists(ref_nmatrix_path):
-                continue  # Skip if missing reference
+                print(f"Missing reference matrix for {match}, skipping...")
+                continue
 
             ref_nmatrix = np.load(ref_nmatrix_path)  # (num_segments, C, N)
             if ref_seg_idx >= ref_nmatrix.shape[0]:
-                continue  # Skip if index out of bounds
+                print(f"Segment index {ref_seg_idx} out of bounds for {match}, skipping...")
+                continue  
 
             nm_candidate = torch.tensor(ref_nmatrix[ref_seg_idx]).to(device)
             nm_query = torch.tensor(query_nmatrix[q_id]).to(device)
@@ -150,17 +151,24 @@ def eval_faiss_map_clf(emb_dir, classifier, emb_dummy_dir=None,
             # Compute classifier logits in batch mode
             logits = classifier(nm_query, nm_candidate)  # (num_segments, 1)
 
-            # Take the max score across all segments
-            classifier_score = logits.max().item() * freq
-            hist[match] += classifier_score
+            classifier_score = logits.max().item()
+            print(f"Classifier score for {match}: {classifier_score:.4f} (before freq weighting)")
 
-        if ix % 20 == 0:
+            # Multiply by frequency
+            weighted_score = classifier_score * freq
+            hist[match] += weighted_score
+            print(f"Updated hist[{match}] = {hist[match]:.4f} (after weighting with freq={freq})")
+
+        if ix % 5 == 0:
             print(f"Processed {ix} / {len(test_ids)} queries...")
 
     # Compute MAP
+    print("\nComputing MAP score...")
     map_score = calculate_map(ground_truth, predictions, k=k_map)
     np.save(f'{emb_dir}/predictions.npy', predictions)
     np.save(f'{emb_dir}/map_score.npy', map_score)
+    
+    print(f"MAP score computed: {map_score:.4f}")
     print(f"Saved predictions and MAP score to {emb_dir}")
 
     return map_score, k_map
