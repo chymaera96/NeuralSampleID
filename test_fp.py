@@ -230,15 +230,17 @@ def create_ref_nmatrix(dataloader, augment, model, save_dir, max_size=512, verbo
             x_i, _ = augment(audio, None)
             x_list = torch.split(x_i, max_size, dim=0)
             nmat = []
+            fp_size = 0
             for x in x_list:
                 p = model.peak_extractor(x)
                 x_before_proj, _ = model.encoder(p, return_pre_proj=True)  # (B, C, N)
                 x_before_proj = x_before_proj.cpu().numpy()
                 nmat.append(x_before_proj)
+                fp_size += x_before_proj.shape[0]
 
             ref_nmatrix[nm] = nmat
             if verbose and idx % 20 == 0:
-                        print(f"Step [{idx}/{len(dataloader)}]\t shape: {ref_nmatrix[nm].shape}")
+                print(f"Step [{idx}/{len(dataloader)}]\t shape: {[fp_size, x_before_proj.shape[1], x_before_proj.shape[2]]}")
 
     for song_id, nmatrices in ref_nmatrix.items():
         save_path = os.path.join(save_dir, f"{song_id}.npy")
@@ -260,15 +262,17 @@ def create_query_nmatrix(dataloader, augment, model, save_path, max_size=512, ve
             x_i, _ = augment(audio, None)
             x_list = torch.split(x_i, max_size, dim=0)  # Prevent OOM errors
             nmat = []
+            fp_size = 0
             for x in x_list:
                 p = model.peak_extractor(x)
                 x_before_proj, _ = model.encoder(p, return_pre_proj=True)  # (B, C, N)
                 x_before_proj = x_before_proj.cpu().numpy()
                 nmat.append(x_before_proj)
+                fp_size += x_before_proj.shape[0]
 
             query_nmatrix[nm] = nmat
             if verbose and idx % 20 == 0:
-                print(f"Step [{idx}/{len(dataloader)}]\t shape: {query_nmatrix[nm].shape}")
+                print(f"Step [{idx}/{len(dataloader)}]\t shape: {[fp_size, x_before_proj.shape[1], x_before_proj.shape[2]]}")
 
     np.save(save_path, query_nmatrix)
     print(f"Saved node matrices for {len(query_nmatrix)} queries in {save_path}")
