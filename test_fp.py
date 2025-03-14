@@ -270,9 +270,9 @@ def create_query_nmatrix(dataloader, augment, model, save_path, max_size=512, ve
                 nmat.append(x_before_proj)
                 fp_size += x_before_proj.shape[0]
 
-            query_nmatrix[nm] = nmat
+            query_nmatrix[nm] = np.concatenate(nmat)
             if verbose and idx % 20 == 0:
-                print(f"Step [{idx}/{len(dataloader)}]\t shape: {[fp_size, x_before_proj.shape[1], x_before_proj.shape[2]]}")
+                print(f"Step [{idx}/{len(dataloader)}]\t shape: {query_nmatrix[nm].shape}")
 
     np.save(save_path, query_nmatrix)
     print(f"Saved node matrices for {len(query_nmatrix)} queries in {save_path}")
