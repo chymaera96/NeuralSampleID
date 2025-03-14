@@ -165,6 +165,8 @@ def eval_faiss_map_clf(emb_dir, classifier, emb_dummy_dir=None,
         if ix % 5 == 0:
             print(f"Processed {ix} / {len(test_ids)} queries...")
 
+        predictions[q_id] = sorted(hist, key=hist.get, reverse=True)
+
     # Compute MAP
     print("\nComputing MAP score...")
     map_score = calculate_map(ground_truth, predictions, k=k_map)
