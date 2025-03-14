@@ -156,7 +156,7 @@ def eval_faiss_map_clf(emb_dir, classifier, emb_dummy_dir=None,
             # print(f"Classifier score for {match}: {classifier_score:.4f} (before freq weighting)")
 
             # Multiply by frequency
-            weighted_score = classifier_score * freq
+            weighted_score = classifier_score * np.log1p(freq)
             hist[match] += weighted_score
             # print(f"Updated hist[{match}] = {hist[match]:.4f} (after weighting with freq={freq})")
 
