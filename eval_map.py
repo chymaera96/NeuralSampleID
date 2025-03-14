@@ -153,12 +153,12 @@ def eval_faiss_map_clf(emb_dir, classifier, emb_dummy_dir=None,
             logits = classifier(nm_query, nm_candidate)  # (num_segments, 1)
 
             classifier_score = logits.max().item()
-            print(f"Classifier score for {match}: {classifier_score:.4f} (before freq weighting)")
+            # print(f"Classifier score for {match}: {classifier_score:.4f} (before freq weighting)")
 
             # Multiply by frequency
             weighted_score = classifier_score * freq
             hist[match] += weighted_score
-            print(f"Updated hist[{match}] = {hist[match]:.4f} (after weighting with freq={freq})")
+            # print(f"Updated hist[{match}] = {hist[match]:.4f} (after weighting with freq={freq})")
 
         if ix % 5 == 0:
             print(f"Processed {ix} / {len(test_ids)} queries...")
