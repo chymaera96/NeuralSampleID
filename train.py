@@ -53,7 +53,7 @@ parser.add_argument('--encoder', default='grafp', type=str)
 parser.add_argument('--size_opt', default='t', type=str)
 parser.add_argument('--n_dummy_db', default=None, type=int)
 parser.add_argument('--n_query_db', default=None, type=int)
-parser.add_argument('--k', default=3, type=int)
+parser.add_argument('--k', default=5, type=int)
 
 
 

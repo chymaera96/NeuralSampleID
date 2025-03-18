@@ -59,7 +59,7 @@ parser.add_argument('--text', default='test', type=str)
 parser.add_argument('--recompute', action='store_true', default=False)
 parser.add_argument('--map', action='store_true', default=False)
 # parser.add_argument('--hit_rate', action='store_true', default=True)
-parser.add_argument('--k', default=3, type=int)
+parser.add_argument('--k', default=5, type=int)
 parser.add_argument('--test_ids', default='1000', type=str)
 parser.add_argument('--clf_ckp', default='clf_test_best.pth', type=str)
 
