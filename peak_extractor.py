@@ -21,7 +21,7 @@ class GPUPeakExtractorv2(nn.Module):
                 in_channels=3, 
                 out_channels=self.n_filters,
                 kernel_size=(self.patch_bins, self.patch_frames),
-                stride=(self.patch_bins, self.patch_frames),
+                stride=(self.patch_bins // 2, self.patch_frames // 2),
             ),
             nn.ReLU(),
         )
