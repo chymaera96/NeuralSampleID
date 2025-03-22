@@ -66,6 +66,7 @@ class CrossAttentionClassifier(nn.Module):
         self.fc = nn.Sequential(
             nn.Linear(in_dim, hidden_dim),
             nn.ReLU(),
+            nn.Dropout(p=0.3),
             nn.Linear(hidden_dim, 1),
             nn.Sigmoid()
         )
@@ -208,11 +209,7 @@ def main():
     for epoch in range(args.epochs):
         loss_epoch = train(cfg, train_loader, model, classifier, optimizer, scaler, augment=gpu_augment)        
         print(f"Epoch {epoch}, Loss: {loss_epoch}")
-        if loss_epoch < best_loss:
-            best_loss = loss_epoch
-            torch.save(classifier.state_dict(), f'checkpoint/clf_{args.ckp}_best.pth')
-        elif epoch % 5 == 0:
-            torch.save(classifier.state_dict(), f'checkpoint/clf_{args.ckp}_{epoch}.pth')
+        torch.save(classifier.state_dict(), f'checkpoint/clf_{args.ckp}_{epoch}.pth')
 
 if __name__ == '__main__':
     main()
