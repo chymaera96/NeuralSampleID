@@ -72,7 +72,7 @@ def extract_test_ids(lookup_table):
 
 def eval_faiss_map_clf(emb_dir, classifier, emb_dummy_dir=None,
                        index_type='ivfpq', nogpu=False, max_train=1e7,
-                       k_probe=3, n_centroids=32, k_map=20):
+                       k_probe=1, n_centroids=32, k_map=20):
     """
     Evaluation using classifier logits instead of cosine similarity.
     """
