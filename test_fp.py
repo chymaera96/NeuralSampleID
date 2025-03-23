@@ -400,22 +400,22 @@ def main():
             else:
                 print("=> Skipping dummy db creation...")
 
-            # create_ref_db(ref_db_loader, augment=test_augment,
-            #                 model=model, output_root_dir=fp_dir, verbose=True)
+            create_ref_db(ref_db_loader, augment=test_augment,
+                            model=model, output_root_dir=fp_dir, verbose=True)
             
             # create_query_db(query_db_loader, augment=test_augment,
             #                 model=model, output_root_dir=fp_dir, verbose=True)
             
             if args.map:
-                # create_query_db(query_full_db_loader, augment=test_augment,
-                #                 model=model, output_root_dir=fp_dir, fname='query_full_db', verbose=True)
+                create_query_db(query_full_db_loader, augment=test_augment,
+                                model=model, output_root_dir=fp_dir, fname='query_full_db', verbose=True)
             
-                # create_ref_nmatrix(ref_db_loader, augment=test_augment,
-                #                 model=model, save_dir=f'{fp_dir}/ref_nmatrix', verbose=True)
+                create_ref_nmatrix(ref_db_loader, augment=test_augment,
+                                model=model, save_dir=f'{fp_dir}/ref_nmatrix', verbose=True)
                 
-                # create_query_nmatrix(query_full_db_loader, augment=test_augment,
-                #                 model=model, save_path=f'{fp_dir}/query_nmatrix.npy', verbose=True)
-                pass
+                create_query_nmatrix(query_full_db_loader, augment=test_augment,
+                                model=model, save_path=f'{fp_dir}/query_nmatrix.npy', verbose=True)
+                # pass
             
             text = f'{args.text}_{str(epoch)}'
             label = epoch if type(epoch) == int else 0
