@@ -16,6 +16,8 @@ import torchaudio
 from util import *
 from simclr.ntxent import ntxent_loss, SoftCrossEntropy
 from simclr.simclr import SimCLR   
+from simclr.triplet import get_batch_labels, triplet_loss, classifier_loss
+
 from modules.transformations import GPUTransformSampleID
 from modules.data import NeuralSampleIDDataset
 # from encoder.graph_encoder import GraphEncoder
@@ -132,6 +134,53 @@ def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augmen
         loss_epoch += loss.item()
 
     return loss_epoch
+
+
+
+def train_triplet(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augment=None):
+    model.train()
+    loss_epoch = 0
+    global nan_counter
+
+    for idx, (x_i, x_j) in enumerate(train_loader):
+
+        optimizer.zero_grad()
+        x_i = x_i.to(device)
+        x_j = x_j.to(device)
+
+        with torch.no_grad():
+            x_i, x_j = augment(x_i, x_j)
+
+        _, _, z_i, z_j = model(x_i, x_j)
+
+        # Combine both views and normalize
+        z = torch.cat([z_i, z_j], dim=0)
+        z = F.normalize(z, dim=1)
+        labels = get_batch_labels(z_i.size(0), device=z.device)
+
+        # Compute losses
+        loss_cls = classifier_loss(z, labels)
+        loss_trip = triplet_loss(z, labels, margin=cfg['margin'])
+
+        # Final loss
+        loss = cfg['beta'] * loss_cls + cfg['gamma'] * loss_trip
+
+        assert not torch.isnan(loss), "Loss is NaN"
+
+        scaler.scale(loss).backward()
+        torch.nn.utils.clip_grad_norm_(model.parameters(), max_norm=1.0)
+        scaler.step(optimizer)
+        scaler.update()
+
+        if idx % 10 == 0:
+            print(f"Step [{idx}/{len(train_loader)}] | "
+                  f"Cls: {loss_cls.item():.4f} | Triplet: {loss_trip.item():.4f}")
+
+        loss_epoch += loss.item()
+
+    return loss_epoch
+
+
 
 
 def validate(epoch, query_loader, dummy_loader, augment, model, output_root_dir):
@@ -256,7 +305,7 @@ def main():
 
     for epoch in range(start_epoch+1, num_epochs+1):
         print("#######Epoch {}#######".format(epoch))
-        loss_epoch = train(cfg, train_loader, model, optimizer, scaler, ir_train_idx, noise_train_idx, gpu_augment)
+        loss_epoch = train_triplet(cfg, train_loader, model, optimizer, scaler, ir_train_idx, noise_train_idx, gpu_augment)
         writer.add_scalar("Loss/train", loss_epoch, epoch)
         loss_log.append(loss_epoch)
         output_root_dir = create_fp_dir(ckp=args.ckp, epoch=epoch)
