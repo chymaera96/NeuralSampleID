@@ -46,7 +46,7 @@ error_threshold: 5
 
 # Triplets hyperparameters
 beta: 0.3         # Weight for classifier loss
-gamma: 0.0         # Weight for triplet loss
+gamma: 0.7         # Weight for triplet loss
 margin: 0.3          # Margin for the triplet loss
 
 

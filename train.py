@@ -161,8 +161,8 @@ def train_triplet(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx
         # Compute losses
         loss_cls = classifier_loss(z_i, z_j)
         # loss_cls = torch.tensor(0.0)
-        # loss_trip = triplet_loss(z, labels, margin=cfg['margin'])
-        loss_trip = torch.tensor(0.0)
+        loss_trip = triplet_loss(z, labels, margin=cfg['margin'])
+        # loss_trip = torch.tensor(0.0)
 
         # Final loss
         loss = cfg['beta'] * loss_cls + cfg['gamma'] * loss_trip
