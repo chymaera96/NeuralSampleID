@@ -4,46 +4,40 @@ import torch.nn.functional as F
 
 def triplet_loss(embeddings, labels, margin=0.2):
     """
-    Semi-hard triplet loss with in-batch mining.
+    Vectorized semi-hard triplet loss.
     Args:
-        embeddings: (2B, D) normalized embeddings
-        labels: (2B,) pseudo-labels
-        margin: Margin for triplet loss
+        embeddings: (B, D) normalized embeddings
+        labels: (B,) pseudo-labels (int64)
+        margin: float, margin for triplet loss
     Returns:
-        loss: Scalar loss value
+        scalar tensor
     """
-    sim_matrix = torch.matmul(embeddings, embeddings.T)  # cosine similarity
-    batch_size = labels.size(0)
-    loss = 0.0
-    count = 0
+    device = embeddings.device
+    sim_matrix = torch.matmul(embeddings, embeddings.T)  # (B, B)
 
-    for i in range(batch_size):
-        anchor_label = labels[i]
-        anchor_sim = sim_matrix[i]
+    labels = labels.unsqueeze(1)  # (B, 1)
+    matches = labels == labels.T  # (B, B) bool mask
 
-        # Positive and negative masks
-        is_pos = (labels == anchor_label) & (torch.arange(batch_size, device=labels.device) != i)
-        is_neg = (labels != anchor_label)
+    # Remove diagonal (self-matching)
+    mask_pos = matches & ~torch.eye(matches.size(0), dtype=torch.bool, device=device)
+    mask_neg = ~matches
 
-        if not torch.any(is_pos) or not torch.any(is_neg):
-            continue
+    # For each anchor, get hardest positive
+    pos_sim = sim_matrix.masked_fill(~mask_pos, float('-inf')).max(dim=1).values  # (B,)
 
-        pos_sim = anchor_sim[is_pos]         # (P,)
-        neg_sim = anchor_sim[is_neg]         # (N,)
+    # For each anchor, get semi-hard negatives
+    neg_sim = sim_matrix.masked_fill(~mask_neg, float('-inf'))  # (B, B)
+    semi_hard_neg_mask = neg_sim > (pos_sim.unsqueeze(1) - margin)
+    semi_hard_neg = neg_sim.masked_fill(~semi_hard_neg_mask, float('inf'))
 
-        pos_sim = pos_sim.max()              # hardest positive
-        semi_hard_negs = neg_sim[neg_sim > pos_sim - margin]
+    # Select minimum semi-hard negative sim per anchor
+    neg_sim_min = semi_hard_neg.min(dim=1).values  # (B,)
+    valid = ~torch.isinf(neg_sim_min)
 
-        if semi_hard_negs.numel() == 0:
-            continue
+    # Compute triplet loss
+    loss = F.relu(pos_sim[valid] - neg_sim_min[valid] + margin)
+    return loss.mean() if loss.numel() > 0 else torch.tensor(0.0, device=device)
 
-        neg_sim = semi_hard_negs.min()       # hardest semi-hard negative
-
-        triplet = F.relu(pos_sim - neg_sim + margin)
-        loss += triplet
-        count += 1
-
-    return loss / max(count, 1)
 
 
 def classifier_loss(embeddings, labels):
