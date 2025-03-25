@@ -42,12 +42,28 @@ def triplet_loss(embeddings, labels, margin=0.2):
 
 def classifier_loss(embeddings, labels):
     """
-    Contrastive classification loss using dot-product + softmax.
+    Vectorized supervised contrastive loss (no temperature, no loop).
     Args:
-        embeddings: (2B, D) normalized embeddings
-        labels: (2B,) pseudo-labels (same label => same class)
+        embeddings: (2B, D) normalized
+        labels: (2B,) with matching labels for positives
     """
-    logits = torch.matmul(embeddings, embeddings.T)
-    logits.fill_diagonal_(-float('inf'))
+    device = embeddings.device
+    sim = torch.matmul(embeddings, embeddings.T)  # cosine sim (2B, 2B)
+    B = labels.size(0)
 
-    return F.cross_entropy(logits, labels)
+    # Remove self-similarity from numerator and denominator
+    mask = torch.eye(B, dtype=torch.bool, device=device)
+    sim.masked_fill_(mask, -float('inf'))
+
+    # Create binary mask of positive pairs (excluding self)
+    label_eq = labels.unsqueeze(0) == labels.unsqueeze(1)  # (B, B)
+    positive_mask = label_eq & ~mask  # exclude self
+
+    # Compute log-softmax across rows
+    log_probs = F.log_softmax(sim, dim=1)  # (B, B)
+
+    # Only keep log-probs of actual positives
+    loss = - (log_probs * positive_mask.float()).sum(dim=1) / positive_mask.sum(dim=1).clamp(min=1)
+
+    return loss.mean()
+
