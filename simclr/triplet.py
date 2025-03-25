@@ -42,33 +42,22 @@ def triplet_loss(embeddings, labels, margin=0.2):
 
 def classifier_loss(z_i, z_j):
     """
-    Adapted NT-Xent contrastive loss for classification-style pairing.
-    Each (z_i[k], z_j[k]) is a positive pair.
+    Paper-consistent classifier loss:
+    For each anchor, the positive is its paired view.
     """
-    z = torch.cat([z_i, z_j], dim=0)              # (2B, D)
-    sim_matrix = torch.matmul(z, z.T)
+    z = F.normalize(torch.cat([z_i, z_j], dim=0), dim=1)  # (2B, D)
+    sim_matrix = torch.matmul(z, z.T)                     # (2B, 2B)
 
-    N = z.shape[0]
-    labels = torch.arange(N // 2, device=z.device)
-    labels = torch.cat([labels, labels], dim=0)   # [0, 1, ..., B-1, 0, 1, ..., B-1]
+    N = z.size(0)
+    sim_matrix.fill_diagonal_(-float('inf'))
 
-    loss = 0
-    for i in range(N):
-        # mask out self
-        sim_i = torch.cat([sim_matrix[i, :i], sim_matrix[i, i+1:]])
-        label_i = labels[i]
-        labels_wo_self = torch.cat([labels[:i], labels[i+1:]])
+    # Positives are at index i <-> i ± B
+    targets = torch.arange(N, device=z.device)
+    targets = targets + N//2
+    targets = targets % N  # maps i <-> i ± B
 
-        # identify positives (same class)
-        pos_mask = (labels_wo_self == label_i)
+    return F.cross_entropy(sim_matrix, targets)
 
-        if pos_mask.sum() == 0:
-            continue  # no positives
-
-        log_prob = F.log_softmax(sim_i, dim=0)
-        loss += -log_prob[pos_mask].mean()
-
-    return loss / N
 
 
 
