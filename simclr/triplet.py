@@ -2,14 +2,6 @@ import torch
 import torch.nn.functional as F
 
 
-def get_batch_labels(batch_size, device):
-    """
-    Labels for classification-style contrastive loss.
-    Each sample in the batch is its own class → identity labels.
-    """
-    return torch.arange(2 * batch_size, device=device)
-
-
 def triplet_loss(embeddings, labels, margin=0.2):
     """
     Semi-hard triplet loss with in-batch mining.
