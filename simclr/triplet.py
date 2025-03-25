@@ -42,33 +42,21 @@ def triplet_loss(embeddings, labels, margin=0.2):
 
 def classifier_loss(embeddings, labels):
     """
-    Safe contrastive classification loss. Assumes embeddings are normalized.
+    Vectorized supervised contrastive loss (no temp).
     """
     device = embeddings.device
-    sim = torch.matmul(embeddings, embeddings.T)  # cosine sim (2B, 2B)
-    B = labels.size(0)
+    sim = torch.matmul(embeddings, embeddings.T)  # (2B, 2B)
+    N = labels.size(0)
 
-    mask = torch.eye(B, dtype=torch.bool, device=device)
-    sim.masked_fill_(mask, -float('inf'))
+    mask = torch.eye(N, device=device, dtype=torch.bool)
+    sim.masked_fill_(mask, float('-inf'))
 
-    # Positive pairs
-    label_eq = labels.unsqueeze(0) == labels.unsqueeze(1)  # (B, B)
+    label_eq = labels.unsqueeze(0) == labels.unsqueeze(1)  # (2B, 2B)
     pos_mask = label_eq & ~mask
 
-    # Debug prints
-    num_pos = pos_mask.sum(dim=1)
-    if (num_pos == 0).any():
-        print("⚠️ Found rows with zero positive pairs")
-
     log_probs = F.log_softmax(sim, dim=1)
+    pos_count = pos_mask.sum(dim=1).clamp(min=1)
 
-    loss_per_sample = - (log_probs * pos_mask.float()).sum(dim=1) / num_pos.clamp(min=1)
-
-    if torch.isnan(loss_per_sample).any():
-        print("❌ NaN detected in loss! Investigate embeddings or labels.")
-        print("logits:", sim)
-        print("labels:", labels)
-        print("pos mask:\n", pos_mask.int())
-
-    return loss_per_sample.mean()
+    loss = - (log_probs * pos_mask.float()).sum(dim=1) / pos_count
+    return loss.mean()
 

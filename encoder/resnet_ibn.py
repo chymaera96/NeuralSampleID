@@ -105,18 +105,19 @@ class ResNetIBN(nn.Module):
         self.relu = nn.ReLU(inplace=True)
         self.maxpool = nn.MaxPool2d(kernel_size=3, stride=2, padding=1)
 
-        self.layer1 = self._make_layer(ResidualIBN, 64, 64, 2, stride=1)
-        self.layer2 = self._make_layer(ResidualIBN, 64, 128, 2, stride=2)
-        self.layer3 = self._make_layer(ResidualIBN, 128, 256, 2, stride=2)
-        self.layer4 = self._make_layer(ResidualIBN, 256, 512, 2, stride=2)
+        self.layer1 = self._make_layer(ResidualIBN, 64, 128, 2, stride=1)
+        self.layer2 = self._make_layer(ResidualIBN, 128, 256, 2, stride=1)
+        self.layer3 = self._make_layer(ResidualIBN, 256, 512, 2, stride=2)
+        self.layer4 = self._make_layer(ResidualIBN, 512, 1024, 2, stride=2)
 
         self.global_pool = GeMPooling()
 
-        self.embedding_head = nn.Sequential(
-            nn.Linear(512, 1024),
-            nn.ReLU(),
-            nn.Linear(1024, 2048)
-        )
+        # self.embedding_head = nn.Sequential(
+        #     nn.Linear(512, 1024),
+        #     nn.ReLU(),
+        #     nn.Linear(1024, 2048)
+        # )
+        self.embedding_head = nn.Linear(1024, 2048)
 
 
     def _make_layer(self, block, in_channels, out_channels, blocks, stride):
