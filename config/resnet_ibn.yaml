@@ -33,7 +33,7 @@ silence: 1.0e-5
 # Dataset and Model hyperparameters
 train_sz: 8000
 val_sz: 25000
-bsz_train: 32
+bsz_train: 256
 tau: 0.05
 tau_mix: 0.05
 lr: 1.0e-4
