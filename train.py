@@ -155,7 +155,6 @@ def train_triplet(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx
 
         # Combine both views and normalize
         z = torch.cat([z_i, z_j], dim=0)
-        z = F.normalize(z, dim=1)
         labels = torch.arange(z.size(0), device=z.device)
 
         # Compute losses
