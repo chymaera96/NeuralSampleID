@@ -219,7 +219,7 @@ def create_dummy_db(dataloader, augment, model, output_root_dir, fname='dummy_db
 def create_ref_nmatrix(dataloader, augment, model, save_dir, max_size=512, verbose=False):
 
     os.makedirs(save_dir, exist_ok=True)
-    model.eval() 
+    # model.eval() 
 
     ref_nmatrix = {}  
     print("=> Creating reference node matrices...")
@@ -252,7 +252,7 @@ def create_ref_nmatrix(dataloader, augment, model, save_dir, max_size=512, verbo
 
 def create_query_nmatrix(dataloader, augment, model, save_path, max_size=512, verbose=False):
 
-    model.eval()  
+    # model.eval()  
     query_nmatrix = {}
     print("=> Creating query node matrices...")
     with torch.no_grad():
@@ -313,6 +313,7 @@ def main():
     else:
         model = model.to(device)
 
+    model.eval()
     classifier = CrossAttentionClassifier(in_dim=512, num_nodes=32).to(device)
 
     # Load classifier checkpoint
