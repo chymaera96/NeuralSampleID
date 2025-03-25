@@ -16,7 +16,7 @@ import torchaudio
 from util import *
 from simclr.ntxent import ntxent_loss, SoftCrossEntropy
 from simclr.simclr import SimCLR   
-from simclr.triplet import get_batch_labels, triplet_loss, classifier_loss
+from simclr.triplet import triplet_loss, classifier_loss
 
 from modules.transformations import GPUTransformSampleID
 from modules.data import NeuralSampleIDDataset
