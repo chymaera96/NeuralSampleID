@@ -4,12 +4,10 @@ import torch.nn.functional as F
 
 def get_batch_labels(batch_size, device):
     """
-    Generate pseudo-labels for a batch of (x_i, x_j) pairs.
-    Returns:
-        labels: Tensor of shape (2 * batch_size,)
+    Labels for classification-style contrastive loss.
+    Each sample in the batch is its own class → identity labels.
     """
-    labels = torch.arange(batch_size, device=device)
-    return torch.cat([labels, labels], dim=0)
+    return torch.arange(2 * batch_size, device=device)
 
 
 def triplet_loss(embeddings, labels, margin=0.2):
@@ -64,6 +62,6 @@ def classifier_loss(embeddings, labels):
         labels: (2B,) pseudo-labels (same label => same class)
     """
     logits = torch.matmul(embeddings, embeddings.T)
-    logits = logits - torch.eye(logits.size(0), device=logits.device) * 1e12  # mask diagonal
+    logits.fill_diagonal_(-float('inf'))
 
     return F.cross_entropy(logits, labels)
