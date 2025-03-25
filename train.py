@@ -281,7 +281,7 @@ def main():
     print(count_parameters(model, args.encoder))
 
     optimizer = torch.optim.Adam(model.parameters(), lr=learning_rate)
-    scheduler = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max = cfg['T_max'], eta_min = cfg['min_lr'])
+    scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=40, gamma=0.2)
     # scaler = GradScaler(enabled=True)
     scaler = DummyScaler()
        
