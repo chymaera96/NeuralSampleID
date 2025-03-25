@@ -40,49 +40,35 @@ def triplet_loss(embeddings, labels, margin=0.2):
 
 
 
-def classifier_loss(embeddings, labels):
+def classifier_loss(z_i, z_j):
     """
-    Vectorized contrastive classification loss with proper masking.
-    Args:
-        embeddings: (2B, D) normalized
-        labels: (2B,) where positives have same label
-    Returns:
-        scalar loss (mean over samples)
+    Adapted NT-Xent contrastive loss for classification-style pairing.
+    Each (z_i[k], z_j[k]) is a positive pair.
     """
-    device = embeddings.device
-    N = labels.size(0)
-    
-    # Cosine similarity matrix
-    sim = torch.matmul(embeddings, embeddings.T)  # shape: (N, N)
-    
-    # Mask self-similarity (avoid log(0) in softmax)
-    sim.fill_diagonal_(-float('inf'))
+    z = torch.cat([z_i, z_j], dim=0)              # (2B, D)
+    sim_matrix = torch.matmul(z, z.T)
 
-    # Build mask of positives (excluding self)
-    pos_mask = (labels.unsqueeze(0) == labels.unsqueeze(1)) & (~torch.eye(N, device=device, dtype=torch.bool))
+    N = z.shape[0]
+    labels = torch.arange(N // 2, device=z.device)
+    labels = torch.cat([labels, labels], dim=0)   # [0, 1, ..., B-1, 0, 1, ..., B-1]
 
-    # Compute log-softmax over rows
-    log_probs = F.log_softmax(sim, dim=1)
+    loss = 0
+    for i in range(N):
+        # mask out self
+        sim_i = torch.cat([sim_matrix[i, :i], sim_matrix[i, i+1:]])
+        label_i = labels[i]
+        labels_wo_self = torch.cat([labels[:i], labels[i+1:]])
 
-    # Sanity checks
-    pos_per_row = pos_mask.sum(dim=1)
-    if (pos_per_row == 0).any():
-        print("❌ NaN risk: some rows have 0 positives!")
-        print("pos_mask.sum(1):", pos_per_row.tolist())
+        # identify positives (same class)
+        pos_mask = (labels_wo_self == label_i)
 
-    # Compute loss per sample, handle divide-by-zero via clamp
-    loss = - (log_probs * pos_mask.float()).sum(dim=1) / pos_per_row.clamp(min=1)
+        if pos_mask.sum() == 0:
+            continue  # no positives
 
-    # Final safety check
-    if torch.isnan(loss).any():
-        print("🧨 NaN in classifier loss!")
-        print("sim min/max:", sim.min().item(), sim.max().item())
-        print("log_probs min/max:", log_probs.min().item(), log_probs.max().item())
-        print("loss vector:", loss)
+        log_prob = F.log_softmax(sim_i, dim=0)
+        loss += -log_prob[pos_mask].mean()
 
-        return torch.tensor(0.0, device=device)
-
-    return loss.mean()
+    return loss / N
 
 
 
