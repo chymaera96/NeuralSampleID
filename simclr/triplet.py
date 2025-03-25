@@ -42,21 +42,47 @@ def triplet_loss(embeddings, labels, margin=0.2):
 
 def classifier_loss(embeddings, labels):
     """
-    Vectorized supervised contrastive loss (no temp).
+    Vectorized contrastive classification loss with proper masking.
+    Args:
+        embeddings: (2B, D) normalized
+        labels: (2B,) where positives have same label
+    Returns:
+        scalar loss (mean over samples)
     """
     device = embeddings.device
-    sim = torch.matmul(embeddings, embeddings.T)  # (2B, 2B)
     N = labels.size(0)
+    
+    # Cosine similarity matrix
+    sim = torch.matmul(embeddings, embeddings.T)  # shape: (N, N)
+    
+    # Mask self-similarity (avoid log(0) in softmax)
+    sim.fill_diagonal_(-float('inf'))
 
-    mask = torch.eye(N, device=device, dtype=torch.bool)
-    sim.masked_fill_(mask, float('-inf'))
+    # Build mask of positives (excluding self)
+    pos_mask = (labels.unsqueeze(0) == labels.unsqueeze(1)) & (~torch.eye(N, device=device, dtype=torch.bool))
 
-    label_eq = labels.unsqueeze(0) == labels.unsqueeze(1)  # (2B, 2B)
-    pos_mask = label_eq & ~mask
-
+    # Compute log-softmax over rows
     log_probs = F.log_softmax(sim, dim=1)
-    pos_count = pos_mask.sum(dim=1).clamp(min=1)
 
-    loss = - (log_probs * pos_mask.float()).sum(dim=1) / pos_count
+    # Sanity checks
+    pos_per_row = pos_mask.sum(dim=1)
+    if (pos_per_row == 0).any():
+        print("❌ NaN risk: some rows have 0 positives!")
+        print("pos_mask.sum(1):", pos_per_row.tolist())
+
+    # Compute loss per sample, handle divide-by-zero via clamp
+    loss = - (log_probs * pos_mask.float()).sum(dim=1) / pos_per_row.clamp(min=1)
+
+    # Final safety check
+    if torch.isnan(loss).any():
+        print("🧨 NaN in classifier loss!")
+        print("sim min/max:", sim.min().item(), sim.max().item())
+        print("log_probs min/max:", log_probs.min().item(), log_probs.max().item())
+        print("loss vector:", loss)
+
+        return torch.tensor(0.0, device=device)
+
     return loss.mean()
+
+
 
