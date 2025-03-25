@@ -45,7 +45,8 @@ def classifier_loss(z_i, z_j):
     Paper-consistent classifier loss:
     For each anchor, the positive is its paired view.
     """
-    z = F.normalize(torch.cat([z_i, z_j], dim=0), dim=1)  # (2B, D)
+    z = torch.cat([z_i, z_j], dim=0)  # (2B, D)
+    # z = F.normalize(torch.cat([z_i, z_j], dim=0), dim=1)  # (2B, D)
     sim_matrix = torch.matmul(z, z.T)                     # (2B, 2B)
 
     N = z.size(0)

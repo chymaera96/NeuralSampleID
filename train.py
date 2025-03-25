@@ -154,7 +154,7 @@ def train_triplet(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx
         _, _, z_i, z_j = model(x_i, x_j)
 
         # Combine both views and normalize
-        z = torch.cat([z_i, z_j], dim=0)
+        z = F.normalize(torch.cat([z_i, z_j], dim=0), dim=1, p=2)
         B = z_i.size(0)
         labels = torch.cat([torch.arange(B), torch.arange(B)], dim=0).to(z.device)
 
