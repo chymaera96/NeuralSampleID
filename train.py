@@ -155,7 +155,8 @@ def train_triplet(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx
 
         # Combine both views and normalize
         z = torch.cat([z_i, z_j], dim=0)
-        labels = torch.arange(z.size(0), device=z.device)
+        B = z_i.size(0)
+        labels = torch.cat([torch.arange(B), torch.arange(B)], dim=0).to(z.device)
 
         # Compute losses
         loss_cls = classifier_loss(z, labels)
