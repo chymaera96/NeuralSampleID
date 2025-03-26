@@ -314,15 +314,16 @@ def main():
         model = model.to(device)
 
     model.eval()
-    classifier = CrossAttentionClassifier(in_dim=512, num_nodes=32).to(device)
+    # classifier = CrossAttentionClassifier(in_dim=512, num_nodes=32).to(device)
+    classifier = nn.Identity()
 
-    # Load classifier checkpoint
-    clf_ckpt = f'checkpoint/{args.clf_ckp}'
-    if os.path.isfile(clf_ckpt):
-        print(f"=> Loading classifier checkpoint '{clf_ckpt}'")
-        classifier.load_state_dict(torch.load(clf_ckpt))
-    else:
-        print(f"=> No classifier checkpoint found at '{clf_ckpt}'")
+    # # Load classifier checkpoint
+    # clf_ckpt = f'checkpoint/{args.clf_ckp}'
+    # if os.path.isfile(clf_ckpt):
+    #     print(f"=> Loading classifier checkpoint '{clf_ckpt}'")
+    #     classifier.load_state_dict(torch.load(clf_ckpt))
+    # else:
+    #     print(f"=> No classifier checkpoint found at '{clf_ckpt}'")
 
 
     print("Creating dataloaders ...")
