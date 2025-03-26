@@ -48,9 +48,9 @@ class GPUTransformSampleID(nn.Module):
         self.train_transform_2_options = [
             PitchShift(min_semitones=-cfg['pitch_shift'], max_semitones=cfg['pitch_shift'], p=1.0),
             TimeStretch(min_rate=cfg['min_rate'], max_rate=cfg['max_rate'], p=1.0),
-            FrameLevelCorruption(remove_prob=0.0, silence_prob=0.0),
-            FrameLevelCorruption(duplicate_prob=0.0, silence_prob=0.0),
-            FrameLevelCorruption(duplicate_prob=0.0, remove_prob=0.0),
+            # FrameLevelCorruption(remove_prob=0.0, silence_prob=0.0),
+            # FrameLevelCorruption(duplicate_prob=0.0, silence_prob=0.0),
+            # FrameLevelCorruption(duplicate_prob=0.0, remove_prob=0.0),
                     
         ]
 
