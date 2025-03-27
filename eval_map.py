@@ -140,6 +140,11 @@ def eval_faiss_with_map(emb_dir,
         for row, col in zip(*valid_indices):
             sims[I[row, col]].append(S[row, col])
 
+        # Calculate the mean of the S values for each I value
+        for i in sims:
+            sims[i] = np.max(sims[i])
+
+
         hist = defaultdict(int)
 
         for cid in candidates:
