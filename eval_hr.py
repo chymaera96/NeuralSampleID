@@ -93,6 +93,7 @@ def eval_faiss_clf(emb_dir,
             q = query[test_id:(test_id + sl), :]
             print(f"nm_query_full shape: {nm_query_full.shape}")
             nm_query = nm_query_full[:sl, :, :]
+            print(f"nm_query shape: {nm_query.shape}")
 
             _, I = index.search(q, k_probe)
             candidates = I[np.where(I >= 0)].flatten()
@@ -119,6 +120,7 @@ def eval_faiss_clf(emb_dir,
 
                 nm_candidate = torch.tensor(ref_nmat[segment_idx]).to(device)
                 nm_candidate = nm_candidate.unsqueeze(0).repeat(sl, 1, 1)  # Match query shape
+                print(f"nm_candidate shape: {nm_candidate.shape}")
 
                 with torch.no_grad():
                     logits = classifier(nm_query, nm_candidate)
