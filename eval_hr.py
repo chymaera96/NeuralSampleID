@@ -90,11 +90,11 @@ def eval_faiss_clf(emb_dir,
         nm_query_full = torch.tensor(query_nmatrix[q_id]).to(device)
 
         for si, sl in enumerate(max_query_len):
-            print(f"-----------Processing {q_name} with {sl} segments-----------")
+            # print(f"-----------Processing {q_name} with {sl} segments-----------")
             q = query[test_id:(test_id + sl), :]
-            print(f"nm_query_full shape: {nm_query_full.shape}")
+            # print(f"nm_query_full shape: {nm_query_full.shape}")
             nm_query = nm_query_full[:sl, :, :]
-            print(f"nm_query shape: {nm_query.shape}")
+            # print(f"nm_query shape: {nm_query.shape}")
 
             _, I = index.search(q, k_probe)
             candidates = I[np.where(I >= 0)].flatten()
@@ -124,7 +124,7 @@ def eval_faiss_clf(emb_dir,
 
                 nm_candidate = torch.tensor(ref_nmat[segment_idx]).to(device)
                 nm_candidate = nm_candidate.unsqueeze(0).repeat(nm_query.shape[0], 1, 1)  # Match query shape
-                print(f"nm_candidate shape: {nm_candidate.shape}")
+                # print(f"nm_candidate shape: {nm_candidate.shape}")
 
                 with torch.no_grad():
                     logits = classifier(nm_query, nm_candidate)
@@ -142,6 +142,9 @@ def eval_faiss_clf(emb_dir,
                 top1[ti, si] = int(q_id in gt[pred[0]])
                 top3[ti, si] = int(any(q_id in gt[p] for p in pred[:3]))
                 top10[ti, si] = int(any(q_id in gt[p] for p in pred[:10]))
+        
+        if ti % 5 == 0:
+            print(f"Processed {ti} / {len(test_ids)} queries...")
 
     valid = (test_seq_len <= max_test_seq_len[:, None])
     hit_rates = np.stack([
