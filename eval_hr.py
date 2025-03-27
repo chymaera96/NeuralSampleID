@@ -102,7 +102,7 @@ def eval_faiss_clf(emb_dir,
             hist = defaultdict(float)
 
             for ix,cid in enumerate(candidates):
-                print(f"PROCESSING {ix}/{len(candidates)}")
+                # print(f"PROCESSING {ix}/{len(candidates)}")
                 if cid < dummy_db_shape[0]:
                     continue
                 ref_id = cid - dummy_db_shape[0]
@@ -115,13 +115,15 @@ def eval_faiss_clf(emb_dir,
 
                 ref_path = os.path.join(ref_nmatrix_dir, f"{match}.npy")
                 if not os.path.exists(ref_path):
+                    print(f"Missing reference matrix for {match}, skipping...")
                     continue
                 ref_nmat = np.load(ref_path)
-                if segment_idx >= len(ref_nmat):
+                if segment_idx >= ref_nmat.shape[0]:
+                    print(f"Segment index {segment_idx} out of bounds for {match}, skipping...")
                     continue
 
                 nm_candidate = torch.tensor(ref_nmat[segment_idx]).to(device)
-                nm_candidate = nm_candidate.unsqueeze(0).repeat(sl, 1, 1)  # Match query shape
+                nm_candidate = nm_candidate.unsqueeze(0).repeat(nm_query.shape[0], 1, 1)  # Match query shape
                 print(f"nm_candidate shape: {nm_candidate.shape}")
 
                 with torch.no_grad():
