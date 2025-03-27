@@ -46,7 +46,7 @@ def eval_faiss_clf(emb_dir,
                    max_train=1e7,
                    test_ids='icassp',
                    test_seq_len='1 3 5 9 11 19',
-                   k_probe=20,
+                   k_probe=5,
                    n_centroids=64):
 
 
@@ -88,10 +88,10 @@ def eval_faiss_clf(emb_dir,
         max_len = int(max_test_seq_len[ti])
         max_query_len = test_seq_len[test_seq_len <= max_len]
         nm_query_full = torch.tensor(query_nmatrix[q_id]).to(device)
-        # nm_query = nm_query_full[nm_query_full <
 
         for si, sl in enumerate(max_query_len):
             q = query[test_id:(test_id + sl), :]
+            print(f"nm_query_full shape: {nm_query_full.shape}")
             nm_query = nm_query_full[:sl]
 
             _, I = index.search(q, k_probe)
