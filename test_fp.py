@@ -222,7 +222,7 @@ def main():
     noise_dir = cfg['noise_dir']
     annot_path = cfg['annot_path']
     enc = args.encoder.split('_')[0]
-    size = args.encoder.split('_')[1]
+    # size = args.encoder.split('_')[1]
     # args.recompute = False
     # assert args.recompute is False
     assert args.small_test is False
@@ -233,7 +233,7 @@ def main():
 
     print("Creating new model...")
     if enc == 'grafp':
-        model = SimCLR(cfg, encoder=GraphEncoderDGL(cfg=cfg, in_channels=cfg['n_filters'], k=args.k, size=size))
+        model = SimCLR(cfg, encoder=GraphEncoderDGL(cfg=cfg, in_channels=cfg['n_filters'], k=args.k))
     elif enc == 'resnet-ibn':
         model = SimCLR(cfg, encoder=ResNetIBN())
     else:
