@@ -51,7 +51,7 @@ parser.add_argument('--query_lens', default=None, type=str)
 parser.add_argument('--encoder', default='grafp_t', type=str)
 parser.add_argument('--n_dummy_db', default=None, type=int)
 # parser.add_argument('--n_query_db', default=350, type=int)
-parser.add_argument('--small_test', action='store_true', default=False)
+parser.add_argument('--index_type', default='ivfpq', type=str)
 parser.add_argument('--text', default='test', type=str)
 # parser.add_argument('--test_snr', default=None, type=int)
 parser.add_argument('--recompute', action='store_true', default=False)
@@ -222,10 +222,11 @@ def main():
     noise_dir = cfg['noise_dir']
     annot_path = cfg['annot_path']
     enc = args.encoder.split('_')[0]
+    index_type = args.index_type
     # size = args.encoder.split('_')[1]
     # args.recompute = False
     # assert args.recompute is False
-    assert args.small_test is False
+    # assert args.small_test is False
     # Hyperparameters
     random_seed = 42
     shuffle_dataset =True
@@ -366,7 +367,7 @@ def main():
             
             if args.map:
                 map_score, k_map = eval_faiss_with_map(emb_dir=fp_dir, 
-                                        index_type='l2',
+                                        index_type=index_type,
                                         test_seq_len=test_seq_len,
                                         nogpu=True)
 
