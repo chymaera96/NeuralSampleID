@@ -284,11 +284,6 @@ def main():
                             pin_memory=True, drop_last=False)
 
 
-    if args.small_test:
-        index_type = 'l2'
-    else:
-        index_type = 'ivfpq'
-
     if args.query_lens is not None:
         args.query_lens = [float(q) for q in args.query_lens.split(',')]
         test_seq_len = [query_len_from_seconds(q, cfg['overlap'], dur=cfg['dur'])
