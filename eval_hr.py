@@ -92,7 +92,7 @@ def eval_faiss_clf(emb_dir,
         for si, sl in enumerate(max_query_len):
             q = query[test_id:(test_id + sl), :]
             print(f"nm_query_full shape: {nm_query_full.shape}")
-            nm_query = nm_query_full[:sl]
+            nm_query = nm_query_full[:sl, :, :]
 
             _, I = index.search(q, k_probe)
             candidates = I[np.where(I >= 0)].flatten()
