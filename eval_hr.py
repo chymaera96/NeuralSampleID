@@ -84,19 +84,10 @@ def eval_faiss_clf(emb_dir,
     for ti, test_id in enumerate(test_ids):
         q_name = query_lookup[test_id]
         q_id = q_name.split('_')[0]
-        max_len = max_test_seq_len[ti]
+        max_len = int(max_test_seq_len[ti])
         max_query_len = test_seq_len[test_seq_len <= max_len]
-
-        # Gather segment-level node matrices for this query sequence
-        nm_query_segments = []
-        for i in range(max_len):
-            key = f"{q_id}_{i}"
-            if key in query_nmatrix:
-                nm_query_segments.append(torch.tensor(query_nmatrix[key]))
-        if not nm_query_segments:
-            continue
-
-        nm_query_full = torch.stack(nm_query_segments).to(device)  # (max_len, C, N)
+        nm_query_full = torch.tensor(query_nmatrix[q_id]).to(device)
+        # nm_query = nm_query_full[nm_query_full <
 
         for si, sl in enumerate(max_query_len):
             q = query[test_id:(test_id + sl), :]
