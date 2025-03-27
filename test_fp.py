@@ -31,6 +31,7 @@ from downstream import CrossAttentionClassifier
 from eval import get_index, load_memmap_data, eval_faiss
 # from eval_map import eval_faiss_with_map
 from eval_map import eval_faiss_map_clf
+from eval_hr import eval_faiss_clf
 
 
 # Directories
@@ -407,16 +408,19 @@ def main():
             
             create_query_db(query_db_loader, augment=test_augment,
                             model=model, output_root_dir=fp_dir, verbose=True)
+
+            create_ref_nmatrix(ref_db_loader, augment=test_augment,
+                                model=model, save_dir=f'{fp_dir}/ref_nmatrix', verbose=True)
+            
+            create_query_nmatrix(query_db_loader, augment=test_augment,
+                                model=model, save_path=f'{fp_dir}/query_nmatrix.npy', verbose=True)
             
             if args.map:
                 create_query_db(query_full_db_loader, augment=test_augment,
                                 model=model, output_root_dir=fp_dir, fname='query_full_db', verbose=True)
-            
-                create_ref_nmatrix(ref_db_loader, augment=test_augment,
-                                model=model, save_dir=f'{fp_dir}/ref_nmatrix', verbose=True)
                 
                 create_query_nmatrix(query_full_db_loader, augment=test_augment,
-                                model=model, save_path=f'{fp_dir}/query_nmatrix.npy', verbose=True)
+                                model=model, save_path=f'{fp_dir}/query_full_nmatrix.npy', verbose=True)
                 # pass
             
             text = f'{args.text}_{str(epoch)}'
@@ -424,8 +428,9 @@ def main():
 
 
             if args.query_lens is not None:
-                hit_rates = eval_faiss(emb_dir=fp_dir,
+                hit_rates = eval_faiss_clf(emb_dir=fp_dir,
                                     test_seq_len=test_seq_len, 
+                                    classifier=classifier,
                                     index_type=index_type,
                                     nogpu=True) 
 
@@ -437,7 +442,8 @@ def main():
                                 label)
   
             else:
-                hit_rates = eval_faiss(emb_dir=fp_dir, 
+                hit_rates = eval_faiss_clf(emb_dir=fp_dir, 
+                                    classifier=classifier,
                                     index_type=index_type,
                                     nogpu=True)
                 

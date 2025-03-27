@@ -78,7 +78,7 @@ def eval_faiss_map_clf(emb_dir, classifier, emb_dummy_dir=None,
     """
     classifier.to(device).eval()
 
-    query_nmatrix_path = os.path.join(emb_dir, 'query_nmatrix.npy')
+    query_nmatrix_path = os.path.join(emb_dir, 'query_full_nmatrix.npy')
     ref_nmatrix_dir = os.path.join(emb_dir, 'ref_nmatrix')
 
     # Load FAISS index

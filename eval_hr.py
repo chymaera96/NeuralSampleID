@@ -40,8 +40,6 @@ def extract_test_ids(lookup_table):
 
 def eval_faiss_clf(emb_dir,
                    classifier,
-                   query_nmatrix_path,
-                   ref_nmatrix_dir,
                    emb_dummy_dir=None,
                    index_type='ivfpq',
                    nogpu=False,
@@ -53,6 +51,9 @@ def eval_faiss_clf(emb_dir,
 
 
     classifier.to(device).eval()
+
+    query_nmatrix_path = os.path.join(emb_dir, 'query_nmatrix.npy')
+    ref_nmatrix_dir = os.path.join(emb_dir, 'ref_nmatrix')
 
     if isinstance(test_seq_len, str):
         test_seq_len = np.array(list(map(int, test_seq_len.split())))
