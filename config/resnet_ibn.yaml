@@ -33,7 +33,7 @@ silence: 1.0e-5
 # Dataset and Model hyperparameters
 train_sz: 8000
 val_sz: 25000
-bsz_train: 128
+bsz_train: 512
 tau: 0.05
 tau_mix: 0.05
 lr: 1.0e-4
@@ -43,6 +43,12 @@ T_max: 100
 lambda: 0.0
 beta: 0.0
 error_threshold: 5
+
+# Triplets hyperparameters
+beta: 0.3         # Weight for classifier loss
+gamma: 0.7         # Weight for triplet loss
+margin: 0.3          # Margin for the triplet loss
+
 
 # Augmentation hyperparameters
 n_frames: 216 # depends on the spectrogram parameters
