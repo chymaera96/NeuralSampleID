@@ -90,6 +90,7 @@ def eval_faiss_clf(emb_dir,
         nm_query_full = torch.tensor(query_nmatrix[q_id]).to(device)
 
         for si, sl in enumerate(max_query_len):
+            print(f"-----------Processing {q_name} with {sl} segments-----------")
             q = query[test_id:(test_id + sl), :]
             print(f"nm_query_full shape: {nm_query_full.shape}")
             nm_query = nm_query_full[:sl, :, :]
@@ -100,7 +101,8 @@ def eval_faiss_clf(emb_dir,
 
             hist = defaultdict(float)
 
-            for cid in candidates:
+            for ix,cid in enumerate(candidates):
+                print(f"PROCESSING {ix}/{len(candidates)}")
                 if cid < dummy_db_shape[0]:
                     continue
                 ref_id = cid - dummy_db_shape[0]
@@ -125,9 +127,12 @@ def eval_faiss_clf(emb_dir,
                 with torch.no_grad():
                     logits = classifier(nm_query, nm_candidate)
                     score = logits.max().item()
+            
 
                 if score >= 0.5:
                     hist[match] += score
+
+                print(f"Classifier score for {match}: {score:.4f} (before freq weighting)")
 
             pred = sorted(hist, key=hist.get, reverse=True)
 
