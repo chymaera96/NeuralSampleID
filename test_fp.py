@@ -366,7 +366,7 @@ def main():
             
             if args.map:
                 map_score, k_map = eval_faiss_with_map(emb_dir=fp_dir, 
-                                        index_type='ivfpq',
+                                        index_type='l2',
                                         test_seq_len=test_seq_len,
                                         nogpu=True)
 

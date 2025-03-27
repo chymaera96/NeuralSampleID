@@ -303,15 +303,21 @@ def eval_faiss(emb_dir,
             q_id = query_lookup[test_id].split("_")[0]    # query ID; split to remove the segment number
 
             # segment-level top k search for each segment
-            _, I = index.search(
-                q, k_probe) # _: distance, I: result IDs matrix
+            S, I = index.search(q, k_probe)  # S: distances, I: result IDs matrix
 
-            # # offset compensation to get the start IDs of candidate sequences
-            # for offset in range(len(I)):
-            #     I[offset, :] -= offset
+            # Flatten I and S while keeping their correspondence
+            valid_indices = np.where(I >= 0)  # Only consider valid indices where I >= 0
+            candidates = np.unique(I[valid_indices])  # Get unique values of I
 
-            candidates = I[np.where(I >= 0)].flatten()
-    
+            # Create a dictionary to map unique I values to their corresponding S values
+            sims = {i: [] for i in candidates}
+            for row, col in zip(*valid_indices):
+                sims[I[row, col]].append(S[row, col])
+
+            # Calculate the mean of the S values for each I value
+            for i in sims:
+                sims[i] = np.max(sims[i])
+
             """ Song-level match score """
             for ci, cid in enumerate(candidates):
                 if cid < dummy_db_shape[0]:
@@ -328,7 +334,8 @@ def eval_faiss(emb_dir,
                     q_match = q[:candidate_seq.shape[0], :] 
                 else:
                     q_match = q     
-                score = np.mean(np.sum(q_match * candidate_seq, axis=1))
+                # score = np.mean(np.sum(q_match * candidate_seq, axis=1))
+                score = sims[cid]
                 hist[match] += score
                 # hist[match] += 1
 
