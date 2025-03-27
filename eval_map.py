@@ -129,9 +129,16 @@ def eval_faiss_with_map(emb_dir,
         if q.shape[0] <= 10:
             continue
 
-        _, I = index.search(q, k_probe)
-        candidates = I[np.where(I >= 0)].flatten()
+        S, I = index.search(q, k_probe)  # S: distances, I: result IDs matrix
 
+        # Flatten I and S while keeping their correspondence
+        valid_indices = np.where(I >= 0)  # Only consider valid indices where I >= 0
+        candidates = np.unique(I[valid_indices])  # Get unique values of I
+
+        # Create a dictionary to map unique I values to their corresponding S values
+        sims = {i: [] for i in candidates}
+        for row, col in zip(*valid_indices):
+            sims[I[row, col]].append(S[row, col])
 
         hist = defaultdict(int)
 
@@ -147,7 +154,8 @@ def eval_faiss_with_map(emb_dir,
             else:
                 q_match = q
             # score = sliding_window_similarity(q_match, candidate_seq, metric='cosine')
-            score = np.max(cosine_similarity(q_match, candidate_seq))
+            # score = np.max(cosine_similarity(q_match, candidate_seq))
+            score = sims[cid]
             hist[match] += score
         
         if ix % 20 == 0:
