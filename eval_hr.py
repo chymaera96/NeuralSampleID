@@ -134,7 +134,7 @@ def eval_faiss_clf(emb_dir,
                 if score >= 0.5:
                     hist[match] += score
 
-                print(f"Classifier score for {match}: {score:.4f} (before freq weighting)")
+                # print(f"Classifier score for {match}: {score:.4f} (before freq weighting)")
 
             pred = sorted(hist, key=hist.get, reverse=True)
 
