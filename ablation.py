@@ -27,7 +27,7 @@ import os
 import random
 
 @torch.no_grad()
-def collect_scores(cfg, model, ref_dir, classifier, dataloader, transform, n_samples, t_segs=10):
+def collect_scores(cfg, model, ref_dir, classifier, dataloader, transform, n_samples, t_segs=10, mode="query"):
     net_scores = []
     device = next(classifier.parameters()).device  # safer than relying on global
 
@@ -58,21 +58,21 @@ def collect_scores(cfg, model, ref_dir, classifier, dataloader, transform, n_sam
         xcerpts = spec[:int(n_segs), :, :]  # (n_segs, C, N)
 
         # Load reference node matrix
-        ref_path = os.path.join(ref_dir, f"{nm.split('_')[0]}.npy")
-        if not os.path.exists(ref_path):
-            ref_path = os.path.join(ref_dir, random.choice(os.listdir(ref_dir)))
+        if mode == "query":
+            ref_path = os.path.join(ref_dir, f"{nm}.npy")
+            nm_r = torch.tensor(np.load(ref_path)).to(device)
+        else:
+            nm_r = None
 
         scores = []
         for x in xcerpts:
             x = x.unsqueeze(0).to(device)
             p = model.peak_extractor(x)
             nm_q, _ = model.encoder(p, return_pre_proj=True)
-            nm_r = torch.tensor(np.load(ref_path)).to(device)
-
-            if len(nm_r.shape) == 2:
-                nm_r = nm_r.unsqueeze(0)
-
-            nm_q = nm_q.repeat(nm_r.size(0), 1, 1)
+            if nm_r is not None:
+                nm_q = nm_q.repeat(nm_r.size(0), 1, 1)
+            else:
+                nm_r = torch.randn_like(nm_q)
             logits = classifier(nm_q, nm_r).max().item()
             scores.append(logits)
 
