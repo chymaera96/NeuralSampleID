@@ -137,8 +137,8 @@ def main():
     print(f"Sampling {args.samples} query-reference and dummy-reference pairs...")
 
     ref_dir = args.ref_dir
-    real_scores = collect_scores(model, ref_dir, classifier, query_loader, transform, device, args.samples)
-    dummy_scores = collect_scores(model, ref_dir, classifier, dummy_loader, transform, device, args.samples)
+    real_scores = collect_scores(model, ref_dir, classifier, query_loader, transform, args.samples)
+    dummy_scores = collect_scores(model, ref_dir, classifier, dummy_loader, transform, args.samples)
 
     compute_rejection_stats(real_scores, dummy_scores, threshold=args.threshold, save_path=args.save_plot)
 
