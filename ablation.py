@@ -28,7 +28,7 @@ import os
 import random
 
 @torch.no_grad()
-def collect_scores(cfg, model, ref_dir, classifier, dataloader, transform, n_samples, t_segs=5, mode="query"):
+def collect_scores(cfg, model, ref_dir, classifier, dataloader, transform, n_samples, t_segs=10, mode="query"):
     net_scores = []
     device = next(classifier.parameters()).device 
     dataset = dataloader.dataset
