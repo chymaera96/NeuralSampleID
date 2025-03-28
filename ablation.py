@@ -86,6 +86,9 @@ def compute_rejection_stats(real_scores, dummy_scores, threshold=0.5, save_path=
 def main():
     parser = argparse.ArgumentParser(description="Classifier Rejection Evaluation via AUC")
     parser.add_argument('--test_dir', default='../datasets/sample_100/audio', type=str)
+    parser.add_argument('--ref_dir', 
+                        default='/data/scratch/acw723/logs/emb/valid/model_tc_35_best/ref_nmatrix', 
+                        type=str)
     parser.add_argument('--config', default='config/grafp.yaml', type=str)
     parser.add_argument('--clf_ckp', default='checkpoint/clf_tc_35_4.pth', type=str)
     parser.add_argument('--enc_ckp', default='checkpoint/model_tc_35_best.pth', type=str)
@@ -133,8 +136,9 @@ def main():
 
     print(f"Sampling {args.samples} query-reference and dummy-reference pairs...")
 
-    real_scores = collect_scores(model, classifier, query_loader, transform, device, args.samples)
-    dummy_scores = collect_scores(model, classifier, dummy_loader, transform, device, args.samples)
+    ref_dir = args.ref_dir
+    real_scores = collect_scores(model, ref_dir, classifier, query_loader, transform, device, args.samples)
+    dummy_scores = collect_scores(model, ref_dir, classifier, dummy_loader, transform, device, args.samples)
 
     compute_rejection_stats(real_scores, dummy_scores, threshold=args.threshold, save_path=args.save_plot)
 
