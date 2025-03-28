@@ -10,6 +10,7 @@ import matplotlib
 matplotlib.use('Agg')  # Prevent crashes on headless servers
 import matplotlib.pyplot as plt
 from sklearn.metrics import roc_auc_score, roc_curve
+from collections import defaultdict
 
 from modules.data import Sample100Dataset
 from modules.transformations import GPUTransformSampleID
@@ -29,10 +30,21 @@ import random
 @torch.no_grad()
 def collect_scores(cfg, model, ref_dir, classifier, dataloader, transform, n_samples, t_segs=10, mode="query"):
     net_scores = []
-    device = next(classifier.parameters()).device  # safer than relying on global
-
+    device = next(classifier.parameters()).device 
     dataset = dataloader.dataset
     dataset_len = len(dataset)
+
+    with open('data/gt_dict.json', 'r') as fp:
+        gt = json.load(fp)
+
+    inverted_dict = defaultdict(list)
+
+    for key, values in gt.items():
+        for value in set(values):  # Use `set` to remove duplicates in the original list
+            inverted_dict[value].append(key)  # Append the original key to the list of the new key
+
+    i_gt = dict(inverted_dict)
+
 
     for i in range(n_samples):
         # Loop safely even if n_samples > len(dataset)
@@ -59,7 +71,7 @@ def collect_scores(cfg, model, ref_dir, classifier, dataloader, transform, n_sam
 
         # Load reference node matrix
         if mode == "query":
-            ref_path = os.path.join(ref_dir, f"{nm}.npy")
+            ref_path = os.path.join(ref_dir, f"{i_gt[nm][0]}.npy")
             nm_r = torch.tensor(np.load(ref_path)).to(device)
         else:
             nm_r = None
