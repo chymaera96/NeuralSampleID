@@ -98,7 +98,7 @@ def collect_scores(cfg, model, ref_dir, classifier, dataloader, transform, n_sam
         count += 1
         ix += 1
 
-        if count % 2 == 0:
+        if count % 10 == 0:
             print(f"Processed {count}/{n_samples} samples...")
 
         if count >= n_samples:
