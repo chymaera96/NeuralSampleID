@@ -41,7 +41,7 @@ def collect_scores(cfg, model, ref_dir, classifier, dataloader, transform, n_sam
         audio = audio.unsqueeze(0).to(device)
 
         audio_len = audio.size(-1)
-        needed_len = t_segs * cfg['sr']
+        needed_len = t_segs * cfg['fs']
 
         if audio_len < needed_len:
             continue
