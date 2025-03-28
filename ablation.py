@@ -51,7 +51,6 @@ def collect_scores(model, ref_dir, classifier, dataloader, transform, n_samples)
     return scores
 
 
-
 def compute_rejection_stats(real_scores, dummy_scores, threshold=0.5, save_path=None):
     scores = np.array(real_scores + dummy_scores)
     labels = np.array([1] * len(real_scores) + [0] * len(dummy_scores))
@@ -117,7 +116,7 @@ def main():
         print("=> no checkpoint found at '{}'".format(ckp))
         raise FileNotFoundError
     
-    model.eval()
+    # model.eval()
 
     classifier = CrossAttentionClassifier(in_dim=512, num_nodes=32).to(device)
     classifier.load_state_dict(torch.load(args.clf_ckp, map_location=device))
@@ -134,10 +133,10 @@ def main():
     query_loader = torch.utils.data.DataLoader(query_dataset, batch_size=1, shuffle=True)
     dummy_loader = torch.utils.data.DataLoader(dummy_dataset, batch_size=1, shuffle=True)
 
-    print(f"Sampling {args.samples} query-reference and dummy-reference pairs...")
-
+    print(f"Sampling {args.samples} query-reference pairs...")
     ref_dir = args.ref_dir
     real_scores = collect_scores(model, ref_dir, classifier, query_loader, transform, args.samples)
+    print("Sampling {args.samples} dummy-reference pairs...")
     dummy_scores = collect_scores(model, ref_dir, classifier, dummy_loader, transform, args.samples)
 
     compute_rejection_stats(real_scores, dummy_scores, threshold=args.threshold, save_path=args.save_plot)
