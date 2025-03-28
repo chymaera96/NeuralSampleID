@@ -56,6 +56,7 @@ def collect_scores(cfg, model, ref_dir, classifier, dataloader, transform, n_sam
         needed_len = t_segs * cfg['fs']
 
         if audio_len < needed_len:
+            print(f"Skipping {nm} of length {audio_len/cfg['fs']}...")
             continue
 
         # Random start point for excerpt
