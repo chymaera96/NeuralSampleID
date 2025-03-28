@@ -77,20 +77,20 @@ def collect_scores(cfg, model, ref_dir, classifier, dataloader, transform, n_sam
             ref_path = os.path.join(ref_dir, f"{i_gt[nm][0]}.npy")
             nm_r = torch.tensor(np.load(ref_path)).to(device)
         else:
-            # nm_r = None
-            ref_path = os.path.join(ref_dir, random.choice(os.listdir(ref_dir)))
-            nm_r = torch.tensor(np.load(ref_path)).to(device)
+            nm_r = None
+            # ref_path = os.path.join(ref_dir, random.choice(os.listdir(ref_dir)))
+            # nm_r = torch.tensor(np.load(ref_path)).to(device)
 
         scores = []
         for x in xcerpts:
             x = x.unsqueeze(0).to(device)
             p = model.peak_extractor(x)
             nm_q, _ = model.encoder(p, return_pre_proj=True)
-            # if nm_r is not None:
-            #     nm_q = nm_q.repeat(nm_r.size(0), 1, 1)
-            # else:
-            #     nm_r = torch.randn_like(nm_q)
-            nm_q = nm_q.repeat(nm_r.size(0), 1, 1)
+            if nm_r is not None:
+                nm_q = nm_q.repeat(nm_r.size(0), 1, 1)
+            else:
+                nm_r = torch.randn_like(nm_q)
+            # nm_q = nm_q.repeat(nm_r.size(0), 1, 1)
             logits = classifier(nm_q, nm_r).max().item()
             scores.append(logits)
 
