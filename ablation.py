@@ -46,9 +46,10 @@ def collect_scores(cfg, model, ref_dir, classifier, dataloader, transform, n_sam
     i_gt = dict(inverted_dict)
 
     count = 0
-    while count < n_samples:
+    ix = 0
+    while ix > 0:
         # Loop safely even if n_samples > len(dataset)
-        nm, audio = dataset[count % dataset_len]
+        nm, audio = dataset[ix % dataset_len]
         nm = nm.split("/")[-1] if "/" in nm else nm  # ensure clean ID
         audio = audio.unsqueeze(0).to(device)
 
@@ -56,7 +57,8 @@ def collect_scores(cfg, model, ref_dir, classifier, dataloader, transform, n_sam
         needed_len = t_segs * cfg['fs']
 
         if audio_len < needed_len:
-            print(f"Skipping {nm} of length {audio_len/cfg['fs']}...")
+            # print(f"Skipping {nm} of length {audio_len/cfg['fs']}...")
+            ix += 1
             continue
 
         # Random start point for excerpt
@@ -94,9 +96,13 @@ def collect_scores(cfg, model, ref_dir, classifier, dataloader, transform, n_sam
 
         net_scores.append(np.mean(scores))
         count += 1
+        ix += 1
 
         if count % 2 == 0:
             print(f"Processed {count}/{n_samples} samples...")
+
+        if count >= n_samples:
+            break
 
     return net_scores
 
