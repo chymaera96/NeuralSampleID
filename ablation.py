@@ -28,7 +28,7 @@ import os
 import random
 
 @torch.no_grad()
-def collect_scores(cfg, model, ref_dir, classifier, dataloader, transform, n_samples, t_segs=10, mode="query"):
+def collect_scores(cfg, model, ref_dir, classifier, dataloader, transform, n_samples, t_segs=5, mode="query"):
     net_scores = []
     device = next(classifier.parameters()).device 
     dataset = dataloader.dataset
@@ -93,8 +93,8 @@ def collect_scores(cfg, model, ref_dir, classifier, dataloader, transform, n_sam
 
         net_scores.append(np.mean(scores))
         count += 1
-        
-        if count % 10 == 0:
+
+        if count % 2 == 0:
             print(f"Processed {count}/{n_samples} samples...")
 
     return net_scores
