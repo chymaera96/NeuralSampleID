@@ -45,10 +45,10 @@ def collect_scores(cfg, model, ref_dir, classifier, dataloader, transform, n_sam
 
     i_gt = dict(inverted_dict)
 
-
-    for i in range(n_samples):
+    count = 0
+    while count < n_samples:
         # Loop safely even if n_samples > len(dataset)
-        nm, audio = dataset[i % dataset_len]
+        nm, audio = dataset[count % dataset_len]
         nm = nm.split("/")[-1] if "/" in nm else nm  # ensure clean ID
         audio = audio.unsqueeze(0).to(device)
 
@@ -92,9 +92,10 @@ def collect_scores(cfg, model, ref_dir, classifier, dataloader, transform, n_sam
             scores.append(logits)
 
         net_scores.append(np.mean(scores))
-
-        if i % 10 == 0:
-            print(f"Processed {i}/{n_samples} samples...")
+        count += 1
+        
+        if count % 10 == 0:
+            print(f"Processed {count}/{n_samples} samples...")
 
     return net_scores
 
