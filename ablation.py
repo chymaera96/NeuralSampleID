@@ -47,7 +47,7 @@ def collect_scores(cfg, model, ref_dir, classifier, dataloader, transform, n_sam
 
     count = 0
     ix = 0
-    while ix > 0:
+    while True:
         # Loop safely even if n_samples > len(dataset)
         nm, audio = dataset[ix % dataset_len]
         nm = nm.split("/")[-1] if "/" in nm else nm  # ensure clean ID
