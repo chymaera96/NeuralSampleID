@@ -1,6 +1,7 @@
 import os
 import json
 import random
+import math
 import argparse
 import numpy as np
 import torch
@@ -19,36 +20,69 @@ from util import load_config
 
 device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
+import math
+import torch
+import numpy as np
+import os
+import random
+
 @torch.no_grad()
-def collect_scores(model, ref_dir, classifier, dataloader, transform, n_samples):
-    scores = []
-    for i, (nm, audio) in enumerate(dataloader):
-        nm = nm[0]
-        if i >= n_samples:
-            break
-        
-        audio = audio.to(device)
-        x, _ = transform(audio, None)
-        r = random.randint(0, x.size(0) - 1)
-        x = x[r].unsqueeze(0)
+def collect_scores(cfg, model, ref_dir, classifier, dataloader, transform, n_samples, t_segs=10):
+    net_scores = []
+    device = next(classifier.parameters()).device  # safer than relying on global
 
-        p = model.peak_extractor(x)
-        nm_q, _ = model.encoder(p, return_pre_proj=True)
+    dataset = dataloader.dataset
+    dataset_len = len(dataset)
 
+    for i in range(n_samples):
+        # Loop safely even if n_samples > len(dataset)
+        nm, audio = dataset[i % dataset_len]
+        nm = nm.split("/")[-1] if "/" in nm else nm  # ensure clean ID
+        audio = audio.unsqueeze(0).to(device)
+
+        audio_len = audio.size(-1)
+        needed_len = t_segs * cfg['sr']
+
+        if audio_len < needed_len:
+            continue
+
+        # Random start point for excerpt
+        max_start = audio_len - needed_len
+        start_sample = random.randint(0, max_start)
+        audio_excerpt = audio[..., start_sample:start_sample + needed_len]
+
+        spec, _ = transform(audio_excerpt, None)
+
+        # Compute overlapping segments from this excerpt
+        n_segs = math.floor((t_segs - cfg['dur']) / 0.5) + 1
+        xcerpts = spec[:int(n_segs), :, :]  # (n_segs, C, N)
+
+        # Load reference node matrix
         ref_path = os.path.join(ref_dir, f"{nm.split('_')[0]}.npy")
         if not os.path.exists(ref_path):
             ref_path = os.path.join(ref_dir, random.choice(os.listdir(ref_dir)))
-        nm_r = torch.tensor(np.load(ref_path)).to(device)
-        nm_q = nm_q.repeat(nm_r.size(0), 1, 1)
 
-        logits = classifier(nm_q, nm_r).max().item()
+        scores = []
+        for x in xcerpts:
+            x = x.unsqueeze(0).to(device)
+            p = model.peak_extractor(x)
+            nm_q, _ = model.encoder(p, return_pre_proj=True)
+            nm_r = torch.tensor(np.load(ref_path)).to(device)
 
-        scores.append(logits)
+            if len(nm_r.shape) == 2:
+                nm_r = nm_r.unsqueeze(0)
+
+            nm_q = nm_q.repeat(nm_r.size(0), 1, 1)
+            logits = classifier(nm_q, nm_r).max().item()
+            scores.append(logits)
+
+        net_scores.append(np.mean(scores))
 
         if i % 10 == 0:
             print(f"Processed {i}/{n_samples} samples...")
-        
-    return scores
+
+    return net_scores
+
 
 
 def compute_rejection_stats(real_scores, dummy_scores, threshold=0.5, save_path=None):
