@@ -87,6 +87,7 @@ def collect_scores(cfg, model, ref_dir, classifier, dataloader, transform, n_sam
             #     nm_q = nm_q.repeat(nm_r.size(0), 1, 1)
             # else:
             #     nm_r = torch.randn_like(nm_q)
+            nm_q = nm_q.repeat(nm_r.size(0), 1, 1)
             logits = classifier(nm_q, nm_r).max().item()
             scores.append(logits)
 
