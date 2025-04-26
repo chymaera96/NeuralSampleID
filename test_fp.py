@@ -22,14 +22,12 @@ create_fp_dir, load_config, \
 query_len_from_seconds, seconds_from_query_len, \
 load_augmentation_index
 from modules.data import Sample100Dataset
-# from encoder.graph_encoder import GraphEncoder
 from encoder.dgl.graph_encoder import GraphEncoderDGL
 from encoder.resnet_ibn import ResNetIBN
 from simclr.simclr import SimCLR   
 from modules.transformations import GPUTransformSampleID
 from downstream import CrossAttentionClassifier
 from eval import get_index, load_memmap_data, eval_faiss
-# from eval_map import eval_faiss_with_map
 from eval_map import eval_faiss_map_clf
 from eval_hr import eval_faiss_clf
 
@@ -290,9 +288,7 @@ def main():
     annot_path = cfg['annot_path']
     enc = args.encoder.split('_')[0]
     size = args.encoder.split('_')[1]
-    # args.recompute = False
-    # assert args.recompute is False
-    assert args.small_test is False
+
     # Hyperparameters
     random_seed = 42
     shuffle_dataset =True
@@ -403,17 +399,17 @@ def main():
             else:
                 print("=> Skipping dummy db creation...")
 
-            # create_ref_db(ref_db_loader, augment=test_augment,
-            #                 model=model, output_root_dir=fp_dir, verbose=True)
+            create_ref_db(ref_db_loader, augment=test_augment,
+                            model=model, output_root_dir=fp_dir, verbose=True)
             
-            # create_query_db(query_db_loader, augment=test_augment,
-            #                 model=model, output_root_dir=fp_dir, verbose=True)
+            create_query_db(query_db_loader, augment=test_augment,
+                            model=model, output_root_dir=fp_dir, verbose=True)
 
-            # create_ref_nmatrix(ref_db_loader, augment=test_augment,
-            #                     model=model, save_dir=f'{fp_dir}/ref_nmatrix', verbose=True)
+            create_ref_nmatrix(ref_db_loader, augment=test_augment,
+                                model=model, save_dir=f'{fp_dir}/ref_nmatrix', verbose=True)
             
-            # create_query_nmatrix(query_db_loader, augment=test_augment,
-            #                     model=model, save_path=f'{fp_dir}/query_nmatrix.npy', verbose=True)
+            create_query_nmatrix(query_db_loader, augment=test_augment,
+                                model=model, save_path=f'{fp_dir}/query_nmatrix.npy', verbose=True)
             
             if args.map:
                 create_query_db(query_full_db_loader, augment=test_augment,
