@@ -19,7 +19,7 @@ from encoder.resnet_ibn import ResNetIBN
 
 # Directories
 root = os.path.dirname(__file__)
-model_folder = os.path.join(root,"checkpoint")
+model_folder = os.path.abspath(os.path.join(root, os.pardir, "checkpoint"))
 parent_dir = os.path.abspath(os.path.join(root, os.pardir))
 sys.path.append(parent_dir)
 nan_counter = 0

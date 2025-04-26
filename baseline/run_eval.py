@@ -28,7 +28,7 @@ from baseline.eval_hr import eval_faiss
 
 # Directories
 root = os.path.dirname(__file__)
-model_folder = os.path.join(root,"checkpoint")
+model_folder = os.path.abspath(os.path.join(root, os.pardir, "checkpoint"))
 
 parser = argparse.ArgumentParser(description='Neuralfp Testing')
 parser.add_argument('--config', default='config/resnet_ibn.yaml', type=str,
