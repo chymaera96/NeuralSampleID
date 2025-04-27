@@ -57,35 +57,6 @@ parser.add_argument('--k', default=5, type=int)
 
 
 
-def mixco(model, xis, xjs, zis, zjs, cfg):
-    # This code is adapted from https://github.com/Lee-Gihun/MixCo-Mixup-Contrast
-
-    crit = SoftCrossEntropy()
-    B = xis.shape[0]
-    assert B % 2 == 0
-    sid = int(B / 2)
-    loss = 0
-
-    for x, z in zip([xis, xjs], [zjs, zis]):
-        x_1, x_2 = x[:sid], x[sid:]
-
-        # Each input gets a different lambda
-        lam = torch.from_numpy(np.random.uniform(0, 1, size=(sid, 1, 1))).float().to(x.device)
-        spec_mix = lam * x_1 + (1 - lam) * x_2
-
-        _, _, _, z_mix = model(spec_mix, spec_mix)
-        z_mix = F.normalize(z_mix, dim=1)
-
-        # Create labels with equal weighting regardless of lambda
-        lbls_mix = torch.cat((torch.eye(sid), torch.eye(sid)), dim=1).to(x.device)
-        logits_mix = torch.mm(z_mix, z.transpose(0, 1))
-        logits_mix /= cfg['tau_mix']
-        loss += crit(logits_mix, lbls_mix) / 2
-
-    return loss
-
-
-
 def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augment=None):
     model.train()
     loss_epoch = 0
@@ -102,21 +73,12 @@ def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augmen
 
         _, _, z_i, z_j = model(x_i, x_j)
 
-        simclr_loss = ntxent_loss(z_i, z_j, cfg)
+        loss = ntxent_loss(z_i, z_j, cfg)
 
-
-        if torch.isnan(simclr_loss):
+        if torch.isnan(loss):
             print(f"NaN detected in loss at step {idx}, skipping batch")
             nan_counter = save_nan_batch(x_i, x_j, save_dir="nan_batches", counter=nan_counter)
             continue
-
-        if cfg['beta'] > 0.0:       # Beta set to 0.0 as mixco support is not implemented
-            mixco_loss = mixco(model, x_i, x_j, z_i, z_j, cfg)
-        else:
-            mixco_loss = torch.tensor(0.0)
-
-        loss = simclr_loss
-        assert not torch.isnan(loss), "Loss is NaN"
 
         scaler.scale(loss).backward()
 
@@ -127,7 +89,7 @@ def train(cfg, train_loader, model, optimizer, scaler, ir_idx, noise_idx, augmen
         scaler.update()
 
         if idx % 10 == 0:
-            print(f"Step [{idx}/{len(train_loader)}]\t SimCLR Loss: {simclr_loss.item()} \t MixCo Loss: {mixco_loss.item()}")
+            print(f"Step [{idx}/{len(train_loader)}]\t SimCLR Loss: {loss.item()}")
 
         loss_epoch += loss.item()
 

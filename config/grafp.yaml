@@ -26,20 +26,15 @@ n_peaks: 512  # max number of peaks to consider
 silence: 1.0e-5
 
 # Dataset and Model hyperparameters
-train_sz: 8000
-val_sz: 25000
 bsz_train: 256
 n_filters : 8 # number of filters in the peak extraction layer
 patch_frames: 8
 patch_bins: 4
 tau: 0.05
-tau_mix: 0.05
 lr: 8.0e-5
 min_lr: 7.0e-7
 n_epochs: 400
 T_max: 400
-lambda: 0.0
-beta: 0.0
 error_threshold: 1
 
 # Classification hyperparameters
@@ -56,18 +51,16 @@ gain: 10
 min_rate: 0.7
 max_rate: 1.5
 
-# BitCrusher hyperparameters
+# BitCrusher hyperparameters (not utilized)
 min_bit_depth: 2
 max_bit_depth: 10
 
-# Dynamic range compression hyperparameters
+# Dynamic range compression hyperparameters (not utilized)
 DC_threshold: [-30, 0]
 DC_ratio: [2, 4, 8, 20]
 DC_attack: [0.001, 0.1]
 DC_release: [0.05, 1.0]
 
-# time_mask: 8
-# freq_mask: 16
 
 # Model architecture
 d: 128
@@ -75,6 +68,3 @@ h: 1024
 u: 32
 dim: 2048
 
-# Database sizes (validation)
-n_dummy: 100
-n_query: 20

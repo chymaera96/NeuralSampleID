@@ -24,46 +24,23 @@ class DummyScaler:
 
 
 
-def load_index(cfg, data_dir, ext=['wav','mp3'], shuffle_dataset=True, mode="train"):
+def load_index(cfg, json_path, data_dir=None):
 
-    if data_dir.endswith('.json'):
-        print(f"DATA DIR: {data_dir}")
-    # print(f"JSON PATH: {json_path}")
-        print(f"=>Loading indices from index file {data_dir}")
-        with open(data_dir, 'r') as fp:
-            dataset = json.load(fp)
-        return dataset
-    
-    print(f"=>Loading indices from {data_dir}")
-    if not os.path.exists(data_dir):
-        raise FileNotFoundError(f"Directory {data_dir} not found")
-    
-    json_path = os.path.join(cfg['data_dir'], data_dir.split('/')[-1] + ".json")
-    # print(f"DATA DIR: {data_dir}")
-    # print(f"JSON PATH: {json_path}")
-    if os.path.exists(json_path):
-        print(f"Loading indices from {json_path}")
-        with open(json_path, 'r') as fp:
-            dataset = json.load(fp)
-        return dataset
-    
-    fpaths = glob.glob(os.path.join(data_dir,'**/*.*'), recursive=True)
-    fpaths = [p for p in fpaths if p.split('.')[-1] in ext]
-    dataset_size = len(fpaths)
-    indices = list(range(dataset_size))
-    if shuffle_dataset :
-        np.random.seed(42)
-        np.random.shuffle(indices)
-    if mode == "train":
-        size = cfg['train_sz']
-    else:
-        size = cfg['val_sz']
-    dataset = {str(i):fpaths[ix] for i,ix in enumerate(indices[:size])}
+    print(f"=>Loading indices from index file {json_path}")
+    with open(json_path, 'r') as fp:
+        dataset = json.load(fp)
 
-    with open(json_path, 'w') as fp:
-        json.dump(dataset, fp)
-
+    if data_dir is not None:
+        for db_type, index in dataset.items():
+            for ix,fpath in enumerate(index):
+                if '/' not in fpath:
+                    fpath = os.path.join(data_dir, fpath)
+                    dataset[db_type][ix] = fpath
+                else:
+                    break
+    
     return dataset
+
 
 
 def load_nsid_index(cfg, json_path=None, overwrite=False):

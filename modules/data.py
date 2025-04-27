@@ -172,7 +172,7 @@ class Sample100Dataset(Dataset):
         self.cfg = cfg
 
         if self.mode == "dummy":
-            self.filenames = load_index(cfg, path, mode="valid")
+            self.filenames = load_index(cfg, json_path='data/sample_100.json', data_dir=path)
         else:
             self.filenames = {}
 

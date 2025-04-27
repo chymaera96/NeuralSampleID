@@ -11,11 +11,6 @@ noise_dir: '/data/home/acw723/datasets/musan/noise/'
 annot_path: 'data/sample100_query_index.json'
 
 
-# train_dir: 'data/fma_small_all.json'
-# val_dir: 'data/fma_medium_all.json'
-# ir_dir: '/import/research_c4dm/ss380/AIR_1_4' # To-do: Change this
-# noise_dir: '/import/c4dm-datasets/musan'
-
 
 # Model input parameters
 arch: 'resnet-ibn'
@@ -31,17 +26,12 @@ n_peaks: 512  # max number of peaks to consider
 silence: 1.0e-5
 
 # Dataset and Model hyperparameters
-train_sz: 8000
-val_sz: 25000
 bsz_train: 512
 tau: 0.05
-tau_mix: 0.05
 lr: 1.0e-4
 min_lr: 2.0e-6
 n_epochs: 120
 T_max: 100
-lambda: 0.0
-beta: 0.0
 error_threshold: 5
 
 # Augmentation hyperparameters
@@ -63,16 +53,3 @@ DC_threshold: [-30, 0]
 DC_ratio: [2, 4, 8, 20]
 DC_attack: [0.001, 0.1]
 DC_release: [0.05, 1.0]
-
-# time_mask: 8
-# freq_mask: 16
-
-# Model architecture
-d: 128
-h: 1024
-u: 32
-dim: 2048
-
-# Database sizes (validation)
-n_dummy: 100
-n_query: 20

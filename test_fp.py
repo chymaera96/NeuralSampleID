@@ -338,8 +338,7 @@ def main():
     query_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="query")
     query_full_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="query_full")
     ref_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="ref")
-    dummy_path = 'data/sample_100.json'     # Required for dummy db
-    dummy_dataset = Sample100Dataset(cfg, path=dummy_path, annot_path=annot_path, mode="dummy")
+    dummy_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="dummy")
 
 
     # Create DataLoader instances for each dataset
