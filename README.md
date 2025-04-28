@@ -35,8 +35,20 @@ conda install faiss-gpu -c pytorch
 
 The models are trained using the `fma_medium` subset of the Free Music Archive (FMA) dataset. The audio files are first preprocessed into source-separated stems; specifically `vocal`,`drum`,`bass`,`other` stems. For this, we use HTDemucs \[cite\]. For the training setup, the source separated audio files should follow the following directory structure.
 
-htdemucs/ ├── 12345/ │ ├── vocals.mp3 │ ├── drums.mp3 │ ├── bass.mp3 │ └── other.mp3 ├── 12346/ │ ├── vocals.mp3 │ ├── drums.mp3 │ ├── bass.mp3 │ └── other.mp3 ├── ...
-
+```
+htdemucs/
+├── 12345/
+│   ├── vocals.mp3
+│   ├── drums.mp3
+│   ├── bass.mp3
+│   └── other.mp3
+├── 12346/
+│   ├── vocals.mp3
+│   ├── drums.mp3
+│   ├── bass.mp3
+│   └── other.mp3
+├── ...
+```
 
 Each subfolder (e.g., `12345`) corresponds to a unique FMA track ID and contains the separated stem files in `.mp3` format.
 
