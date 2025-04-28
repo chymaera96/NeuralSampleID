@@ -74,13 +74,11 @@ def generate_query_index(annotations_file, output_file):
         annotations_file (str): Path to the annotations_full.json file.
         output_file (str): Path to save the generated index file.
     """
-    # Load the annotations_full.json file
     with open(annotations_file, 'r') as f:
         annotations = json.load(f)
     
     index_data = []
     
-    # Process each annotation entry
     for annotation in annotations:
         sample_id = annotation.get("sample_id", "unknown")
         query_file = annotation["query_file"].replace(".mp3", "")
@@ -146,7 +144,6 @@ def generate_query_index(annotations_file, output_file):
     with open(output_file, 'w') as f:
         json.dump(index_data, f, indent=4)
     print(f"Index file saved at: {output_file}")
-
 
 
 
