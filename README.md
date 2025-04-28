@@ -10,7 +10,7 @@ Official repository for "REFINING MUSIC SAMPLE IDENTIFICATION WITH A SELF-SUPERV
 - [Pretraining](#pretraining)
 - [Classifier Training](#classifier-training)
 - [Evaluation](#evaluation)
-- [Pretrained Models](#pretrained-models)
+- [Pretrained Models and Fingerprints](#pretrained-models)
 - [Citation](#citation)
 
 ---
@@ -52,6 +52,8 @@ htdemucs/
 
 Each subfolder (e.g., `12345`) corresponds to a unique FMA track ID and contains the separated stem files in `.mp3` format.
 
+We use the our extended annotations of the Sample100 dataset -- `sample100-ext` for retrieval evaluation. Details of the dataset can be found in the dataset [README](https://github.com/automatic-sample-id-ismir25/asid-ismir25/blob/main/sample100-ext/README.md). Evaluation audio files have not been shared as a part of this work. Instead, we provide the fingeprints computed using our setup for queries and reference database. 
+
 
 ## Pretraining
 
@@ -65,7 +67,7 @@ Key arguments:
 - `--config`: YAML config file path
 - `--ckp`: Placeholder name for the training run
 
-> **Note**:  Update the paths (particularly, `htdemucs_dir` and `fma_dir`) in the YAML file to point at the directory containing the source-separated audio data for training. If you want to resume from a checkpoint, use `--resume path/to/checkpoint.pth`.
+> **Note**:  Update the paths (particularly, `htdemucs_dir` and `fma_dir`) in the YAML file to point at the directory containing the source-separated and mixed audio data for training. If you want to resume from a checkpoint, use `--resume path/to/checkpoint.pth`.
 
 ---
 
@@ -74,11 +76,8 @@ Key arguments:
 After pretraining, you can fine-tune the MHCA classifier on the learned embeddings (fingerprints).
 
 ```bash
-# (Coming soon) Fine-tuning script
+python downstream.py --enc_wts ENCODER_CHECKPOINT
 ```
-
-For now, classification can be incorporated by evaluating extracted fingerprints.
-
 ---
 
 ## Evaluation
@@ -98,7 +97,7 @@ bash ismir25.sh baseline
 The script `ismir25.sh` handles running evaluation with the appropriate model to reproduce published benchmarks.
 
 
-## Pretrained Models
+## Pretrained Models and Fingeprints
 
  [![HuggingFace](https://huggingface.co/front/assets/huggingface_logo-noborder.svg)](https://huggingface.co/chymaera96/NeuralSampleID)
 

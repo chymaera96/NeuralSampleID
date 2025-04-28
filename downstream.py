@@ -20,25 +20,11 @@ device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cp
 
 parser = argparse.ArgumentParser(description='Train Classifier on Pretrained GraphEncoderDGL')
 parser.add_argument('--config', default='config/grafp.yaml', type=str, help='Path to config file')
-parser.add_argument('--epochs', default=50, type=int, metavar='N', help='Number of total epochs to run')
+parser.add_argument('--epochs', default=5, type=int, metavar='N', help='Number of total epochs to run')
 parser.add_argument('--resume', default=None, type=str, metavar='PATH', help='Path to latest checkpoint')
 parser.add_argument('--ckp', default='test', type=str, help='Checkpoint name')
 parser.add_argument('--enc_wts', required=True, type=str, help='Path to pretrained GraphEncoderDGL weights')
 
-# class GraphClassifier(nn.Module):
-#     def __init__(self, in_dim, hidden_dim, num_classes=2):
-#         super().__init__()
-#         self.pool = nn.AdaptiveAvgPool1d(1)
-#         self.fc = nn.Sequential(
-#             nn.Linear(in_dim, hidden_dim),
-#             nn.ReLU(),
-#             nn.Linear(hidden_dim, num_classes),
-#             nn.Sigmoid()
-#         )
-
-#     def forward(self, x):
-#         x = self.pool(x).squeeze(-1)
-#         return self.fc(x)
 
 
 class CrossAttentionClassifier(nn.Module):
