@@ -1,19 +1,17 @@
 # NeuralSampleID
 
-NeuralSampleID is a framework for learning contrastive audio fingerprints for audio identification tasks. It uses a SimCLR-style self-supervised pretraining scheme, followed by classifier-based fine-tuning and evaluation.
-
-Pretrained models and extracted fingerprints are hosted on HuggingFace.
+Official repository for "REFINING MUSIC SAMPLE IDENTIFICATION WITH A SELF-SUPERVISED GRAPH NEURAL NETWORK" currently under review at Internation Society for Music Information Retrieval (ISMIR), 2025.
 
 ---
 
 ## Table of Contents
 - [Installation](#installation)
+- [Dataset Preparation] (#dataset-preparation)
 - [Pretraining](#pretraining)
-- [Training a Classifier](#training-a-classifier)
+- [Classifier Training](#classifier-training)
 - [Evaluation](#evaluation)
 - [Pretrained Models](#pretrained-models)
 - [Citation](#citation)
-- [Acknowledgements](#acknowledgements)
 
 ---
 
@@ -35,7 +33,13 @@ conda install faiss-gpu -c pytorch
 
 ## Dataset Preparation
 
-The models are trained using the `fma_medium` subset of the Free Music Archive (FMA) dataset. 
+The models are trained using the `fma_medium` subset of the Free Music Archive (FMA) dataset. The audio files are first preprocessed into source-separated stems; specifically `vocal`,`drum`,`bass`,`other` stems. For this, we use HTDemucs \[cite\]. For the training setup, the source separated audio files should follow the following directory structure.
+
+htdemucs/ ├── 12345/ │ ├── vocals.mp3 │ ├── drums.mp3 │ ├── bass.mp3 │ └── other.mp3 ├── 12346/ │ ├── vocals.mp3 │ ├── drums.mp3 │ ├── bass.mp3 │ └── other.mp3 ├── ...
+
+
+Each subfolder (e.g., `12345`) corresponds to a unique FMA track ID and contains the separated stem files in `.mp3` format.
+
 
 ## Pretraining
 
@@ -53,7 +57,7 @@ Key arguments:
 
 ---
 
-## Training a Classifier
+## Classifier Training
 
 After pretraining, you can fine-tune the MHCA classifier on the learned embeddings (fingerprints).
 
@@ -79,29 +83,12 @@ bash ismir25.sh proposed
 bash ismir25.sh baseline
 ```
 
-The script `ismir25.sh` handles running evaluation with the appropriate model and fingerprint data.
+The script `ismir25.sh` handles running evaluation with the appropriate model to reproduce published benchmarks.
 
-### Example structure for `ismir25.sh`
-
-```bash
-#!/bin/bash
-
-MODEL_TYPE=$1
-
-if [ "$MODEL_TYPE" == "baseline" ]; then
-    python eval.py --model baseline --fingerprints path/to/baseline/fingerprints
-elif [ "$MODEL_TYPE" == "proposed" ]; then
-    python eval.py --model proposed --fingerprints path/to/proposed/fingerprints
-else
-    echo "Unknown model type: $MODEL_TYPE"
-fi
-```
-
----
 
 ## Pretrained Models
 
- [![HuggingFace](https://huggingface.co/front/assets/huggingface_logo-noborder.svg)](https://huggingface.co/chymaera96/NeuralSampleID).
+ [![HuggingFace](https://huggingface.co/front/assets/huggingface_logo-noborder.svg)](https://huggingface.co/chymaera96/NeuralSampleID)
 
 - [GrafPrint pretrained weights](https://huggingface.co/chymaera96/NeuralSampleID/tree/main/grafp-weights)
 - [Baseline ResNet-IBN fingerprints](https://huggingface.co/chymaera96/NeuralSampleID/tree/main/baseline-fingerprints)
@@ -113,6 +100,6 @@ fi
 
 TBD
 
-
+---
 
 For issues or questions, please open an [Issue](https://github.com/chymaera96/NeuralSampleID/issues).
