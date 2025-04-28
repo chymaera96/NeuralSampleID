@@ -10,11 +10,10 @@ from nnAudio.Spectrogram import CQT
 from fx_util import BandEQ, Compressor, FrameLevelCorruption
 
 class GPUTransformSampleID(nn.Module):
-    def __init__(self, cfg, ir_dir, noise_dir, train=True, cpu=False, max_transforms_1=1, max_transforms_2=1):
+    def __init__(self, cfg, ir_dir=None, train=True, cpu=False, max_transforms_1=1, max_transforms_2=1):
         super(GPUTransformSampleID, self).__init__()
         self.sample_rate = cfg['fs']
         self.ir_dir = ir_dir
-        self.noise_dir = noise_dir
         self.overlap = cfg['overlap']
         self.arch = cfg['arch']
         self.n_frames = cfg['n_frames']
@@ -33,7 +32,7 @@ class GPUTransformSampleID(nn.Module):
                            n_mels=cfg['n_mels']),
             AmplitudeToDB()
         )
-        
+
         self.cqt = CQT(sr=self.sample_rate, hop_length=cfg['hop_len'])
 
         if self.arch == 'grafp':

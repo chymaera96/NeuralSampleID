@@ -28,7 +28,7 @@ nan_counter = 0
 
 device = torch.device("cuda") if torch.cuda.is_available() else torch.device("cpu")
 
-parser = argparse.ArgumentParser(description='Grafprint Training')
+parser = argparse.ArgumentParser(description='ASID Training')
 parser.add_argument('--config', default='config/grafp.yaml', type=str,
                     help='Path to config file')
 parser.add_argument('--train_dir', default=None, type=str, metavar='PATH',
@@ -86,8 +86,6 @@ def main():
     args = parser.parse_args()
     cfg = load_config(args.config)
     writer = SummaryWriter(f'runs/{args.ckp}')
-    ir_dir = cfg['ir_dir']
-    noise_dir = cfg['noise_dir']
     
     # Hyperparameters
     batch_size = cfg['bsz_train']
@@ -98,10 +96,9 @@ def main():
     shuffle_dataset = True
 
     print("Initializing augmentation pipeline...")
-    noise_train_idx = load_augmentation_index(noise_dir, splits=0.8)["train"]
-    ir_train_idx = load_augmentation_index(ir_dir, splits=0.8)["train"]
-    gpu_augment = GPUTransformSampleID(cfg=cfg, ir_dir=ir_train_idx, noise_dir=noise_train_idx, train=True).to(device)
-    cpu_augment = GPUTransformSampleID(cfg=cfg, ir_dir=ir_train_idx, noise_dir=noise_train_idx, cpu=True)
+    # ir_train_idx = load_augmentation_index(ir_dir, splits=0.8)["train"]
+    gpu_augment = GPUTransformSampleID(cfg=cfg, train=True).to(device)
+    cpu_augment = GPUTransformSampleID(cfg=cfg, cpu=True)
 
     print("Loading dataset...")
     train_dataset = NeuralSampleIDDataset(cfg=cfg, train=True, transform=cpu_augment)

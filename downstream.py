@@ -131,24 +131,18 @@ def train(cfg, train_loader, model, classifier, optimizer, scaler, augment=None)
         z_all = torch.cat((z_i, z_j), dim=0)    # (2B, C)
 
         # Mine hardest negatives
-        negatives = torch.cat((z_i, z_j), dim=0)  # Pool negatives from the batch
-        hard_negative_idxs = mine_hard_negatives(z_i, z_j, z_all, num_negatives=3)  # Still (B, C)
+        hard_negative_idxs = mine_hard_negatives(z_i, z_j, z_all, num_negatives=3)  # (B, C)
 
         # Use indices to fetch corresponding x_before_proj negatives
         hard_negatives = x_before_proj_all[hard_negative_idxs.view(-1)]  # (B*3, C, N)
 
-        # Train classifier using cross-attention
         logits_pos = classifier(x_before_proj_i, x_before_proj_j)  # (B, 1)
         logits_neg = classifier(x_before_proj_i.repeat(3, 1, 1), hard_negatives)  # (B*3, 1)
-
-        # Labels
         pos_labels = torch.ones(logits_pos.shape[0], 1).to(device)
         neg_labels = torch.zeros(logits_neg.shape[0], 1).to(device)
 
-        # Compute loss
         clf_loss = criterion(logits_pos, pos_labels) + criterion(logits_neg, neg_labels)
 
-        # Backpropagation
         scaler.scale(clf_loss).backward()
         scaler.step(optimizer)
         scaler.update()
@@ -164,17 +158,14 @@ def train(cfg, train_loader, model, classifier, optimizer, scaler, augment=None)
 def main():
     args = parser.parse_args()
     cfg = load_config(args.config)
-    noise_dir = cfg['noise_dir']
-    ir_dir = cfg['ir_dir']
     cfg = load_config(args.config)
     wts = args.enc_wts
     
     print("Intializing augmentation pipeline...")
-    noise_train_idx = load_augmentation_index(noise_dir, splits=0.8)["train"]
-    ir_train_idx = load_augmentation_index(ir_dir, splits=0.8)["train"]
+    # ir_train_idx = load_augmentation_index(ir_dir, splits=0.8)["train"]
+    gpu_augment = GPUTransformSampleID(cfg=cfg, train=True).to(device)
+    cpu_augment = GPUTransformSampleID(cfg=cfg, cpu=True)
 
-    gpu_augment = GPUTransformSampleID(cfg=cfg, ir_dir=ir_train_idx, noise_dir=noise_train_idx, train=True).to(device)
-    cpu_augment = GPUTransformSampleID(cfg=cfg, ir_dir=ir_train_idx, noise_dir=noise_train_idx, cpu=True)
     train_dataset = NeuralSampleIDDataset(cfg=cfg, train=True, transform=cpu_augment)
     train_loader = DataLoader(train_dataset, batch_size=cfg['clf_bsz'], shuffle=True, num_workers=2, pin_memory=True, drop_last=True)
     

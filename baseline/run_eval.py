@@ -208,8 +208,6 @@ def main():
     args = parser.parse_args()
     cfg = load_config(args.config)
     test_cfg = load_config(args.test_config)
-    ir_dir = cfg['ir_dir']
-    noise_dir = cfg['noise_dir']
     annot_path = cfg['annot_path']
     index_type = args.index_type
     # Hyperparameters
@@ -230,16 +228,8 @@ def main():
         model = model.to(device)
 
     print("Creating dataloaders ...")
-
-    # Augmentation for testing with specific noise subsets
-    if args.noise_idx is not None:
-        noise_test_idx = load_augmentation_index(noise_dir, json_path=args.noise_idx, splits=0.8)[args.noise_split]
-    else:
-        noise_test_idx = load_augmentation_index(noise_dir, splits=0.8)["test"]
-    ir_test_idx = load_augmentation_index(ir_dir, splits=0.8)["test"]
-    test_augment = GPUTransformSampleID(cfg=cfg, ir_dir=ir_test_idx, 
-                                        noise_dir=noise_test_idx, 
-                                        train=False).to(device)
+    # ir_test_idx = load_augmentation_index(ir_dir, splits=0.8)["test"]
+    test_augment = GPUTransformSampleID(cfg=cfg, train=False).to(device)
 
     query_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="query")
     query_full_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="query_full")

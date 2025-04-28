@@ -33,27 +33,29 @@ conda install faiss-gpu -c pytorch
 
 ---
 
+## Dataset Preparation
+
+The models are trained using the `fma_medium` subset of the Free Music Archive (FMA) dataset. 
+
 ## Pretraining
 
-The pretraining step uses contrastive learning (NT-Xent Loss) with a Graph Neural Network or ResNet-IBN backbone.
+The pretraining step uses contrastive learning of the Graph Neural Network backbone. 
 
 ```bash
-# Example: Pretrain the model with Graph Encoder
-python train.py --config config/grafp.yaml --train_dir path/to/train_data --val_dir path/to/val_data --ckp grafp_pretrain
+python train.py --config config/grafp.yaml --ckp CKP_NAME
 ```
 
 Key arguments:
 - `--config`: YAML config file path
-- `--train_dir`, `--val_dir`: Paths to training and validation datasets
-- `--ckp`: Checkpoint name (saved under `checkpoint/`)
+- `--ckp`: Placeholder name for the training run
 
-> **Note**: If you want to resume from a checkpoint, use `--resume path/to/checkpoint.pth`.
+> **Note**:  Update the paths (particularly, `htdemucs_dir` and `fma_dir`) in the YAML file to point at the directory containing the source-separated audio data for training. If you want to resume from a checkpoint, use `--resume path/to/checkpoint.pth`.
 
 ---
 
 ## Training a Classifier
 
-After pretraining, you can fine-tune a classifier on the learned embeddings.
+After pretraining, you can fine-tune the MHCA classifier on the learned embeddings (fingerprints).
 
 ```bash
 # (Coming soon) Fine-tuning script

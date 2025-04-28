@@ -32,8 +32,6 @@ parser.add_argument('--config', default='config/resnet_ibn.yaml', type=str,
                     help='Path to config file')
 parser.add_argument('--train_dir', default=None, type=str, metavar='PATH',
                     help='path to training data')
-parser.add_argument('--val_dir', default=None, type=str, metavar='PATH',
-                    help='path to validation data')
 parser.add_argument('--epochs', default=None, type=int, metavar='N',
                     help='number of total epochs to run')
 parser.add_argument('--resume', default=None, type=str, metavar='PATH',
@@ -100,8 +98,6 @@ def main():
     args = parser.parse_args()
     cfg = load_config(args.config)
     writer = SummaryWriter(f'runs/{args.ckp}')
-    ir_dir = cfg['ir_dir']
-    noise_dir = cfg['noise_dir']
     
     # Hyperparameters
     batch_size = cfg['bsz_train']
@@ -111,14 +107,10 @@ def main():
     random_seed = args.seed
     shuffle_dataset = True
 
-    print("Intializing augmentation pipeline...")
-    noise_train_idx = load_augmentation_index(noise_dir, splits=0.8)["train"]
-    ir_train_idx = load_augmentation_index(ir_dir, splits=0.8)["train"]
-    noise_val_idx = load_augmentation_index(noise_dir, splits=0.8)["test"]
-    ir_val_idx = load_augmentation_index(ir_dir, splits=0.8)["test"]
-    gpu_augment = GPUTransformSampleID(cfg=cfg, ir_dir=ir_train_idx, noise_dir=noise_train_idx, train=True).to(device)
-    cpu_augment = GPUTransformSampleID(cfg=cfg, ir_dir=ir_train_idx, noise_dir=noise_train_idx, cpu=True)
-    val_augment = GPUTransformSampleID(cfg=cfg, ir_dir=ir_val_idx, noise_dir=noise_val_idx, train=False).to(device)
+    print("Initializing augmentation pipeline...")
+    # ir_train_idx = load_augmentation_index(ir_dir, splits=0.8)["train"]
+    gpu_augment = GPUTransformSampleID(cfg=cfg, train=True).to(device)
+    cpu_augment = GPUTransformSampleID(cfg=cfg, cpu=True)
 
     print("Loading dataset...")
     train_dataset = NeuralSampleIDDataset(cfg=cfg, train=True, transform=cpu_augment)
