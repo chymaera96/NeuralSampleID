@@ -99,7 +99,7 @@ fi
 
 ## Pretrained Models
 
-You can download pretrained model weights and extracted fingerprints from [![HuggingFace](https://huggingface.co/front/assets/huggingface_logo-noborder.svg)](https://huggingface.co/chymaera96/NeuralSampleID).
+ [![HuggingFace](https://huggingface.co/front/assets/huggingface_logo-noborder.svg)](https://huggingface.co/chymaera96/NeuralSampleID).
 
 - [GrafPrint pretrained weights](https://huggingface.co/chymaera96/NeuralSampleID/tree/main/grafp-weights)
 - [Baseline ResNet-IBN fingerprints](https://huggingface.co/chymaera96/NeuralSampleID/tree/main/baseline-fingerprints)
@@ -109,24 +109,8 @@ You can download pretrained model weights and extracted fingerprints from [![Hug
 
 ## Citation
 
-If you use NeuralSampleID in your work, please cite:
+TBD
 
-```bibtex
-@inproceedings{your_bibtex_here,
-  title={Neural SampleID: Contrastive Audio Fingerprinting},
-  author={Your Name},
-  booktitle={Proceedings of the 2025 ISMIR Conference},
-  year={2025}
-}
-```
 
----
-
-## Acknowledgements
-
-- Parts of the code structure and training loop were adapted from SimCLR and MixCo.
-- FAISS is used for fast nearest neighbor search during evaluation.
-
----
 
 For issues or questions, please open an [Issue](https://github.com/chymaera96/NeuralSampleID/issues).
