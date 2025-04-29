@@ -9,8 +9,11 @@ import json
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 import torchaudio
+import sys
 torchaudio.set_audio_backend("soundfile")
 
+root = os.path.dirname(__file__)
+sys.path.insert(0, os.path.abspath(os.path.join(root, '..')))
 
 
 from util import \
@@ -29,6 +32,7 @@ from baseline.eval_hr import eval_faiss
 # Directories
 root = os.path.dirname(__file__)
 model_folder = os.path.abspath(os.path.join(root, os.pardir, "checkpoint"))
+print("MODEL FOLDER:", model_folder)
 
 parser = argparse.ArgumentParser(description='Neuralfp Testing')
 parser.add_argument('--config', default='config/resnet_ibn.yaml', type=str,
@@ -36,7 +40,7 @@ parser.add_argument('--config', default='config/resnet_ibn.yaml', type=str,
 parser.add_argument('--test_config', default='config/test_config.yaml', type=str)
 parser.add_argument('--seed', default=42, type=int,
                     help='seed for initializing testing. ')
-parser.add_argument('--test_dir', default='data/fma_medium.json', type=str,
+parser.add_argument('--test_dir', default=None, type=str,
                     help='path to test data')
 parser.add_argument('--noise_idx', default=None, type=str)
 parser.add_argument('--noise_split', default='all', type=str,
