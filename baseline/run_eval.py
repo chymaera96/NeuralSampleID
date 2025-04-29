@@ -49,6 +49,7 @@ parser.add_argument('--index_type', default='ivfpq', type=str)
 parser.add_argument('--text', default='test', type=str)
 parser.add_argument('--recompute', action='store_true', default=False)
 parser.add_argument('--map', action='store_true', default=False)
+parser.add_argument('--ismir25', action='store_true', default=False)
 
 device = torch.device('cuda' if torch.cuda.is_available else 'cpu')
 
@@ -207,7 +208,12 @@ def main():
 
     args = parser.parse_args()
     cfg = load_config(args.config)
-    test_cfg = load_config(args.test_config)
+    if args.test_config.endswith('.yaml'):
+        test_cfg = load_config(args.test_config)
+    elif args.test_config.startswith('{'):
+        test_cfg = json.loads(args.test_config)
+    else:
+        raise ValueError("Invalid test_config format. Must be a YAML file or JSON string.")
     annot_path = cfg['annot_path']
     index_type = args.index_type
     # Hyperparameters
@@ -234,8 +240,7 @@ def main():
     query_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="query")
     query_full_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="query_full")
     ref_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="ref")
-    dummy_path = 'data/sample_100.json'     # Required for dummy db
-    dummy_dataset = Sample100Dataset(cfg, path=dummy_path, annot_path=annot_path, mode="dummy")
+    dummy_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="dummy")
 
     # Create DataLoader instances for each dataset
     dummy_db_loader = DataLoader(dummy_dataset, batch_size=1, 
@@ -287,15 +292,16 @@ def main():
             else:
                 print("=> Skipping dummy db creation...")
 
-            create_ref_db(ref_db_loader, augment=test_augment,
-                            model=model, output_root_dir=fp_dir, verbose=True)
-            
-            create_query_db(query_db_loader, augment=test_augment,
-                            model=model, output_root_dir=fp_dir, verbose=True)
-            
-            if args.map:
-                create_query_db(query_full_db_loader, augment=test_augment,
-                                model=model, output_root_dir=fp_dir, fname='query_full_db', verbose=True)
+            if args.ismir25:
+                create_ref_db(ref_db_loader, augment=test_augment,
+                                model=model, output_root_dir=fp_dir, verbose=True)
+                
+                create_query_db(query_db_loader, augment=test_augment,
+                                model=model, output_root_dir=fp_dir, verbose=True)
+                
+                if args.map:
+                    create_query_db(query_full_db_loader, augment=test_augment,
+                                    model=model, output_root_dir=fp_dir, fname='query_full_db', verbose=True)
             
             
             text = f'{args.text}_{str(epoch)}'

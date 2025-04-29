@@ -39,7 +39,7 @@ model_folder = os.path.join(root,"checkpoint")
 parser = argparse.ArgumentParser(description='Neuralfp Testing')
 parser.add_argument('--config', default='config/grafp.yaml', type=str,
                     help='Path to config file')
-parser.add_argument('--test_config', default='config/test_config.yaml', type=str)
+parser.add_argument('--test_config', default='config/test_config.yaml')
 parser.add_argument('--seed', default=42, type=int,
                     help='seed for initializing testing. ')
 parser.add_argument('--test_dir', default='data/fma_medium.json', type=str,
@@ -61,6 +61,7 @@ parser.add_argument('--map', action='store_true', default=False)
 parser.add_argument('--k', default=5, type=int)
 parser.add_argument('--test_ids', default='1000', type=str)
 parser.add_argument('--clf_ckp', default='clf_test_best.pth', type=str)
+parser.add_argument('--ismir25', action='store_true', default=False)
 
 device = torch.device('cuda' if torch.cuda.is_available else 'cpu')
 
@@ -282,7 +283,12 @@ def main():
 
     args = parser.parse_args()
     cfg = load_config(args.config)
-    test_cfg = load_config(args.test_config)
+    if args.test_config.endswith('.yaml'):
+        test_cfg = load_config(args.test_config)
+    elif args.test_config.startswith('{'):
+        test_cfg = json.loads(args.test_config)
+    else:
+        raise ValueError("Invalid test_config format. Must be a YAML file or JSON string.")
     annot_path = cfg['annot_path']
     enc = args.encoder.split('_')[0]
     size = args.encoder.split('_')[1]
@@ -389,24 +395,25 @@ def main():
             else:
                 print("=> Skipping dummy db creation...")
 
-            create_ref_db(ref_db_loader, augment=test_augment,
-                            model=model, output_root_dir=fp_dir, verbose=True)
-            
-            create_query_db(query_db_loader, augment=test_augment,
-                            model=model, output_root_dir=fp_dir, verbose=True)
-
-            create_ref_nmatrix(ref_db_loader, augment=test_augment,
-                                model=model, save_dir=f'{fp_dir}/ref_nmatrix', verbose=True)
-            
-            create_query_nmatrix(query_db_loader, augment=test_augment,
-                                model=model, save_path=f'{fp_dir}/query_nmatrix.npy', verbose=True)
-            
-            if args.map:
-                create_query_db(query_full_db_loader, augment=test_augment,
-                                model=model, output_root_dir=fp_dir, fname='query_full_db', verbose=True)
+            if args.ismir25:
+                create_ref_db(ref_db_loader, augment=test_augment,
+                                model=model, output_root_dir=fp_dir, verbose=True)
                 
-                create_query_nmatrix(query_full_db_loader, augment=test_augment,
-                                model=model, save_path=f'{fp_dir}/query_full_nmatrix.npy', verbose=True)
+                create_query_db(query_db_loader, augment=test_augment,
+                                model=model, output_root_dir=fp_dir, verbose=True)
+
+                create_ref_nmatrix(ref_db_loader, augment=test_augment,
+                                    model=model, save_dir=f'{fp_dir}/ref_nmatrix', verbose=True)
+                
+                create_query_nmatrix(query_db_loader, augment=test_augment,
+                                    model=model, save_path=f'{fp_dir}/query_nmatrix.npy', verbose=True)
+                
+                if args.map:
+                    create_query_db(query_full_db_loader, augment=test_augment,
+                                    model=model, output_root_dir=fp_dir, fname='query_full_db', verbose=True)
+                    
+                    create_query_nmatrix(query_full_db_loader, augment=test_augment,
+                                    model=model, save_path=f'{fp_dir}/query_full_nmatrix.npy', verbose=True)
                 # pass
             
             text = f'{args.text}_{str(epoch)}'
