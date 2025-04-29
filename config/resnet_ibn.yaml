@@ -1,11 +1,11 @@
 # Dataset directories
-data_dir: 'data'
+data_dir: '../data'
 fma_dir: '/data/EECS-Studiosync/datasets/fma_medium/'
 htdemucs_dir: '/data/EECS-Studiosync/datasets/fma_medium/htdemucs'
 # train_dir: 'data/fma_small_all.json'
 # ir_dir: '/data/home/acw723/datasets/ir'
 # annot_path: '/data/home/acw723/datasets/sample_100/samples.csv'
-annot_path: 'data/sample100_query_index.json'
+annot_path: '../data/sample100_query_index.json'
 
 
 # Model input parameters
