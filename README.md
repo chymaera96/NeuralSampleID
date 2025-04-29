@@ -6,7 +6,7 @@ Official repository for "REFINING MUSIC SAMPLE IDENTIFICATION WITH A SELF-SUPERV
 
 ## Table of Contents
 - [Installation](#installation)
-- [Dataset Preparation] (#dataset-preparation)
+- [Dataset Preparation](#dataset-preparation)
 - [Pretraining](#pretraining)
 - [Classifier Training](#classifier-training)
 - [Evaluation](#evaluation)
@@ -60,7 +60,11 @@ We use the our extended annotations of the Sample100 dataset -- `sample100-ext` 
 The pretraining step uses contrastive learning of the Graph Neural Network backbone. 
 
 ```bash
+# Pre-training the proposed model
 python train.py --config config/grafp.yaml --ckp CKP_NAME
+# (Single-stage) training of the baseline mode
+cd baseline
+python train.py --config config/resnet_ibn.yaml --ckp CKP_NAME
 ```
 
 Key arguments:
@@ -82,7 +86,7 @@ python downstream.py --enc_wts ENCODER_CHECKPOINT
 
 ## Evaluation
 
-Evaluation compares query fingerprints against a database using FAISS. To reproduce evaluation:
+Given a query set, the evaluation process compares the retrieval rates and mean average precision (mAP). 
 
 ```bash
 # Usage: ./ismir25.sh [baseline|proposed]
@@ -94,16 +98,17 @@ bash ismir25.sh proposed
 bash ismir25.sh baseline
 ```
 
-The script `ismir25.sh` handles running evaluation with the appropriate model to reproduce published benchmarks.
+The script `ismir25.sh` handles running evaluation with the appropriate model to reproduce published benchmarks. A detailed demonstration of evaluation on custom datasets will be updated soon!
 
 
 ## Pretrained Models and Fingeprints
 
  [![HuggingFace](https://huggingface.co/front/assets/huggingface_logo-noborder.svg)](https://huggingface.co/chymaera96/NeuralSampleID)
 
-- [GrafPrint pretrained weights](https://huggingface.co/chymaera96/NeuralSampleID/tree/main/grafp-weights)
+- [GNN pretrained weights](https://huggingface.co/chymaera96/NeuralSampleID/tree/main/grafp-weights)
+- [MHCA classifier weights](https://huggingface.co/chymaera96/NeuralSampleID/tree/main/grafp-weights)
 - [Baseline ResNet-IBN fingerprints](https://huggingface.co/chymaera96/NeuralSampleID/tree/main/baseline-fingerprints)
-- [GrafPrint fingerprints](https://huggingface.co/chymaera96/NeuralSampleID/tree/main/grafp-fingerprints)
+- [Evaluation database](https://huggingface.co/chymaera96/NeuralSampleID/tree/main/grafp-fingerprints)
 
 ---
 
