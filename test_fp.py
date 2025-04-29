@@ -324,37 +324,37 @@ def main():
     else:
         print(f"=> No classifier checkpoint found at '{clf_ckpt}'")
 
+    if not args.ismir25:
+        print("Creating dataloaders ...")
 
-    print("Creating dataloaders ...")
+        # ir_test_idx = load_augmentation_index(ir_dir, splits=0.8)["test"]
+        test_augment = GPUTransformSampleID(cfg=cfg, train=False).to(device)
 
-    # ir_test_idx = load_augmentation_index(ir_dir, splits=0.8)["test"]
-    test_augment = GPUTransformSampleID(cfg=cfg, train=False).to(device)
-
-    query_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="query")
-    query_full_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="query_full")
-    ref_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="ref")
-    dummy_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="dummy")
+        query_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="query")
+        query_full_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="query_full")
+        ref_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="ref")
+        dummy_dataset = Sample100Dataset(cfg, path=args.test_dir, annot_path=annot_path, mode="dummy")
 
 
-    # Create DataLoader instances for each dataset
-    dummy_db_loader = DataLoader(dummy_dataset, batch_size=1, 
+        # Create DataLoader instances for each dataset
+        dummy_db_loader = DataLoader(dummy_dataset, batch_size=1, 
+                                    shuffle=False, num_workers=4, 
+                                    pin_memory=True, drop_last=False)
+
+        query_db_loader = DataLoader(query_dataset, batch_size=1, 
+                                    shuffle=False, num_workers=4, 
+                                    pin_memory=True, drop_last=False)
+        
+        query_full_db_loader = DataLoader(query_full_dataset, batch_size=1, 
+                                    shuffle=False, num_workers=4, 
+                                    pin_memory=True, drop_last=False)
+
+        ref_db_loader = DataLoader(ref_dataset, batch_size=1, 
                                 shuffle=False, num_workers=4, 
                                 pin_memory=True, drop_last=False)
-
-    query_db_loader = DataLoader(query_dataset, batch_size=1, 
-                                shuffle=False, num_workers=4, 
-                                pin_memory=True, drop_last=False)
-    
-    query_full_db_loader = DataLoader(query_full_dataset, batch_size=1, 
-                                shuffle=False, num_workers=4, 
-                                pin_memory=True, drop_last=False)
-
-    ref_db_loader = DataLoader(ref_dataset, batch_size=1, 
-                            shuffle=False, num_workers=4, 
-                            pin_memory=True, drop_last=False)
-    
-
-
+        
+    else:   
+        print("Using pre-computed fingerprints...")
 
     if args.small_test:
         index_type = 'l2'

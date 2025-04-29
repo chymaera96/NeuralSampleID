@@ -103,11 +103,10 @@ The script `ismir25.sh` handles running evaluation with the appropriate model to
 
 ## Pretrained Models and Fingeprints
 
- [![HuggingFace](https://huggingface.co/front/assets/huggingface_logo-noborder.svg)](https://huggingface.co/chymaera96/NeuralSampleID)
-
-- [GNN pretrained weights](https://huggingface.co/chymaera96/NeuralSampleID/tree/main/grafp-weights)
-- [MHCA classifier weights](https://huggingface.co/chymaera96/NeuralSampleID/tree/main/grafp-weights)
-- [Baseline ResNet-IBN fingerprints](https://huggingface.co/chymaera96/NeuralSampleID/tree/main/baseline-fingerprints)
+ [![HuggingFace](https://huggingface.co/front/assets/huggingface_logo-noborder.svg)](https://huggingface.co/automatic-sample-id-ismir25/asid-ismir25)
+- [GNN pretrained weights](https://huggingface.co/automatic-sample-id-ismir25/asid-ismir25/blob/main/model_tc_35_best.pth)
+- [MHCA classifier weights](https://huggingface.co/automatic-sample-id-ismir25/asid-ismir25/blob/main/clf_tc_35_4.pth)
+- [Baseline ResNet-IBN weights](https://huggingface.co/automatic-sample-id-ismir25/asid-ismir25/blob/main/model_tc_39_80.pth)
 - [Evaluation database](https://huggingface.co/chymaera96/NeuralSampleID/tree/main/grafp-fingerprints)
 
 ---

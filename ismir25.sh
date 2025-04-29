@@ -11,15 +11,17 @@ if [ -z "$MODEL_TYPE" ]; then
     exit 1
 fi
 
-mkdir -p checkpoints
+mkdir -p checkpoint
 
 # Download model based on selection
 if [ "$MODEL_TYPE" = "baseline" ]; then
-    MODEL_URL="<BASELINE_MODEL_URL>"
-    MODEL_PATH="checkpoints/baseline_model.pth"
+    MODEL_URL="https://huggingface.co/automatic-sample-id-ismir25/asid-ismir25/blob/main/model_tc_35_best.pth"
+    MODEL_PATH="checkpoint/baseline_model.pth"
 elif [ "$MODEL_TYPE" = "proposed" ]; then
-    MODEL_URL="<PROPOSED_MODEL_URL>"
-    MODEL_PATH="checkpoints/proposed_model.pth"
+    MODEL_URL="https://huggingface.co/automatic-sample-id-ismir25/asid-ismir25/blob/main/model_tc_35_best.pth"
+    MODEL_PATH="checkpoint/model_tc_35_best.pth"
+    CLF_URL_URL="https://huggingface.co/automatic-sample-id-ismir25/asid-ismir25/blob/main/clf_tc_35_4.pth"
+    CLF_PATH="checkpoint/clf_tc_35_4.pth"
 else
     echo "Invalid model type. Choose 'baseline' or 'proposed'."
     exit 1
@@ -31,6 +33,14 @@ if [ ! -f "$MODEL_PATH" ]; then
     wget -O "$MODEL_PATH" "$MODEL_URL"
 else
     echo "$MODEL_TYPE model already exists. Skipping download."
+fi
+
+# Download classifier model if proposed model is selected
+if [ "$MODEL_TYPE" = "proposed" ] && [ ! -f "$CLF_PATH" ]; then
+    echo "Downloading classifier model..."
+    wget -O "$CLF_PATH" "$CLF_URL"
+else
+    echo "Classifier model already exists. Skipping download."
 fi
 
 # Download and unzip fingerprint directory
@@ -51,4 +61,23 @@ fi
 
 # Run test_fp.py
 echo "Running fingerprint retrieval test..."
-python test_fp.py --model "$MODEL_PATH" --fp_dir "$FP_DIR"
+# If model is proposed
+if [ "$MODEL_TYPE" = "proposed" ]; then
+    python test_fp.py --query_lens=5,7,10,15,20 \
+                  --text=tc35_reprod \
+                  --test_dir=data \
+                  --map \
+                  --clf_ckp=clf_tc_35_4.pth \
+                  --test_config='{"tc_35:"best"}' \
+                  --ismir25
+else
+    cd baseline
+    python run_eval.py  --query_lens=5,7,10,15,20 \
+                        --text=tc39_reprod \
+                        --test_dir=../../datasets/sample_100/audio \
+                        --map \
+                        --test_config='{"tc_39":100}' \
+                        --ismir25
+    
+fi
+
