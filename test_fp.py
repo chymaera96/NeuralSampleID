@@ -314,7 +314,7 @@ def main():
     else:
         model = model.to(device)
 
-    model.eval()
+    # model.eval()
     classifier = CrossAttentionClassifier(in_dim=512, num_nodes=32).to(device)
     # classifier = nn.Identity()
 
