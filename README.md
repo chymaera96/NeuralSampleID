@@ -19,14 +19,17 @@ Official repository for "REFINING MUSIC SAMPLE IDENTIFICATION WITH A SELF-SUPERV
 
 ```bash
 # Clone the repository
-git clone https://github.com/chymaera96/NeuralSampleID.git
-cd NeuralSampleID
+git clone https://github.com/automatic-sample-id-ismir25/asid-ismir25.git
+cd asid-ismir25
 
 # Install dependencies
 pip install -r requirements.txt
 
-# (Optional) Install FAISS GPU for faster evaluation
+# Install FAISS GPU for faster evaluation
 conda install faiss-gpu -c pytorch
+
+# Install DGL (cuda version specific)
+conda install -c dglteam/label/th24_cu121 dgl
 ```
 
 ---
@@ -106,7 +109,7 @@ The script `ismir25.sh` handles running evaluation with the appropriate model to
  [![HuggingFace](https://huggingface.co/front/assets/huggingface_logo-noborder.svg)](https://huggingface.co/automatic-sample-id-ismir25/asid-ismir25)
 - [GNN pretrained weights](https://huggingface.co/automatic-sample-id-ismir25/asid-ismir25/blob/main/model_tc_35_best.pth)
 - [MHCA classifier weights](https://huggingface.co/automatic-sample-id-ismir25/asid-ismir25/blob/main/clf_tc_35_4.pth)
-- [Baseline ResNet-IBN weights](https://huggingface.co/automatic-sample-id-ismir25/asid-ismir25/blob/main/model_tc_39_80.pth)
+- [Baseline ResNet-IBN weights](https://huggingface.co/automatic-sample-id-ismir25/asid-ismir25/blob/main/model_tc_39_100.pth)
 - [Evaluation database](https://huggingface.co/automatic-sample-id-ismir25/asid-ismir25/blob/main/proposed_db.zip)
 
 ---

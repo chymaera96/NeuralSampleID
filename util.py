@@ -3,13 +3,8 @@ import torch
 import numpy as np
 import json
 import glob
-import soundfile as sf
-import shutil
 import yaml
 from prettytable import PrettyTable
-import re
-import matplotlib.pyplot as plt
-from audiomentations import BandPassFilter
 
 
 class DummyScaler:
@@ -194,47 +189,6 @@ def create_fp_dir(resume=None, ckp=None, epoch=1, train=True):
     return fp_dir
 
 
-
-def create_train_set(data_dir, dest, size=10000):
-    if not os.path.exists(dest):
-        os.mkdir(dest)
-        print(data_dir)
-        print(dest)
-    for ix,fname in enumerate(os.listdir(data_dir)):
-        fpath = os.path.join(data_dir, fname)
-        if ix <= size and fpath.endswith('mp3'):
-            shutil.move(fpath,dest)
-            print(ix)
-        if len(os.listdir(dest)) >= size:
-            return dest
-    
-    return dest
-
-def create_downstream_set(data_dir, size=5000):
-    src = os.path.join(data_dir, f'fma_downstream')
-    dest = data_dir
-    # if not os.path.exists(dest):
-    #     os.mkdir(dest)   
-    # if len(os.listdir(dest)) >= size:
-    #     return dest
-    for ix,fname in enumerate(os.listdir(src)):
-        fpath = os.path.join(src, fname)
-        if not fpath.endswith('mp3'):
-            continue
-        # if ix < size:
-        if len(os.listdir(src)) > 500:
-            shutil.move(fpath,dest)
-
-    return dest
-
-def preprocess_aug_set_sr(data_dir, sr=22050):
-    for fpath in glob.iglob(os.path.join(data_dir,'**/*.wav'), recursive=True):
-        y, sr = sf.read(fpath)
-        print(sr)
-        break
-        # sf.write(fpath, data=y, samplerate=sr)
-    return
-
 def count_parameters(model, encoder):
     table = PrettyTable(["Modules", "Parameters"])
     total_params = 0
@@ -251,55 +205,12 @@ def count_parameters(model, encoder):
         f.write(str(table))
     return total_params
 
-def calculate_output_sparsity(output):
-    total_elements = torch.numel(output)
-    zero_elements = torch.sum((output == 0).int()).item()
-
-    sparsity = zero_elements / total_elements * 100
-    return sparsity
 
 def calculate_snr(signal, noise):
     signal_power = torch.mean(signal ** 2)
     noise_power = torch.mean(noise ** 2)
     snr = 10 * torch.log10(signal_power / (noise_power + 1e-10))
     return snr
-
-    # Get paths of files not in the index
-def get_test_index(data_dir):
-    train_idx = load_index(data_dir)
-    all_file_list = glob.glob(os.path.join(data_dir,'**/*.mp3'), recursive=True)
-    print(f'Number of files in {data_dir}: {len(all_file_list)}')
-    # test_idx = {str(i):f for i,f in enumerate(all_file_list) if f not in train_idx.values()}
-    idx = 0
-    test_idx = {}
-    for i, fpath in enumerate(all_file_list):
-        if i % 200 == 0:
-            print(f"Processed {i}/{len(all_file_list)} files")
-        if fpath not in train_idx.values():
-            test_idx[str(idx)] = fpath
-            idx += 1
-
-    return test_idx
-
-
-def extract_losses(filename):
-    simclr_losses = []
-    mixco_losses = []
-
-    with open(filename, 'r') as file:
-        for line in file:
-            simclr_match = re.search(r'SimCLR Loss: (\d+\.\d+)', line)
-            mixco_match = re.search(r'MixCo Loss: (\d+\.\d+)', line)
-            if simclr_match:
-                simclr_loss = float(simclr_match.group(1))
-                simclr_losses.append(simclr_loss)
-            if mixco_match:
-                mixco_loss = float(mixco_match.group(1))
-                mixco_losses.append(mixco_loss)
-
-    return simclr_losses, mixco_losses
-
-
 
 
 def save_nan_batch(x_i, x_j, save_dir="nan_batches", counter=0):

@@ -10,7 +10,6 @@ debugpy==1.8.5
 decorator==5.1.1
 exceptiongroup==1.2.2
 executing==2.0.1
-faiss-gpu==1.7.2
 filelock==3.14.0
 fsspec==2024.3.1
 grpcio==1.63.0
