@@ -292,7 +292,7 @@ def main():
             else:
                 print("=> Skipping dummy db creation...")
 
-            if args.ismir25:
+            if not args.ismir25:
                 create_ref_db(ref_db_loader, augment=test_augment,
                                 model=model, output_root_dir=fp_dir, verbose=True)
                 
