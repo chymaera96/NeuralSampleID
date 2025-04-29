@@ -143,8 +143,10 @@ def eval_faiss_clf(emb_dir,
                 top3[ti, si] = int(any(q_id in gt[p] for p in pred[:3]))
                 top10[ti, si] = int(any(q_id in gt[p] for p in pred[:10]))
         
-        if ti % 5 == 0:
-            print(f"Processed {ti} / {len(test_ids)} queries...")
+    log_interval = 100 if len(test_ids) > 500 else 10
+
+    if ti % log_interval == 0:
+        print(f"Processed {ti} / {len(test_ids)} queries...")
 
     valid = (test_seq_len <= max_test_seq_len[:, None])
     hit_rates = np.stack([

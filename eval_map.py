@@ -117,7 +117,7 @@ def eval_faiss_map_clf(emb_dir, classifier, emb_dummy_dir=None,
         _, I = index.search(q, k_probe)
 
         candidates, freqs = np.unique(I[I >= 0], return_counts=True)
-        print(f"\nQuery {ix}: Retrieved {len(candidates)} candidates.")
+        # print(f"\nQuery {ix}: Retrieved {len(candidates)} candidates.")
 
         hist = defaultdict(int)
         for cid, freq in zip(candidates, freqs):
@@ -153,15 +153,12 @@ def eval_faiss_map_clf(emb_dir, classifier, emb_dummy_dir=None,
             logits = classifier(nm_query, nm_candidate)  # (num_segments, 1)
 
             clf_score = logits.max().item()
-            # print(f"Classifier score for {match}: {classifier_score:.4f} (before freq weighting)")
 
-            # Multiply by frequency
             # weighted_score = clf_score * np.log1p(freq) if clf_score > 0.5 else 0
             weighted_score = clf_score if clf_score > 0.5 else 0
             hist[match] += weighted_score
-            # print(f"Updated hist[{match}] = {hist[match]:.4f} (after weighting with freq={freq})")
 
-        print(f"Top 10 scores for {q_id}: {sorted(hist.items(), key=lambda x: x[1], reverse=True)[:10]}")
+        # print(f"Top 10 scores for {q_id}: {sorted(hist.items(), key=lambda x: x[1], reverse=True)[:10]}")
         if ix % 5 == 0:
             print(f"Processed {ix} / {len(test_ids)} queries...")
 
