@@ -115,7 +115,7 @@ def eval_faiss_with_map(emb_dir,
     query_lookup = json.load(open(f'{emb_dir}/query_full_db_lookup.json', 'r'))
     ref_lookup = json.load(open(f'{emb_dir}/ref_db_lookup.json', 'r'))
 
-    with open('data/gt_dict.json', 'r') as fp:
+    with open('../data/gt_dict.json', 'r') as fp:
         ground_truth = json.load(fp)
 
     test_ids, max_test_seq_len = extract_test_ids(query_lookup)
