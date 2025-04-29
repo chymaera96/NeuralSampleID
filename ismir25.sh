@@ -49,13 +49,15 @@ mkdir -p "$FP_DIR"
 if [ "$MODEL_TYPE" = "proposed" ]; then
     FP_URL="https://huggingface.co/automatic-sample-id-ismir25/asid-ismir25/blob/main/model_tc_35_best.zip"
     FP_ZIP_PATH="data/model_tc_35_best.zip"
+    FP_OUT_PATH="$FP_DIR/model_tc_35_best"
 else
     FP_URL="https://huggingface.co/automatic-sample-id-ismir25/asid-ismir25/blob/main/model_tc_39_100.zip"
     FP_ZIP_PATH="data/model_tc_39_100.zip"
+    FP_OUT_PATH="$FP_DIR/model_tc_39_100"
 fi
 
 
-if [ ! -d "$FP_DIR/fingerprints" ]; then
+if [ ! -d "$FP_OUT_PATH" ]; then
     echo "Downloading fingerprints..."
     wget -O "$FP_ZIP_PATH" "$FP_URL"
     echo "Unzipping fingerprints..."
