@@ -30,7 +30,6 @@ from baseline.eval_hr import eval_faiss
 
 
 # Directories
-root = os.path.dirname(__file__)
 model_folder = os.path.abspath(os.path.join(root, os.pardir, "checkpoint"))
 print("MODEL FOLDER:", model_folder)
 
