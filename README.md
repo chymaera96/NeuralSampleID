@@ -110,7 +110,7 @@ The script `ismir25.sh` handles running evaluation with the appropriate model to
 - [GNN pretrained weights](https://huggingface.co/automatic-sample-id-ismir25/asid-ismir25/blob/main/model_tc_35_best.pth)
 - [MHCA classifier weights](https://huggingface.co/automatic-sample-id-ismir25/asid-ismir25/blob/main/clf_tc_35_4.pth)
 - [Baseline ResNet-IBN weights](https://huggingface.co/automatic-sample-id-ismir25/asid-ismir25/blob/main/model_tc_39_100.pth)
-- [Evaluation database](https://huggingface.co/automatic-sample-id-ismir25/asid-ismir25/blob/main/proposed_db.zip)
+- [Evaluation database](https://huggingface.co/automatic-sample-id-ismir25/asid-ismir25/blob/main/model_tc_35_best.zip)
 
 ---
 
