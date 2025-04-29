@@ -74,10 +74,10 @@ class BaselineModel(nn.Module):
         
         h_i = self.encoder(x_i)
         z_i = self.projector(h_i)
-        # z_i = F.normalize(z_i, p=2, eps=1e-10)
+        z_i = F.normalize(z_i, p=2, eps=1e-10)
 
         h_j = self.encoder(x_j)
         z_j = self.projector(h_j)
-        # z_j = F.normalize(z_j, p=2, eps=1e-10)
+        z_j = F.normalize(z_j, p=2, eps=1e-10)
 
         return h_i, h_j, z_i, z_j
