@@ -273,7 +273,7 @@ def eval_faiss(emb_dir,
     ref_lookup = json.load(open(f'{emb_dir}/ref_db_lookup.json', 'r'))
     test_ids, max_test_seq_len = extract_test_ids(query_lookup)
     n_test = len(test_ids)
-    with open('data/gt_dict.json', 'r') as fp:
+    with open('../data/gt_dict.json', 'r') as fp:
         gt = json.load(fp)
 
     print(f'n_test: \033[93m{n_test:n}\033[0m')
