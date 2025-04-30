@@ -1,6 +1,6 @@
 # NeuralSampleID
 
-Official repository for "REFINING MUSIC SAMPLE IDENTIFICATION WITH A SELF-SUPERVISED GRAPH NEURAL NETWORK" currently under review at Internation Society for Music Information Retrieval (ISMIR), 2025.
+Neural Sample Identification framework for automatic retrieval of sampled songs based on short queries. 
 
 ---
 
