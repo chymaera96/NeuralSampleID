@@ -1,6 +1,23 @@
-# NeuralSampleID
+# NeuralSampleID: A Framework for Automatic Sample Identification
 
-Neural Sample Identification framework for automatic retrieval of sampled songs based on short queries. 
+**NeuralSampleID** is a lightweight and scalable framework for automatic sample identification (ASID), the task of detecting and retrieving music samples embedded within audio queries. This system:
+
+- Uses a self-supervised Graph Neural Network (GNN) encoder trained with contrastive learning.
+- Includes a cross-attention classifier that refines and ranks retrieval results.
+- Benchmarks performance using fine-grained annotations from an extended version of the Sample100 dataset.
+
+Our method achieves SOTA with only 9% of the parameters used by prior systems. For more details, please see the preprint and the documentation in this repository.
+
+---
+
+ **Our work has been accepted to ISMIR 2025!**  
+Check out the preprint [here](https://arxiv.org/abs/placeholder-link).
+
+This repository contains the official implementation for the paper:
+
+**"Refining Music Sample Identification with a Self-Supervised Graph Neural Network"**  
+_A. Bhattacharjee, I. Meresman Higgs, M. Sandler, and E. Benetos_  
+*To appear in the Proceedings of the 26th International Society for Music Information Retrieval Conference (ISMIR), 2025*
 
 ---
 
@@ -19,8 +36,8 @@ Neural Sample Identification framework for automatic retrieval of sampled songs 
 
 ```bash
 # Clone the repository
-git clone https://github.com/automatic-sample-id-ismir25/asid-ismir25.git
-cd asid-ismir25
+git clone https://github.com/chymaera96/NeuralSampleID.git
+cd NeuralSampleID
 
 # Install dependencies
 pip install -r requirements.txt
