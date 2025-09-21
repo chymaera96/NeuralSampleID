@@ -67,7 +67,7 @@ The extended annotations were created by expert musicians. The annotation proces
 
 [2] Van Balen, J., Serra, J., & Haro, M. (2012). Automatic Identification of Samples in Hip Hop Music. In Int. Symp. on Computer Music Modeling and Retrieval (CMMR). London, United Kingdom.
 
-[3] THIS PAPER. Refining Music Sample Identification with a Self-Supervised Graph Neural Network. [Author(s) to be added later]
+[3] Bhattacharjee, A., Meresman Higgs, I., Sandler, M., & Benetos, E. (2025). Refining Music Sample Identification with a Self-Supervised Graph Neural Network. In Proceedings of the 26th International Society for Music Information Retrieval Conference (ISMIR). Daejeon, South Korea.
 
 [4] Cannam, C., Landone, C., & Sandler, M. (2010). Sonic visualiser: An open source application for viewing, analysing, and annotating music audio files. In Proceedings of the ACM Multimedia 2010 International Conference, Firenze, Italy, October 2010, pp. 1467-1468.
 
@@ -81,6 +81,16 @@ The extended annotations were created by expert musicians. The annotation proces
 
 If you use this dataset in your research, please cite our paper:
 
-```
-[Citation information]
+Bhattacharjee, A., Meresman Higgs, I., Sandler, M., & Benetos, E. (2025). Refining Music Sample Identification with a Self-Supervised Graph Neural Network. In _Proceedings of the 26th International Society for Music Information Retrieval Conference (ISMIR)_. Daejeon, South Korea.
+
+```bibtex
+@inproceedings{bhattacharjee2025refining,
+  title={Refining Music Sample Identification with a Self-Supervised Graph Neural Network},
+  author={Bhattacharjee, Aditya and Meresman Higgs, Ivan and Sandler, Mark and Benetos, Emmanouil},
+  booktitle={Proceedings of the 26th International Society for Music Information Retrieval Conference (ISMIR)},
+  year={2025},
+  address={Daejeon, South Korea},
+  publisher={ISMIR},
+  note={Preprint available at \url{https://www.arxiv.org/abs/2506.14684}}
+}
 ```

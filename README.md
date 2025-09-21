@@ -17,11 +17,12 @@ This repository contains the official implementation for the paper:
 
 **"Refining Music Sample Identification with a Self-Supervised Graph Neural Network"**  
 _A. Bhattacharjee, I. Meresman Higgs, M. Sandler, and E. Benetos_  
-*To appear in the Proceedings of the 26th International Society for Music Information Retrieval Conference (ISMIR), 2025*
+_To appear in the Proceedings of the 26th International Society for Music Information Retrieval Conference (ISMIR), 2025_
 
 ---
 
 ## Table of Contents
+
 - [Installation](#installation)
 - [Dataset Preparation](#dataset-preparation)
 - [Pretraining](#pretraining)
@@ -72,12 +73,11 @@ htdemucs/
 
 Each subfolder (e.g., `12345`) corresponds to a unique FMA track ID and contains the separated stem files in `.mp3` format.
 
-We use the our extended annotations of the Sample100 dataset -- `sample100-ext` for retrieval evaluation. Details of the dataset can be found in the dataset [README](https://github.com/automatic-sample-id-ismir25/asid-ismir25/blob/main/sample100-ext/README.md). Evaluation audio files have not been shared as a part of this work. Instead, we provide the fingeprints computed using our setup for queries and reference database. 
-
+We use the our extended annotations of the Sample100 dataset -- `sample100-ext` for retrieval evaluation. Details of the dataset can be found in the dataset [README](https://github.com/automatic-sample-id-ismir25/asid-ismir25/blob/main/sample100-ext/README.md). Evaluation audio files have not been shared as a part of this work. Instead, we provide the fingeprints computed using our setup for queries and reference database.
 
 ## Pretraining
 
-The pretraining step uses contrastive learning of the Graph Neural Network backbone. 
+The pretraining step uses contrastive learning of the Graph Neural Network backbone.
 
 ```bash
 # Pre-training the proposed model
@@ -88,6 +88,7 @@ python train.py --config config/resnet_ibn.yaml --ckp CKP_NAME
 ```
 
 Key arguments:
+
 - `--config`: YAML config file path
 - `--ckp`: Placeholder name for the training run
 
@@ -102,11 +103,12 @@ After pretraining, you can fine-tune the MHCA classifier on the learned embeddin
 ```bash
 python downstream.py --enc_wts ENCODER_CHECKPOINT
 ```
+
 ---
 
 ## Evaluation
 
-Given a query set, the evaluation process compares the retrieval rates and mean average precision (mAP). 
+Given a query set, the evaluation process compares the retrieval rates and mean average precision (mAP).
 
 ```bash
 # Usage: ./ismir25.sh [baseline|proposed]
@@ -120,10 +122,10 @@ bash ismir25.sh baseline
 
 The script `ismir25.sh` handles running evaluation with the appropriate model to reproduce published benchmarks. A detailed demonstration of evaluation on custom datasets will be updated soon!
 
-
 ## Pretrained Models and Fingeprints
 
  [![HuggingFace](https://huggingface.co/front/assets/huggingface_logo-noborder.svg)](https://huggingface.co/automatic-sample-id-ismir25/asid-ismir25)
+
 - [GNN pretrained weights](https://huggingface.co/automatic-sample-id-ismir25/asid-ismir25/blob/main/model_tc_35_best.pth)
 - [MHCA classifier weights](https://huggingface.co/automatic-sample-id-ismir25/asid-ismir25/blob/main/clf_tc_35_4.pth)
 - [Baseline ResNet-IBN weights](https://huggingface.co/automatic-sample-id-ismir25/asid-ismir25/blob/main/model_tc_39_100.pth)
@@ -133,7 +135,21 @@ The script `ismir25.sh` handles running evaluation with the appropriate model to
 
 ## Citation
 
-TBD
+If you use this code or the dataset in your research, please cite our paper:
+
+Bhattacharjee, A., Meresman Higgs, I., Sandler, M., & Benetos, E. (2025). Refining Music Sample Identification with a Self-Supervised Graph Neural Network. In _Proceedings of the 26th International Society for Music Information Retrieval Conference (ISMIR)_. Daejeon, South Korea.
+
+```bibtex
+@inproceedings{bhattacharjee2025refining,
+  title={Refining Music Sample Identification with a Self-Supervised Graph Neural Network},
+  author={Bhattacharjee, Aditya and Meresman Higgs, Ivan and Sandler, Mark and Benetos, Emmanouil},
+  booktitle={Proceedings of the 26th International Society for Music Information Retrieval Conference (ISMIR)},
+  year={2025},
+  address={Daejeon, South Korea},
+  publisher={ISMIR},
+  note={Preprint available at \url{https://www.arxiv.org/abs/2506.14684}}
+}
+```
 
 ---
 
