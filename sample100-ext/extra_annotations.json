@@ -1,0 +1,1996 @@
+[
+    {
+        "sample_id": "S002",
+        "description": "L1s and L0s correspond to each other occurrences",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S003",
+        "description": "L1 occurrence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S004",
+        "description": "In sample track, layer 2 is first occurrence of beat and layer 1 indicates absence of beat (sample is 4 beats - sample runs 8th quaver to 8th quaver for cleaner separation of notes)",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "absence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S005",
+        "description": "In sample track, L1 gives full repetitions and L2 gives partial repetitions",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "partial occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S006",
+        "description": "In sample track, L2 gives first occurrence and L1 indicates absence of beat",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "absence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S007",
+        "description": "In ref track, riff can either be interpreted as 1 bar long or 2 bars long - the two bars are exactly the same, but judging by the N repetitions = 37 as indicated in the original study, I think the sample was originally interpreted as 1x 2-bar section. Given that the bars are exactly the same (at least to the listener), you could also assume one single bar is sampled. I annotated both versions to give both options - in the ref track, L1 gives the first occurrence of the riff as a 2-bar section and L2 gives the first occurrence as a 1-bar section. In the sample track, L1 indicates absence of track, L2 indicates first occurrence of 2-bar section, and L3 gives first occurrence of 1-bar section.",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "2-bar occurrence"
+            },
+            {
+                "id": 2,
+                "type": "1-bar occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "absence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            },
+            {
+                "id": 3,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S008",
+        "description": "L1 occurrence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S009",
+        "description": "In sample track, L2 gives first occurrence of riff, L1 gives absence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "absence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S010",
+        "description": "In sample track, L1 shows the only occurrence of riff",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S012",
+        "description": "L1 first, L0 absence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S013",
+        "description": "Same as S007 - ref track - L1 2-bar sample or L2 1-bar sample (2 bars are the same, previous study interprets as 2 bars). Sample track - L1 absence or riff, L2 2-bar first occurrence, L3 1-bar first occurrence.",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "2-bar occurrence"
+            },
+            {
+                "id": 2,
+                "type": "1-bar occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "absence"
+            },
+            {
+                "id": 2,
+                "type": "2-bar occurrence"
+            },
+            {
+                "id": 3,
+                "type": "1-bar occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S014",
+        "description": "L2 first occurrence, L1 absence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "absence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S015",
+        "description": "L2 first occurrence, L1 absence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "absence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S016",
+        "description": "L2 first occurrence, L1 absence (please note, the sample is 8 quavers long but starts one quaver before the main bar and ends one quaver before the main bar ends - this is because the note heard in the sample corresponds to the note heard just before the main bar but not the one heard at the end of the main bar)",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "absence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S017",
+        "description": "L1 occurrence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S018",
+        "description": "L2 first occurrence, L1 absence (riff is only 2 beats repeated - I used notes 2 and 3 because this was the cleanest way to get separation between the bass drum and snare because of fast rhythm starting and ending on a full beat rather than an offbeat).",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "absence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S019",
+        "description": "Ref track: L1 taken as 1-bar loop, L2 taken as 2-bar loop. Original study considered it as 1-bar but I think it is 2-bar because the vocal note runs slightly into the second bar or every first occurrence of the sample, but is noticeably cut off on every second occurrence, so I annotated both just in case. Sample track: L1 absence, L2 first occurrence of 1-bar sample, L3 first occurrence of 2-bar sample.",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "1-bar occurrence"
+            },
+            {
+                "id": 2,
+                "type": "2-bar occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "absence"
+            },
+            {
+                "id": 2,
+                "type": "1-bar occurrence"
+            },
+            {
+                "id": 3,
+                "type": "2-bar occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S020",
+        "description": "L1 absence, L2 first occurrence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "absence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S021",
+        "description": "L1 presence, L2 first occurrence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "1st occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S022",
+        "description": "L1 presence (<25 occurrences)",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "presence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "presence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S023",
+        "description": "L1 gives original 3.5-bar sample, with gaps. L2 extends this to a 4-bar sample. Please note the last couple of beats of the original 4-bar sequence are different to what is heard in the sample track which is why I gave both versions – L1 has gaps on the sample track between every occurrence whereas L2 has no gaps. L0 gives the partial sample heard at the end.",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "3.5-bar occurrence with gaps"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "3.5-bar occurrence with gaps"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "partial occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S024",
+        "description": "L1 presence, L2 first full occurrence (many occurrences are cut slightly short)",
+        "target_time_annotations": [
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "presence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S025",
+        "description": "L1 presence (<25 occurrences)",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "presence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S027",
+        "description": "L2 first occurrence, L1 absence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "absence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S028",
+        "description": "L1 presence (<25 occ)",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "presence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S029",
+        "description": "See S124",
+        "target_time_annotations": [],
+        "query_time_annotations": []
+    },
+    {
+        "sample_id": "S030",
+        "description": "Two versions. Ref track L1 gives the one-bar sequence beginning and ending on final semiquaver before normal bar division. Ref track L2 uses one complete bar. L1 is easier to separate notes by audio, L2 is easier to count bars visually. Sample track L0 absence, L1 first complete occurrence of ref track L1, L2 first complete occurrence of ref track L2.",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 0,
+                "type": "absence"
+            },
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S031",
+        "description": "Same as S030 - L1 for clearer audio separation of notes, or L2 for clearer visual reading of bars, on ref and sample tracks. L0 absence on ref track. On this occasion, sample is 2 beats long so L1 runs over beats 2 and 3.",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 0,
+                "type": "absence"
+            },
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S033",
+        "description": "L2 first occurrence, L1 absence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "absence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S035",
+        "description": "L1 first, L0 absence  hard to tell which parts have been sampled due to differences in voices",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S036",
+        "description": "L2 first, L1 absence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "absence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S037",
+        "description": "Two separate sections L1 occurrence of L1, L2 occurrence of L2",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S038",
+        "description": "L1 presence. Sample includes echo of word “bad” so runs from second quaver of bar to second quaver",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "presence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S039",
+        "description": "L2 first, L1 absence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "absence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S040",
+        "description": "L2 first, L1 presence, L0 half of sample only - please note there are gaps between occurrences of the samples because the four bar “phrase” is not sampled in full",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 0,
+                "type": "half occurrence"
+            },
+            {
+                "id": 1,
+                "type": "presence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S041",
+        "description": "L1 presence, L2 partial presence (not entire sample)",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "partial occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S042",
+        "description": "L2 first, L1 absence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "absence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S043",
+        "description": "L1 absence, L2 first occurrence of actual sampled section, L3 first occurrence of riff created from sampled section. Sampled section is only one bar – riff used in sample track is two bars consisting of full sampled section, then first half of the bar played twice. In other words, 8 beats, consisting of beats 1 2 3 4 1 2 1 2 from the sampled section in the ref track",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "absence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            },
+            {
+                "id": 3,
+                "type": "riff created from sampled section"
+            }
+        ]
+    },
+    {
+        "sample_id": "S044",
+        "description": "L2 first, L1 absence. Vocal has been scrubbed from sample",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "absence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S045",
+        "description": "L1 absence, L2 first occurrence of sample as heard in ref track. Multiple variations of this sample are heard throughout the track, sometimes being played in full, sometimes just playing repeated sampled sections of two notes - partial one/two note samples depicted as L3",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "absence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            },
+            {
+                "id": 3,
+                "type": "partial occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S046",
+        "description": "ref track – L1 comprises 4 notes which form the first part of the sample, then L2 comprises 1-2 notes (hard to hear if it’s one note repeated or one long note) – the sample is 4 bars – two bars of L1 then two bars of L2 repeated. In ref track – L1 is first occurrence of first part of sampled section (L1 in ref track), L2 is first occurrences of second part of sampled section (L2 in ref track), L0 is absence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 0,
+                "type": "absence"
+            },
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S048",
+        "description": "L1 first. Beat then repeated, without gaps, through entire track",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S049",
+        "description": "L1 ref track – 2 options – the two one-bar samples are very similar but the second one does not have the guitar chord at the beginning. I think it is likely this bar was used but the original annotation says it was the first. Original bar is L1, my bar is L2. It also could be a longer section samples but the originally annotation suggests one bar. Sample track – L1 absence, L2 first full bar as referenced from ref track, L3 first full example of the modified riff (the riff in the sample track is 2 bars long)",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "absence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            },
+            {
+                "id": 3,
+                "type": "modified occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S050",
+        "description": "ref track – 2 bar beat, 2 versions – L1 has the first and last beat of the 2 beats removed as is heard throughout the track (so repeated throughout but with gaps); L2 includes these. Sample track – L1 first occurrence of 6 beat version, L2 first occurrence of 8 beat version, L0 absence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 0,
+                "type": "absence"
+            },
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S051",
+        "description": "L0 absence, L1 first full occurrence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 0,
+                "type": "absence"
+            },
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S052",
+        "description": "L1 presence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S054",
+        "description": "L1 first, L0 absence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S055",
+        "description": "L1 first, L0 absence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S056",
+        "description": "L1 first, L0 absence. Sample is 5 quavers padded, then padded with 3 extra quavers of rest",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S057",
+        "description": "L1 first, L0 absence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S058",
+        "description": "L1 first, L0 absence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S060",
+        "description": "L1 first, L0 absence. Doesn't really sound the same between ref and sample tracks?",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S061",
+        "description": "L1 first, L0 absence. Extra bass drum note in sample in sample track",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S062",
+        "description": "L1 first, L0 absence. Extra bass drum notes in sample in sample track",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S063",
+        "description": "L1 full occurrence, L2 partial occurrence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "partial occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S064",
+        "description": "L1 first, L0 absence. Beat appears to run through entire track except start and end but volume is much quieter in some sections",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S067",
+        "description": "ref track – L1 runs beats 4123, L2 runs beats 1234, both give the same rhythm when sampled. Sample track – L1 first occurrence of L1, L2 first occurrence of L2, L0 absence. Please note the second half of the song has a completely different beat which is not the same sample so I have noted this as absence of beat, although I think the original study seemed to count this section incorrectly?",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S068",
+        "description": "L1 first, L0 absence. Pattern in sample track is – sample played 1.5 times (3 bars) then 1 bar of two repeating notes from sample",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S069",
+        "description": "L1 only 1 occurrence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S071",
+        "description": "L2 first, L1 absence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 2,
+                "type": "occurrence"
+            },
+            {
+                "id": 1,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S072",
+        "description": "L1 for each occurrence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S073",
+        "description": "L1 first, L0 absence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S074",
+        "description": "L1 first, L0 absence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S078",
+        "description": "L1 occurrence (ref track annotates full bar, both examples in sample track are different lengths but just under one bar)",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S079",
+        "description": "L1 occurrence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S080",
+        "description": "L1 occurrence, L2 partial occurrence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "partial occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S081",
+        "description": "L1 occurrence (final note of sample is extended between occurrences but this is not counted in initial study)",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S082",
+        "description": "L1 occurrence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S083",
+        "description": "L1 first, L0 absence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S084",
+        "description": "L1 first, L0 absence. Notes are different from ref track to sample track?",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S086",
+        "description": "L0 occurrence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 0,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S089",
+        "description": "L0 full occurrence, L1 partial occurrence. Initial study categorized the riff as one bar but the slight variation of notes leads me to believe it is a full 4 bar sample which is repeated in full once and in half-length twice",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 0,
+                "type": "occurrence"
+            },
+            {
+                "id": 1,
+                "type": "partial occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S091",
+        "description": "L0 partial occurrence, L1 full occurrence. Very faint sample and heavily filtered so not sure about accuracy of this one",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 0,
+                "type": "partial occurrence"
+            },
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S094",
+        "description": "L1 samples bass only, L2 samples bass + synth (ref and sample tracks). Not 100% sure what was annotated in the original study",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S098",
+        "description": "L1 first, L0 absence. Very faint in places but sample appears to run through most of the track",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S101",
+        "description": "L1 absence. 4 separate sections annotated in ref track – these form the beat but occur in somewhat random orders through the sample track, so first occurrence not annotated",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S103",
+        "description": "L1 full occurrence, L2 partial occurrence. L0 very brief partial occurrences at start of track but these might not be that accurate and are <1s anyway",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 0,
+                "type": "very short occurrence"
+            },
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "partial occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S104",
+        "description": "L1 first, L0 absence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S106",
+        "description": "L1 occurrence. Original study annotates this as separate one-bar occurrences but I think it is one long sample because of the way the vocals overlap between bars – the two different vocals mean the sampled section in the ref track must be at least 2 bars long in any case",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S109",
+        "description": "two versions, as the study wasn't sure whether the sample is 2 bars or 4 bars. L1 is first occurrence of 2 bar sample, L2 is first occurrence of 4 bar sample, L0 absence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S112",
+        "description": "the sample has been created by joining L1 in the ref track with the L2 (L1 then L2) – easier to annotate these bits separately. Sample track – L1 first, L0 absence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S113",
+        "description": "L1 occurrence. Initial study was unsure if 4x 1 bar samples or 2x 2 bar samples in sample track – it is 2x 2 bar samples evidenced by brief guitar note at beginning of 2 bar segment",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S114",
+        "description": "L1 first, L0 absence. In ref track, L1 is original 1 bar sample as identified in original study. L2 gives a potentially better example of the 1 bar sample as it does not contain the guitar note at the beginning of the bar",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S115",
+        "description": "L1 first, L0 absence. Ref track same as S114 – L1 indicates original annotation, L2 is arguably a \"better\" annotation",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S116",
+        "description": "L1 first, L0 absence. In ref track – sample is a 2 bar section which does not occur in full in sample track. The sample heard in the sample track appears to consist of 1x L1 from ref track + 2x L2 from ref track",
+        "target_time_annotations": [
+            {
+                "id": 0,
+                "type": "occurrence"
+            },
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S120",
+        "description": "L1 first, L0 absence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S121",
+        "description": "L1 occurrence. Ref track – timestamp in initial study was wrong – actually starts where I've annotated",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S122",
+        "description": "L1 occurrence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S123",
+        "description": "L0 absence. L1 first WITHOUT sung vocal (because this one is sampled earlier in the project). Two major issues – between the ref track and sample track, the vocal is removed and the guitar chord rhythm is different. The timestamp on the initial study does not seem to correspond to anything – just two guitar chords which are not really heard in the sample track in isolation. I think this has been rerecorded so this one might be best to leave out of the study",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 0,
+                "type": "absence"
+            },
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S124",
+        "description": "L1 first, L0 absence. Ref track – sample consists of 2x L1 and 2x L2 on loop",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 0,
+                "type": "absence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S125",
+        "description": "L1 occurrence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S126",
+        "description": "L1 occurrence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S127",
+        "description": "L1 occurrence, L2 partial or modified occurrence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "partial occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S128",
+        "description": "L1 full occurrence (note length may be a tiny bit shorter than in ref track), L2 partial occurrence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "partial occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S129",
+        "description": "L1 occurrence. Big variation between ref and sample track due to interpolation – might not be worth keeping",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S130",
+        "description": "L1 occurrence x1",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S131",
+        "description": "L1 occurrence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S134",
+        "description": "see S094 – contains both samples within this track",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            },
+            {
+                "id": 2,
+                "type": "occurrence"
+            }
+        ]
+    },
+    {
+        "sample_id": "S135",
+        "description": "L1 occurrence",
+        "target_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ],
+        "query_time_annotations": [
+            {
+                "id": 1,
+                "type": "occurrence"
+            }
+        ]
+    }
+]
